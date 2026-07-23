@@ -4,9 +4,10 @@
 % PDF/A
 % validate in https://www.pdf-online.com/osa/validate.aspx
 \usepackage[a-1a,mathxmp]{pdfx}[2018/12/22]
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[italian]{babel}
+\usepackage{fontspec} % richiesto da lualatex, sostituisce fontenc/inputenc
+\usepackage[bidi=basic, main=italian]{babel}
+\babelprovide[import]{arabic}
+\babelfont{arabic}{Amiri}
 \usepackage{bookmark}
 \usepackage{caption}
 \usepackage{comment}
@@ -25,7 +26,7 @@
 \usepackage[toc, acronym, automake]{glossaries}
 \usepackage[backend=biber, style=verbose-ibid, hyperref, backref]{biblatex}
 \usepackage{lmodern}
-\usepackage[top=2.75cm, bottom=2.75cm, right=3cm, left=3.75cm]{geometry} % 1in+17pt+0.6cm
+\usepackage[top=1.5cm, bottom=1.5cm, right=2cm, left=2cm]{geometry} % 1in+17pt+0.6cm
 \usepackage{fancyhdr}
 \usepackage{lipsum}
 \usepackage{setspace}
