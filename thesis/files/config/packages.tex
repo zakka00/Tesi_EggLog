@@ -7,7 +7,8 @@
 \usepackage{fontspec} % richiesto da lualatex, sostituisce fontenc/inputenc
 \usepackage[bidi=basic, main=italian]{babel}
 \babelprovide[import]{arabic}
-\babelfont{arabic}{Amiri}
+\babelfont{arabic}[Script=Arabic]{Amiri}
+\providecommand{\inputencodingname}{utf8}
 \usepackage{bookmark}
 \usepackage{caption}
 \usepackage{comment}
@@ -26,7 +27,7 @@
 \usepackage[toc, acronym, automake]{glossaries}
 \usepackage[backend=biber, style=verbose-ibid, hyperref, backref]{biblatex}
 \usepackage{lmodern}
-\usepackage[top=1.5cm, bottom=1.5cm, right=2cm, left=2cm]{geometry} % 1in+17pt+0.6cm
+\usepackage[top=2.5cm, bottom=2.5cm, right=3cm, left=3.5cm]{geometry}
 \usepackage{fancyhdr}
 \usepackage{lipsum}
 \usepackage{setspace}

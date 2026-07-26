@@ -1,54 +1,116 @@
 \chapter{Introduzione}
 \label{chap:introduzione}
+\noindent\textit{
 Nel seguente capitolo viene presetata l'azienda ospitante, il progetto svolto e le motivazioni che hanno 
-portato alla scelta di questo argomento per il lavoro di tesi.
+portato alla scelta di questo argomento per il lavoro di tesi.}
+\section{L'azienda}
+
+Eggon S.r.l. è una \textit{software house} con sede a Padova che opera in diversi ambiti tecnologici, sviluppando soluzioni software
+ innovative e fornendo servizi personalizzati in base alle esigenze dei propri clienti. L’attività dell’azienda si concentra
+  principalmente in settori quali la \gls{digitalhealthg}, l’\gls{Industria5.0g} con dispositivi correlati all'\gls{iiotg} , l'\gls{Insurtechg}
+   e il \gls{Fintechg}, oltre che nell’ambito dell’automazione logistica.
+
 \begin{figure}[H]
     \centering
     \includegraphics[alt={logo dell'azienda Eggon Srl}, width=.5\columnwidth]{img/logo_eggon.png}
-    \caption{Logo di Eggon}
+    \caption{Logo dell'azienda Eggon Srl}
     \label{fig:entanglement}
 \end{figure}
-
-Esempio di utilizzo di un termine nel glossario \gls{iiotg}.
-
-Esempio di citazione direttamente nel testo \cite{site:agile-manifesto}.
-
-Esempio di citazione nel piè di pagina \footcite{womak:lean-thinking}.
-\section{L'azienda}
-
-Eggon S.r.l. è una software house con sede a Padova che opera in diversi ambiti tecnologici, sviluppando soluzioni software
- innovative e fornendo servizi personalizzati in base alle esigenze dei propri clienti. L’attività dell’azienda si concentra
-  principalmente in settori quali la Digital Health, l’Industria 5.0 attraverso lo sviluppo di dispositivi correlati
-  all'\gls{iiot} , l’Insurtech e il Fintech, oltre che nell’ambito dell’automazione logistica.
 
 La società nasce dall’esperienza maturata negli Stati Uniti dai suoi fondatori, Gianpaolo Ferrarin e Fulvio Menegozzo, i quali
  hanno successivamente introdotto nel contesto italiano metodologie di lavoro, approcci innovativi e una forte attenzione alla 
  concretezza nello sviluppo di soluzioni tecnologiche.
 
-\section{L'idea}
-Introduzione all'idea dello stage\footcite{article:spooky}.
-\lipsum[1-3]
+ \section{Il progetto}
+\label{chap:progetto}
+Il tirocinio si è svolto presso Eggon Srl ed è stato dedicato allo sviluppo di \\\textbf{EggLog Motion Core \& Track Intelligence}, un
+ecosistema per la telemetria applicata al motorsport motociclistico. Il sistema si articola in un dispositivo \gls{Embeddedg} per
+l'acquisizione dei dati a bordo del veicolo e in un'applicazione dedicata alla consultazione, alla visualizzazione e all'analisi
+delle informazioni raccolte durante le sessioni di guida stradale o in pista\\
 
-\section{Organizzazione del testo}
-\begin{description}
-    \item[{\hyperref[chap:processi-metodologie]{Il secondo capitolo}}] descrive ...
-    
-    \item[{\hyperref[chap:descrizione-stage]{Il terzo capitolo}}] approfondisce ...
-    
-    \item[{\hyperref[chap:analisi-requisiti]{Il quarto capitolo}}] approfondisce ...
-    
-    \item[{\hyperref[chap:progettazione-codifica]{Il quinto capitolo}}] approfondisce ...
-    
-    \item[{\hyperref[chap:verifica-validazione]{Il sesto capitolo}}] approfondisce ...
-    
-    \item[{\hyperref[chap:conclusioni]{Nel settimo capitolo}}] descrive ...
-\end{description}
 
-Riguardo la stesura del testo, relativamente al documento sono state adottate le seguenti convenzioni tipografiche:
+L'obiettivo del progetto è stato realizzare un \gls{firmwareg} affidabile per il dispositivo embedded, basato su microcontrollore ESP32 (vd. paragrafo ESP32 ),
+in grado di acquisire i dati provenienti dai diversi sensori installati a bordo, organizzarli in modo efficiente e memorizzarli
+localmente su scheda microSD, garantendo continuità di acquisizione, integrità dei dati e prestazioni adeguate ai vincoli tipici
+di un sistema real-time. Parallelamente, è stata sviluppata un'applicazione destinata all'interazione con il dispositivo e
+all'analisi dei dati acquisiti.\\
+
+Il lavoro ha previsto inoltre lo studio del prototipo realizzato dal precedente gruppo di tirocinanti, con l'obiettivo di valutare
+le soluzioni adottate e individuare possibili margini di miglioramento, sia a livello di architettura software sia in vista di
+una futura revisione hardware del dispositivo.\\
+
+
+Il progetto ha permesso di affrontare problematiche caratteristiche dello sviluppo di sistemi embedded destinati ad applicazioni
+reali, approfondendo aspetti relativi all'acquisizione dei dati da sensori, alla gestione efficiente delle risorse hardware e alla
+progettazione di firmware affidabili.
+
+\section{Motivazioni della scelta del progetto}
+Le principali motivazioni che mi hanno portato a scegliere questo progetto di tirocinio sono:
+
 \begin{itemize}
-	\item gli acronimi, le abbreviazioni e i termini ambigui o di uso non comune menzionati vengono definiti nel glossario, situato alla fine del presente documento;
-	\item per la prima occorrenza dei termini riportati nel glossario viene utilizzata la seguente nomenclatura: \gls{iiotg};
-	\item i termini in lingua straniera o facenti parti del gergo tecnico sono evidenziati con il carattere \textit{corsivo}.
+
+    \item \textbf{Interesse per l'Internet of Things e i sistemi embedded} \\
+    Fin dagli anni della scuola secondaria di secondo grado ho sviluppato un forte interesse per il mondo dell'\gls{iotg}, grazie 
+    alla realizzazione di alcuni progetti che mi hanno permesso di avvicinarmi ai sistemi embedded. Questo interesse mi ha spinto a ricercare 
+    un'esperienza che mi consentisse di approfondire tali tematiche in un contesto professionale.
+
+    \item \textbf{Interesse per l'automotive} \\
+    Nel corso degli anni ho sviluppato un particolare interesse per il settore \gls{Automotiveg} e per le tecnologie che ne caratterizzano l'evoluzione, 
+    come i sistemi di telemetria, le reti di comunicazione veicolari e le applicazioni software dedicate all'acquisizione e all'analisi dei dati. 
+
+    \item \textbf{Ambiente di lavoro giovane} \\
+    Un ulteriore elemento che ha influenzato la mia scelta è stato il contesto aziendale. Essendo composta prevalentemente da un team giovane, 
+    l'azienda favorisce una comunicazione diretta, il confronto continuo e uno scambio di idee privo delle barriere.
+
+    \item \textbf{Approfondimento dello sviluppo firmware} \\
+    Nel corso di precedenti esperienze avevo già utilizzato piattaforme come \gls{Arduinog}, ma esclusivamente per applicazioni relativamente semplici.
+    Il tirocinio rappresentava quindi un'opportunità per affrontare uno sviluppo firmware più strutturato, lavorando direttamente su un prodotto 
+    reale e acquisendo competenze più avanzate nel campo dell'embedded.
+
+    \item \textbf{Crescita personale} \\
+    Gli argomenti relativi alle telecomunicazioni sono sempre stati tra quelli che ho trovato più complessi durante il percorso scolastico. 
+    Per questo motivo ho visto il progetto come una sfida personale, con l'obiettivo di consolidare le mie conoscenze e migliorare le mie
+     competenze.
+
 \end{itemize}
+
+\section{Convenzioni tipografiche}
+
+Durante la redazione del presente documento sono state adottate alcune convenzioni
+tipografiche con l'obiettivo di rendere più chiara e uniforme la consultazione del testo.
+In particolare:
+
+\begin{itemize}
+
+    \item Gli acronimi, le abbreviazioni e i termini tecnici o di uso non comune vengono
+    descritti all'interno del \hyperref[chap:glossario]{glossario}, riportato nella parte finale del documento;
+
+    \item Alla prima occorrenza di un termine presente nel glossario viene utilizzata la
+    seguente nomenclatura: \gls{Arduinog};
+
+    \item Nel caso degli acronimi alla prima ricorrenza viene utilizzato il riferimento per esteso (\gls{iiotg}),
+    mentre dalla seconda in poi viene semplicemente riportato come acronimo (\gls{iiot});
+
+    \item I termini in lingua straniera non entrati nell'uso comune della lingua italiana,
+    così come quelli appartenenti al gergo tecnico, vengono riportati in carattere
+    \textit{corsivo};
+
+    \item I nomi di funzioni, variabili o altri elementi appartenenti al codice sorgente
+    vengono rappresentati mediante carattere \texttt{monospaziato};
+
+    \item I riferimenti a libri, articoli o altre risorse presenti nella bibliografia
+    (\hyperref[cap:bibliography]{bibliografia}) sono indicati tramite il relativo identificativo numerico, ad esempio
+    \cite{site:agile-manifesto};
+
+    \item Gli estratti di codice sorgente vengono riportati attraverso appositi blocchi
+    formattati, come riportato di seguito:
+    \begin{listing}[H]
+    \inputminted{python}{code/example.py}
+    \caption{Fibonacci recursive}
+    \label{listing:py_fibo}
+    \end{listing}
+
+\end{itemize}
+
 
 \newpage

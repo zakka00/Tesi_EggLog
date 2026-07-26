@@ -3,12 +3,12 @@
 \input{references/glossary_acronyms}
 
 % Define custom colors
-\definecolor{hyperColor}{HTML}{0B3EE3}
+\definecolor{hyperColor}{HTML}{008080}
 \definecolor{tableGray}{HTML}{F5F5F7}
 \definecolor{veryPeri}{HTML}{6667ab}
 
 % Set line height
-\linespread{1.5}
+\linespread{1.15}
 
 % Custom hyphenation rules
 \hyphenation {
@@ -19,6 +19,9 @@
 
 % Images path
 \graphicspath{{img/}}
+
+% No indentation
+\setlength{\parindent}{0pt}
 
 % Force page color, as some editors set a grayish color as default
 \pagecolor{white}
@@ -38,6 +41,10 @@
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titleformat{\chapter}
+    {\normalfont\Huge\bfseries}{\thechapter.}{1em}{}
+\titlespacing*{\chapter}
+    {0pt}{0pt}{40pt}
 
 % Define use case environment
 \newcounter{usecasecounter} % define a counter
@@ -143,7 +150,7 @@
 % Set up hyperlinks
 \hypersetup{
     colorlinks=true,
-    linktocpage=true,
+    linktoc=all,
     pdfstartpage=1,
     pdfstartview=,
     breaklinks=true,
