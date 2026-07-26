@@ -1,74 +1,213 @@
 \chapter{Analisi dei requisiti}
 \label{chap:analisi-requisiti}
 
-\section{Casi d'uso}
-Per lo studio dei casi di utilizzo del prodotto sono stati creati dei diagrammi.
-I diagrammi dei casi d'uso (in inglese \textit{Use Case Diagram}) sono diagrammi di tipo dedicati alla descrizione delle funzioni o servizi offerti da un sistema, così come sono percepiti e utilizzati dagli attori che interagiscono col sistema stesso.
-Essendo il progetto finalizzato alla creazione di un tool per l'automazione di un processo, le interazioni da parte dell'utilizzatore devono essere ovviamente ridotte allo stretto necessario. Per questo motivo i diagrammi d'uso risultano semplici e in numero ridotto.
+\textit{Questo capitolo presenta gli use case rilevanti per le attività di ottimizzazione ed evoluzione 
+svolte sul firmware embedded del dispositivo EggLog Motion Core (d'ora in poi solo EggLog) durante il 
+periodo di tirocinio, insieme alla relativa analisi dei requisiti.}
 
-\begin{figure}[H]
-    \vspace{2em}
-    \centering
-    \includegraphics[alt={Testo alternativo dell'immagine}, width=0.75\columnwidth]{img/usecase/scenario-principale.jpeg}
-    \caption{Use Case 0: Scenario principale}
-    \label{fig:scenario_principale}
-\end{figure}
+\section{Analisi degli utenti}
+Prima di affrontare le fasi di progettazione e sviluppo, è opportuno individuare a chi si rivolge il 
+prodotto finale, soprattutto quando questo non è ancora disponibile sul mercato.
 
-\begin{usecase}{0}{Scenario principale}
-    \usecaseactors{Sviluppatore applicativi.}
-    \usecasepre{Lo sviluppatore è entrato nel plugin di simulazione all'interno dell'IDE.}
-    \usecasedesc{La finestra di simulazione mette a disposizione i comandi per configurare, registrare o eseguire un test.}
-    \usecasepost{Il sistema è pronto per permettere una nuova interazione.}
-    \label{uc:uc_scenario_principale}
-\end{usecase}
-\begin{usecase}{1}{Gestione Utente}
-    \usecaseactors{Amministratore, Utente Registrato.}
-    \usecasepre{L'utente deve essere autenticato nel sistema.}
-    \usecasedesc{L'utente può gestire le informazioni del proprio profilo.}
-    \usecasepost{Le modifiche vengono salvate nel sistema.}
-    \usecasealt{Se l'utente non è autenticato, visualizza un messaggio di errore.}
-    \label{uc:uc_casi_uso}
-\end{usecase}
+L'azienda ha già condotto uno studio preliminare del pubblico di riferimento, individuando tre principali 
+categorie di utenti:
+\begin{itemize}
+    \item i \textbf{centri di \textit{coaching}}, che possono impiegare i dati sensoriali raccolti come supporto didattico 
+    per il miglioramento tecnico dei piloti.
+    \item i \textbf{team organizzatori di eventi motociclistici}, interessati a raccogliere dati telemetrici 
+    dettagliati sui partecipanti alle gare;
+    \item i \textbf{piloti semi-professionisti}, che possono sfruttare EggLog per valutare le proprie prestazioni 
+    durante sessioni di allenamento o competizioni ufficiali;
+\end{itemize}
 
-\begin{usecase}{2}{Creazione Prodotto}
-    \usecaseactors{Amministratore.}
-    \usecasepre{L'amministratore ha effettuato l'accesso al sistema.}
-    \usecasedesc{L'amministratore può aggiungere un nuovo prodotto al catalogo.}
-    \usecasepost{Il nuovo prodotto viene aggiunto con successo.}
-    \usecasealt{Se i campi obbligatori non sono compilati, visualizza un messaggio di errore.}
-    \label{uc:uc_creazione_prodotto}
-\end{usecase}
+\section{Lista degli \textit{use case}}
+
+Nel contesto dell'ingegneria del software, uno \textit{use case} rappresenta una descrizione strutturata delle 
+interazioni tra un attore e un sistema, finalizzate al raggiungimento di uno specifico obiettivo. 
+L'attore può essere un utente, un altro sistema o qualsiasi entità esterna che interagisce con il software. 
+La definizione degli \textit{use case} consente di individuare e descrivere in modo chiaro i requisiti funzionali
+ del sistema.
+
+Ogni \textit{use case} è caratterizzato dai seguenti elementi:
+\begin{itemize}
+    \item una \textbf{descrizione} dell'interazione tra l'attore e il sistema;
+    \item lo \textbf{scopo} per cui l'attore fa tale interazione;
+    \item i \textbf{criteri di accettazione}, ossia le condizioni che devono essere soddisfatte affinché 
+    il caso d'uso possa considerarsi completato con successo.
+\end{itemize}
+
+Di seguito sono riportati esclusivamente gli use case relativi alle attività di ottimizzazione ed evoluzione 
+effettivamente svolte durante il tirocinio.
+
+\paragraph{UC1 -- Acquisizione binaria dei dati sensore}
+\label{uc:uc_acquisizione_binaria}
+\textbf{Descrizione:} EggLog deve acquisire i campioni dei sensori e serializzarli in un buffer 
+in formato binario anziché testuale.
+
+\textbf{Scopo:} Ridurre la dimensione del buffer necessario in RAM, il carico computazionale sulla CPU per 
+la serializzazione dei dati e, di conseguenza, il consumo energetico del dispositivo.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item I dati acquisiti devono essere serializzati in formato binario nativo, non testuale;
+    \item Il buffer in RAM utilizzato per l'acquisizione deve avere una dimensione ridotta rispetto 
+    all'equivalente in formato testuale;
+    \item La procedura di acquisizione non deve introdurre perdita di campioni rispetto alla configurazione 
+    precedente;
+    \item Ogni campione deve mantenere l'associazione con il proprio timestamp.
+\end{itemize}
+
+\paragraph{UC2 -- Registrazione dei dati su SD in formato binario}
+\label{uc:uc_storage_binario_sd}
+\textbf{Descrizione:} EggLog deve scrivere sulla scheda microSD i dati acquisiti in formato 
+binario anziché testuale.
+
+\textbf{Scopo:} Ridurre il numero e la durata delle operazioni di scrittura su SD e lo spazio di 
+archiviazione occupato.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item I dati devono essere persistiti su SD in formato binario;
+    \item La struttura dei file binari deve permettere una successiva decodifica coerente dei dati;
+    \item La procedura di scrittura non deve causare perdita di dati rispetto al formato precedentemente 
+    utilizzato.
+\end{itemize}
+
+\paragraph{UC3 -- Acquisizione dati dal bus CAN (ECU)}
+\label{uc:uc_lettura_can_ecu}
+\textbf{Descrizione:} EggLog deve poter leggere i dati esposti dalla centralina motore (ECU) 
+tramite bus CAN.
+
+\textbf{Scopo:} Arricchire il set di dati raccolti con i parametri del veicolo (es. regime motore, velocità), 
+sincronizzati con gli altri sensori.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item I dati devono essere reperibili continuamente durante la sessione;
+    \item Ogni rilevazione deve essere associata a un timestamp coerente con gli altri sensori;
+    \item I messaggi CAN non riconosciuti o malformati devono essere scartati senza interrompere 
+    l'acquisizione;
+    \item I dati acquisiti devono essere memorizzati con lo stesso formato binario adottato per gli altri 
+    sensori.
+\end{itemize}
+
+\paragraph{UC4 -- Gestione dello stato del firmware tramite LED}
+\label{uc:uc_stato_led}
+\textbf{Descrizione:} EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per 
+comunicare lo stato corrente del dispositivo.
+
+\textbf{Scopo:} Fornire un feedback visivo immediato all'utente sullo stato operativo del dispositivo, 
+senza necessità di strumenti esterni.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item Ogni stato rilevante del dispositivo (es. inizializzazione, registrazione attiva, errore, batteria 
+    scarica) deve corrispondere a un pattern del LED distinguibile dagli altri;
+    \item Il cambio di stato deve riflettersi sul LED entro un tempo trascurabile per l'utente;
+    \item In presenza di più condizioni contemporanee, deve essere mostrato lo stato a priorità più alta.
+\end{itemize}
+
+\paragraph{UC5 -- Configurazione dell'output rate (ODR) dei sensori}
+\label{uc:uc_config_odr}
+\textbf{Descrizione:} L'utente deve poter modificare la frequenza di campionamento (ODR) dei sensori del 
+dispositivo.
+
+\textbf{Scopo:} Adattare la frequenza di acquisizione alle esigenze specifiche della sessione, bilanciando 
+dettaglio dei dati e consumo di risorse.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item L'operazione deve essere eseguibile dall'utente in qualunque momento;
+    \item La frequenza impostabile deve rientrare nell'intervallo 10-100 Hz;
+    \item La nuova configurazione deve essere salvata in memoria persistente e applicata alle acquisizioni 
+    successive;
+    \item Un valore richiesto fuori dall'intervallo supportato deve essere rifiutato, mantenendo la 
+    configurazione precedente.
+\end{itemize}
+
+\paragraph{UC6 -- Sospensione dell'acquisizione sensori in stato di inattività}
+\label{uc:uc_sospensione_sensori}
+\textbf{Descrizione:} EggLog deve sospendere automaticamente l'acquisizione dei sensori quando 
+rileva che il veicolo è fermo.
+
+\textbf{Scopo:} Ridurre il consumo energetico del dispositivo durante i periodi di inattività del veicolo 
+(es. sosta in un parcheggio).
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item Il dispositivo deve rilevare l'assenza di variazioni significative nei dati dell'accelerometro per 
+    un intervallo di tempo configurabile (default: 10 minuti);
+    \item Al superamento di tale intervallo, l'acquisizione dei sensori non essenziali deve essere sospesa 
+    automaticamente;
+    \item Il dispositivo deve riattivare automaticamente l'acquisizione al rilevamento di un nuovo movimento;
+    \item La sospensione automatica deve poter essere disabilitata su richiesta dell'utente.
+\end{itemize}
+
+\paragraph{UC7 -- Calibrazione dei sensori}
+\label{uc:uc_calibrazione_sensori}
+\textbf{Descrizione:} EggLog deve eseguire una procedura di calibrazione dei sensori a inizio 
+sessione o alla prima configurazione del dispositivo.
+
+\textbf{Scopo:} Garantire l'accuratezza delle misurazioni compensando gli offset e le derive dei sensori.
+
+\textbf{Criteri di accettazione:}
+\begin{itemize}
+    \item La calibrazione deve essere eseguita automaticamente alla prima configurazione del dispositivo o 
+    all'avvio di una sessione priva di calibrazione valida;
+    \item I parametri di calibrazione ottenuti devono essere memorizzati in memoria persistente;
+    \item I parametri di calibrazione memorizzati devono essere applicati alle letture sensore nelle sessioni 
+    successive;
+    \item Se la calibrazione fallisce (es. dispositivo in movimento durante la procedura), la procedura deve 
+    essere ripetuta prima di iniziare l'acquisizione.
+\end{itemize}
 
 \section{Tracciamento dei requisiti}
-Da un'attenta analisi dei requisiti e degli use case effettuata sul progetto è stata stilata la tabella che traccia i requisiti in rapporto agli use case.\\
-Sono stati individuati diversi tipi di requisiti e si è quindi fatto utilizzo di un codice identificativo per distinguerli.\\
-Il codice dei requisiti, dove ogni requisito è identificato con il carattere \textbf{R}, è così strutturato:
-\begin{enumerate}
-    \item[\textbf{F}:] Funzionale.
-    \item[\textbf{Q}:] Qualitativo.
-    \item[\textbf{V}:] Di vincolo.
-    \item[\textbf{N}:] Obbligatorio (necessario).
-    \item[\textbf{D}:] Desiderabile.
-    \item[\textbf{Z}:] Opzionale.
-\end{enumerate}
+Un requisito di un sistema software è definito da una descrizione di cosa il sistema dovrebbe fare, i 
+servizi che esso fornisce e i vincoli a cui deve sottostare. Più in particolare, un requisito si può 
+riconoscere come:
+\begin{itemize}
+    \item una capacità necessaria a un utente per risolvere un problema o raggiungere un obiettivo,
+    \item una capacità del sistema stesso di adempiere a un obbligo prestabilito.
+\end{itemize}
 
-Nelle tabelle \ref{tab:requisiti_funzionali}, \ref{tab:requisiti_qualitativi} e \ref{tab:requisiti_vincolo} sono riassunti i requisiti e il loro tracciamento con gli use case delineati in fase di analisi.
+In questa sezione si riporta la lista di requisiti rilevata in seguito all'analisi dell'utenza e degli use 
+case; i requisiti sono identificati da un codice definito con la seguente nomenclatura:
+\begin{center}
+R(Tipo)(Urgenza)-(Codice)
+\end{center}
+Dove:
+\begin{itemize}
+    \item (Tipo) è una lettera rappresentante la tipologia di requisito:
+    \begin{itemize}
+        \item F per i requisiti funzionali,
+        \item N per i requisiti non funzionali,
+        \item V per i requisiti di vincolo,
+    \end{itemize}
+    \item (Urgenza) è una lettera rappresentante l'urgenza del requisito:
+    \begin{itemize}
+        \item O per i requisiti obbligatori,
+        \item D per i requisiti desiderabili,
+        \item F per i requisiti facoltativi,
+    \end{itemize}
+    \item (Codice) è un numero identificativo sequenziale.
+\end{itemize}
 
-\section{Tabelle dei requisiti}
+\subsection{Requisiti funzionali}
+Nella Tabella \ref{tab:requisiti_funzionali} si riporta il tracciamento dei requisiti funzionali, ovvero le 
+funzionalità e i servizi che il sistema deve offrire per essere conforme alle aspettative.
+
 \begin{center}
     \rowcolors{1}{}{tableGray}
-    \begin{longtable}{|p{2.25cm}|p{7.75cm}|p{2.25cm}|}
+    \begin{longtable}{|p{2cm}|p{8.5cm}|p{1.75cm}|}
     \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
     \endfirsthead
     \rowcolor{white}
     \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
     \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
     \endhead
     \hline
     \rowcolor{white}
@@ -76,70 +215,52 @@ Nelle tabelle \ref{tab:requisiti_funzionali}, \ref{tab:requisiti_qualitativi} e 
     \hline
     \endfoot
     \endlastfoot
-    
-    RFN-1 & L’interfaccia permette di configurare il tipo di sonde del test & UC1 \\
+
+    RFO-1 & EggLog deve acquisire e serializzare in formato binario i dati provenienti dai 
+    sensori, riducendo la dimensione del buffer in RAM & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
+    \hline
+    RFO-2 & EggLog deve scrivere su scheda microSD i dati acquisiti in formato binario & 
+    \hyperref[uc:uc_storage_binario_sd]{UC2} \\
+    \hline
+    RFO-3 & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN & 
+    \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
+    \hline
+    RFO-4 & EggLog deve eseguire una procedura di calibrazione dei sensori a inizio sessione o 
+    alla prima configurazione del dispositivo & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
+    \hline
+    RFD-5 & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare lo stato 
+    corrente del dispositivo & \hyperref[uc:uc_stato_led]{UC4} \\
+    \hline
+    RFD-6 & L'utente deve poter configurare l'output rate (ODR) dei sensori nell'intervallo 10-100 Hz & 
+    \hyperref[uc:uc_config_odr]{UC5} \\
+    \hline
+    RFD-7 & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in 
+    stato di inattività prolungata e riattivarla al rilevamento di movimento & 
+    \hyperref[uc:uc_sospensione_sensori]{UC6} \\
     \hline
     \hiderowcolors
-    \caption{Tabella del tracciamento dei requisiti funzionali.}
+    \caption{Tracciamento dei requisiti funzionali.}
     \label{tab:requisiti_funzionali}
     \end{longtable}
 \end{center}
 
-\begin{center}
-    \rowcolors{1}{}{tableGray}
-    \begin{longtable}{|p{2.25cm}|p{7.75cm}|p{2.25cm}|}
-    \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
-    \endfirsthead
-    \rowcolor{white}
-    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
-    \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
-    \endhead
-    \hline
-    \rowcolor{white}
-    \multicolumn{3}{|r|}{{Continua nella prossima pagina...}}\\
-    \hline
-    %\caption{Tabella del tracciamento dei requisiti qualitativi.}
-    \endfoot
-    \endlastfoot
-    
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    RQD-1n & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
-    \hline
-    \hiderowcolors
-    \caption{Tabella del tracciamento dei requisiti qualitativi.}
-    \label{tab:requisiti_qualitativi}
-    \end{longtable}
-\end{center}
+\subsection{Requisiti non funzionali}
+Nella Tabella \ref{tab:requisiti_non_funzionali} si riporta il tracciamento dei requisiti non funzionali, 
+ovvero l'insieme di criteri quantificabili di qualità che il sistema sviluppato deve rispettare per essere 
+conforme alle aspettative e agli obiettivi preposti.
 
 \begin{center}
     \rowcolors{1}{}{tableGray}
-    \begin{longtable}{|p{2.25cm}|p{7.75cm}|p{2.25cm}|}
+    \begin{longtable}{|p{2cm}|p{8.5cm}|p{1.75cm}|}
     \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
     \endfirsthead
     \rowcolor{white}
     \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
     \hline
-    %\rowcolor{hyperColor!5}
-    \multicolumn{1}{|c|}{\textbf{Requisito}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Use Case}}\\
-    \hline 
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
     \endhead
     \hline
     \rowcolor{white}
@@ -147,13 +268,88 @@ Nelle tabelle \ref{tab:requisiti_funzionali}, \ref{tab:requisiti_qualitativi} e 
     \hline
     \endfoot
     \endlastfoot
-    
-    RVO-1 & La libreria per l'esecuzione dei test automatici deve essere riutilizzabile & - \\
+
+    RNO-1 & Il consumo di RAM per il buffering dei dati sensore deve essere ridotto rispetto al formato 
+    testuale grazie alla serializzazione binaria & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
+    \hline
+    RNO-2 & Il consumo energetico del dispositivo deve essere ridotto rispetto alla configurazione 
+    precedente grazie all'acquisizione/scrittura binaria e alla sospensione automatica in stato di 
+    inattività & \hyperref[uc:uc_acquisizione_binaria]{UC1}, \hyperref[uc:uc_sospensione_sensori]{UC6} \\
+    \hline
+    RND-3 & Il cambio di stato segnalato dal LED deve essere percepito come pressoché istantaneo 
+    dall'utente & \hyperref[uc:uc_stato_led]{UC4} \\
+    \hline
+    RND-4 & L'accuratezza delle misurazioni successive alla calibrazione deve rientrare entro le tolleranze 
+    specificate dal produttore dei sensori & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
     \hline
     \hiderowcolors
-    \caption{Tabella del tracciamento dei requisiti di vincolo.}
+    \caption{Tracciamento dei requisiti non funzionali.}
+    \label{tab:requisiti_non_funzionali}
+    \end{longtable}
+\end{center}
+
+\subsection{Requisiti di vincolo}
+Nella Tabella \ref{tab:requisiti_vincolo} si riporta il tracciamento dei requisiti di vincolo, ovvero 
+l'insieme delle limitazioni tecnologico-organizzative a cui il dispositivo deve sottostare per essere 
+conforme alle aspettative e alle esigenze degli stakeholder.
+
+\begin{center}
+    \rowcolors{1}{}{tableGray}
+    \begin{longtable}{|p{2cm}|p{8.5cm}|p{1.75cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
+    \endfirsthead
+    \rowcolor{white}
+    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
+    \hline
+    \endhead
+    \hline
+    \rowcolor{white}
+    \multicolumn{3}{|r|}{{Continua nella prossima pagina...}}\\
+    \hline
+    \endfoot
+    \endlastfoot
+
+    RVO-1 & EggLog del dispositivo deve appartenere alla famiglia ESP32, nello specifico 
+    ESP32-S3 & Tutti \\
+    \hline
+    RVO-2 & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
+    \hline
+    RVO-3 & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo CAN 
+    utilizzato dalla centralina (ECU) della moto & \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
+    \hline
+    RVO-4 & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla scheda 
+    ESP32-S3 & \hyperref[uc:uc_stato_led]{UC4} \\
+    \hline
+    \hiderowcolors
+    \caption{Tracciamento dei requisiti di vincolo.}
     \label{tab:requisiti_vincolo}
     \end{longtable}
+\end{center}
+
+\subsection{Riepilogo dei requisiti}
+Nella Tabella \ref{tab:riepilogo_requisiti} si riporta il numero di requisiti per categoria e per urgenza; 
+in totale sono stati rilevati 15 requisiti.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Facoltativi} & \textbf{TOTALE} \\
+\hline
+RF & 4 & 3 & 0 & 7 \\
+\hline
+RN & 2 & 2 & 0 & 4 \\
+\hline
+RV & 4 & 0 & 0 & 4 \\
+\hline
+\textbf{TOTALE} & \textbf{10} & \textbf{5} & \textbf{0} & \textbf{15} \\
+\hline
+\end{tabular}
+\captionof{table}{Conteggio dei requisiti tracciati.}
+\label{tab:riepilogo_requisiti}
 \end{center}
 
 \newpage
