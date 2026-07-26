@@ -1,12 +1,237 @@
 \chapter{Descrizione dello stage}
 \label{chap:descrizione-stage}
 
+\textit{Il presente capitolo descrive il percorso di stage svolto presso l'azienda, illustrando gli obiettivi formativi,
+le competenze richieste e le attività pianificate durante il periodo di tirocinio. Vengono inoltre presentate
+l'organizzazione del lavoro adottata, l'analisi preventiva dei principali rischi progettuali e il ruolo svolto
+dal tutor aziendale nel supporto alle attività di sviluppo.}
+
 \section{Competenze e obiettivi}
+
+L'obiettivo principale dello stage è stato l'evoluzione e l'ottimizzazione del firmware embedded del sistema
+\textit{EggLog Motion Core}, una piattaforma dedicata all'acquisizione e alla gestione di dati telemetrici
+in ambito motorsport, sviluppata su piattaforma ESP32.
+
+Il lavoro riguarda principalmente l'analisi dell'architettura firmware esistente, il miglioramento dei
+componenti software già presenti e l'introduzione di nuove funzionalità volte a rendere il sistema più
+affidabile, efficiente e facilmente estendibile.
+
+Le attività svolte hanno coinvolto diversi aspetti del sistema, tra cui la gestione dello \textit{storage}
+su memoria SD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{bleg}) e Wi-Fi, la gestione del
+trasferimento dei dati acquisiti e l'analisi del traffico CAN proveniente dalla centralina elettronica
+(\gls{ecug} detta ECU) della moto mediante tecniche di \gls{cansniffing}.
+
+\subsection{Competenze da acquisire}
+
+Durante il periodo di tirocinio erano previste l'acquisizione e il consolidamento delle seguenti competenze:
+
+\begin{itemize}
+
+    \item sviluppo e manutenzione di firmware embedded in linguaggio \gls{cpp} su piattaforma ESP32;
+
+    \item analisi, \textit{refactoring} e ottimizzazione di codice embedded esistente;
+
+    \item gestione di sistemi di memorizzazione embedded e ottimizzazione delle operazioni di lettura e scrittura
+    su memoria SD;
+
+    \item sviluppo e ottimizzazione di servizi \gls{ble} e Wi-Fi;
+
+    \item analisi dei protocolli di comunicazione utilizzati in ambito automotive, con particolare riferimento
+    al \gls{can};
+
+    \item acquisizione e analisi di messaggi dal \gls{can} provenienti dalla \gls{ecu} di un veicolo motorizzato;
+
+    \item utilizzo di strumenti di \textit{debugging} e \textit{testing} per sistemi embedded;
+
+    \item produzione di documentazione tecnica relativa al firmware e ai protocolli di comunicazione analizzati.
+
+\end{itemize}
+
+
+\subsection{Obiettivi}
+
+Gli obiettivi definiti dall'azienda sono stati classificati secondo tre livelli di priorità:
+
+\begin{itemize}
+    \item \textbf{O}: obbligatorio;
+    \item \textbf{D}: desiderabile;
+    \item \textbf{F}: facoltativo.
+\end{itemize}
+
+
+\subsubsection{Obiettivi obbligatori}
+
+Gli obiettivi obbligatori comprendevano principalmente attività volte al miglioramento dell'affidabilità
+e delle prestazioni del firmware esistente.
+
+\begin{itemize}
+    \item \textbf{OO-1}: \textit{Refactoring} e ottimizzazione del sistema di lettura e scrittura su scheda SD;
+
+    \item \textbf{OO-2}: Completamento del sistema di rotazione dei file con introduzione di meccanismi
+    di recupero in caso di interruzioni impreviste;
+
+    \item \textbf{OO-3}: Ottimizzazione delle procedure di download dei dati memorizzati sulla scheda SD;
+
+    \item \textbf{OO-4}: Miglioramento dei servizi \gls{ble} e introduzione di nuovi comandi firmware;
+
+    \item \textbf{OO-5}: Produzione della documentazione tecnica relativa al firmware sviluppato.
+\end{itemize}
+
+
+\subsubsection{Obiettivi desiderabili}
+
+Gli obiettivi desiderabili erano principalmente orientati all'introduzione di funzionalità aggiuntive
+e al miglioramento delle modalità di trasferimento dei dati.
+
+\begin{itemize}
+    \item \textbf{OD-1}: Implementazione del trasferimento dei dati tramite connessione Wi-Fi;
+
+    \item \textbf{OD-2}: Introduzione di meccanismi di supporto alla ripresa dei trasferimenti interrotti;
+
+    \item \textbf{OD-3}: Valutazione e introduzione di tecniche di compressione dei dati;
+
+    \item \textbf{OD-4}: Integrazione dell'analisi e gestione dei dati proveninti dalla \gls{ecu};
+
+    \item \textbf{OD-5}: Raccolta di metriche relative alle prestazioni dei trasferimenti dati con 
+    relativi \gls{benchmark} per il confronto.
+\end{itemize}
+
+
+\subsubsection{Obiettivi facoltativi}
+
+\begin{itemize}
+    \item \textbf{OF-1}: Implementazione di un sistema avanzato di indicizzazione delle sessioni
+    memorizzate sulla scheda SD.
+\end{itemize}
+
 
 \section{Pianificazione}
 
+Le attività di stage sono state pianificate con il tutor aziendale considerando un monte complessivo
+di 320 ore, distribuite su otto settimane lavorative da quaranta ore ciascuna. Tali settimane sono state 
+suddivise come segue:
+
+\begin{enumerate}
+
+    \item \textbf{Prima settimana -- \textit{Onboarding} e analisi del progetto}
+    \begin{itemize}
+        \item Introduzione al sistema \textbf{EggLog Motion Core} e all'architettura generale della piattaforma;
+        \item Configurazione dell'ambiente di sviluppo e degli strumenti di compilazione e debugging;
+        \item Analisi della struttura del firmware esistente e delle principali componenti software;
+        \item Studio delle modalità di acquisizione, memorizzazione e trasferimento dei dati.
+    \end{itemize}
+
+    \item \textbf{Seconda settimana -- Studio delle tecnologie e analisi del firmware}
+    \begin{itemize}
+        \item Approfondimento della gestione della memoria SD e del relativo \textit{file system};
+        \item Analisi dello stack \gls{ble} e dei servizi implementati;
+        \item Studio dei protocolli di comunicazione utilizzati dal sistema;
+        \item Individuazione delle principali criticità presenti nel firmware.
+    \end{itemize}
+
+    \item \textbf{Terza settimana -- Analisi e progettazione delle modifiche}
+    \begin{itemize}
+        \item Analisi dell'architettura software esistente e definizione degli interventi di \textit{refactoring};
+        \item Progettazione delle modifiche relative alla gestione dello storage;
+        \item Studio dei meccanismi di recupero e gestione dei dati in caso di errore;
+        \item Analisi preliminare del \gls{can} della moto e delle informazioni trasmesse dalla \gls{ecu}.
+    \end{itemize}
+
+    \item \textbf{Quarta settimana -- Sviluppo e ottimizzazione dello storage}
+    \begin{itemize}
+        \item \textit{Refactoring} dei moduli responsabili della gestione della memoria SD;
+        \item Ottimizzazione delle operazioni di lettura e scrittura dei dati;
+        \item Miglioramento del sistema di rotazione dei file;
+        \item Implementazione e verifica dei meccanismi di \textit{recovery}.
+    \end{itemize}
+
+    \item \textbf{Quinta settimana -- Gestione dei dati e comunicazioni}
+    \begin{itemize}
+        \item Implementazione delle funzioni di calibrazione dei sensori;
+        \item Ottimizzazione delle procedure di download dei dati memorizzati;
+        \item Studio delle possibilità di compressione dei dati;
+        \item Miglioramento dei servizi \gls{ble}.
+    \end{itemize}
+
+    \item \textbf{Sesta settimana -- Analisi del \gls{can} e integrazione firmware}
+    \begin{itemize}
+        \item Acquisizione dei messaggi presenti sul \gls{can} tramite attività di \textit{sniffing};
+        \item Analisi degli identificativi e dei dati trasmessi nel \gls{can} dalla \gls{ecu};
+        \item Studio della possibile integrazione delle informazioni trasmesse nel \gls{can} all'interno 
+        del sistema telemetrico;
+        \item Evoluzione dei comandi e dei servizi firmware.
+    \end{itemize}
+
+    \item \textbf{Settima settimana -- Testing e validazione}
+    \begin{itemize}
+        \item Esecuzione di test funzionali sul firmware modificato;
+        \item Raccolta di metriche sulle prestazioni del sistema;
+        \item Esecuzione di benchmark sulle operazioni di memorizzazione e trasferimento dati;
+        \item Analisi e risoluzione delle problematiche emerse durante i test.
+    \end{itemize}
+
+    \item \textbf{Ottava settimana -- Documentazione finale}
+    \begin{itemize}
+        \item Aggiornamento della documentazione tecnica del firmware;
+        \item Descrizione delle modifiche architetturali introdotte;
+        \item Documentazione relativa ai protocolli di comunicazione analizzati;
+        \item Stesura della relazione finale di stage.
+    \end{itemize}
+
+\end{enumerate}
+
+
 \section{Organizzazione del lavoro}
 
-\section{Analisi preventiva dei rischi}
+Le attività di sviluppo sono state organizzate seguendo una metodologia \gls{agile}, ispirata al framework
+\gls{scrum}. Il lavoro è stato suddiviso in sprint della durata indicativa di due settimane, durante i quali
+venivano pianificate le attività da svolgere, definiti gli obiettivi da raggiungere e monitorato lo stato
+di avanzamento delle attività insieme al tutor aziendale.
+\\
+Durante il periodo di stage sono stati inoltre svolti degli \gls{standupmeeting} con cadenza giornaliera,
+finalizzati al mantenimento dell'allineamento tra i membri del team. Questi incontri hanno permesso di
+condividere i progressi effettuati, discutere eventuali problematiche emerse durante le fasi di sviluppo
+e progettazione e individuare possibili soluzioni attraverso il confronto tecnico.
+\\
 
-\newpage
+Il gruppo di lavoro era composto da due tirocinanti, ciascuno responsabile dello sviluppo di una specifica
+componente del sistema. Il sottoscritto ha operato principalmente sulla componente firmware embedded,
+occupandosi dell'evoluzione del software a bordo del dispositivo, mentre la collega ha lavorato sulle
+componenti applicative del sistema.
+\\
+Nonostante la suddivisione delle responsabilità, le attività sono state svolte in maniera collaborativa,
+favorendo il confronto continuo tra i membri del team e garantendo una corretta integrazione tra firmware,
+applicazione mobile e infrastruttura software.
+
+\section{Analisi preventiva dei rischi}
+Prima dell'avvio delle attività è stata effettuata un'analisi preventiva dei principali rischi
+che avrebbero potuto influenzare il corretto svolgimento del progetto.
+
+\begin{itemize}
+
+    \item \textbf{Comprensione del firmware esistente}\\
+    la necessità di intervenire su un sistema software già sviluppato ha richiesto una fase iniziale
+    di analisi dell'architettura firmware e dei meccanismi implementati, al fine di ridurre il rischio
+    di introdurre regressioni durante le modifiche.
+
+    \item \textbf{Gestione dello storage e integrità dei dati}\\
+    le operazioni di lettura, scrittura e trasferimento dei dati dalla memoria SD rappresentavano una
+    possibile criticità in termini di affidabilità. Il rischio è stato mitigato attraverso attività di
+    \textit{testing}, analisi delle prestazioni e utilizzo di \gls{benchmark}.
+
+    \item \textbf{Analisi del traffico \gls{can}}\\
+    l'acquisizione e l'interpretazione dei dati provenienti dalla \gls{ecu} della moto rappresentavano
+    una possibile criticità, in quanto i messaggi presenti sul \gls{can} non seguono necessariamente
+    una codifica standardizzata.\\
+    Inoltre, prima dell'attività di \textit{sniffing}, è stata quindi svolta un'analisi
+    di fattibilità sia dal punto di vista hardware, valutando l'interfacciamento fisico con il veicolo,
+    sia dal punto di vista software, considerando l'acquisizione, l'elaborazione e l'interpretazione
+    dei dati raccolti.
+
+    \item \textbf{Coordinamento tra le componenti del sistema}\\
+    la presenza di più componenti sviluppate parallelamente poteva introdurre problematiche di
+    integrazione tra firmware, applicazione mobile e infrastruttura software. Tale rischio è stato
+    mitigato attraverso confronti periodici con il tutor aziendale, revisioni del codice e attività
+    di integrazione condivise.
+
+\end{itemize}
