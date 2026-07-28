@@ -44,13 +44,12 @@ effettivamente svolte durante il tirocinio.
 
 \subsection{UC1 -- Acquisizione binaria dei dati sensore}
 \label{uc:uc_acquisizione_binaria}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc1-acquisizione-binaria.jpeg}
-%     \caption{Diagramma UML -- UC1: Acquisizione binaria dei dati sensore}
-%     \label{fig:uc1_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC1.png}
+    \caption{Diagramma UML -- UC1: Acquisizione binaria dei dati sensore}
+    \label{fig:uc1_diagram}
+\end{figure}
 
 \textbf{Attore:} sensori di bordo.
 
@@ -73,7 +72,7 @@ effettivamente svolte durante il tirocinio.
     \item ciascun sensore restituisce il valore misurato;
     \item il firmware associa a ogni campione il timestamp corrente;
     \item il firmware serializza il campione in formato binario nativo;
-    \item il firmware inserisce il campione serializzato nel buffer in \gls{ram};
+    \item il firmware inserisce il campione serializzato nel buffer in RAM;
     \item se il buffer ha raggiunto la soglia di scrittura, il firmware avvia \hyperref[uc:uc_storage_binario_sd]{UC2}.
 \end{enumerate}
 
@@ -89,13 +88,12 @@ effettivamente svolte durante il tirocinio.
 
 \subsection{UC2 -- Registrazione binaria dei dati sensore su SD}
 \label{uc:uc_storage_binario_sd}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc2-storage-binario-sd.jpeg}
-%     \caption{Diagramma UML -- UC2: Registrazione binaria dei dati sensore su SD}
-%     \label{fig:uc2_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{../img/usecase/thesis/files/img/usecase/UC2.png}
+    \caption{Diagramma UML -- UC2: Registrazione binaria dei dati sensore su SD}
+    \label{fig:uc2_diagram}
+\end{figure}
 
 \textbf{Attore:} scheda microSD.
 
@@ -108,21 +106,21 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item I dati sono persistiti sulla scheda SD in formato binario e il buffer in \gls{ram} viene svuotato.
+    \item I dati sono persistiti sulla scheda microSD in formato binario e il buffer in RAM viene svuotato.
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware verifica che il buffer abbia raggiunto la soglia di scrittura;
-    \item il firmware accede al file su scheda sd associato al sensore a cui appartiene il buffer;
+    \item il firmware accede al file su scheda microSD associato al sensore a cui appartiene il buffer;
     \item il firmware scrive il contenuto del buffer sul file in formato binario;
-    \item il firmware svuota il buffer in \gls{ram};
+    \item il firmware svuota il buffer in RAM;
     \item il firmware conferma l'avvenuta scrittura.
 \end{enumerate}
 
 \textbf{Scenari alternativi:}
 \begin{itemize}
-    \item[1a.] la scheda SD non è presente: la scrittura viene rimandata e i dati restano nel buffer fino 
+    \item[1a.] la scheda microSD non è presente: la scrittura viene rimandata e i dati restano nel buffer fino 
     a un numero massimo di tentativi;
     \item[3a.] la scrittura fallisce (SD piena o guasta): il firmware segnala l'errore e applica una 
     politica di retry.
@@ -132,35 +130,34 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Estensioni:} \hyperref[uc:uc_led_sd_mancante]{UC4.4}, \hyperref[uc:uc_led_errore]{UC4.7}.
 
-\subsection{UC3 -- Acquisizione dati dal \gls{can}}
+\subsection{UC3 -- Acquisizione dati dal bus CAN}
 \label{uc:uc_lettura_can_ecu}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc3-lettura-can-ecu.jpeg}
-%     \caption{Diagramma UML -- UC3: Acquisizione dati dal CAN}
-%     \label{fig:uc3_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC3.png}
+    \caption{Diagramma UML -- UC3: Acquisizione dati dal CAN}
+    \label{fig:uc3_diagram}
+\end{figure}
 
-\textbf{Attore:} \gls{ecu} del veicolo (tramite bus \gls{can}).
+\textbf{Attore:} ECU del veicolo mediante bus CAN.
 
 \textbf{Precondizioni:}
 \begin{itemize}
-    \item Il modulo di interfaccia \gls{can} è collegato al bus dati del veicolo;
+    \item Il modulo di interfaccia CAN è collegato al bus dati del veicolo;
     \item è in corso una sessione di registrazione attiva.
 \end{itemize}
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item I dati \gls{ecu} acquisiti sono timestampati, sincronizzati con gli altri sensori e resi 
+    \item I dati ECU acquisiti sono timestampati, sincronizzati con gli altri sensori e resi 
     disponibili per la registrazione (cfr. \hyperref[uc:uc_storage_binario_sd]{UC2}).
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
-    \item Il firmware si mette in ascolto sul bus \gls{can};
-    \item la \gls{ecu} trasmette periodicamente i messaggi contenenti i parametri motore;
-    \item il firmware riceve e decodifica ciascun messaggio \gls{can};
+    \item Il firmware si mette in ascolto sul bus CAN;
+    \item la ECU trasmette periodicamente i messaggi contenenti i parametri motore;
+    \item il firmware riceve e decodifica ciascun messaggio CAN;
     \item il firmware associa a ciascun dato il timestamp corrente;
     \item il firmware serializza i dati in formato binario, coerentemente con \hyperref[uc:uc_acquisizione_binaria]{UC1};
     \item il firmware inserisce i dati nel buffer di acquisizione.
@@ -168,7 +165,7 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Scenari alternativi:}
 \begin{itemize}
-    \item[3a.] il messaggio \gls{can} ricevuto non è riconosciuto o risulta malformato: il messaggio viene 
+    \item[3a.] il messaggio CAN ricevuto non è riconosciuto o risulta malformato: il messaggio viene 
     scartato.
 \end{itemize}
 
@@ -178,13 +175,12 @@ effettivamente svolte durante il tirocinio.
 
 \subsection{UC4 -- Gestione dello stato del firmware tramite \gls{led}}
 \label{uc:uc_stato_led}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc4-stato-led.jpeg}
-%     \caption{Diagramma UML -- UC4: Gestione dello stato del firmware tramite LED}
-%     \label{fig:uc4_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{../img/usecase/thesis/files/img/usecase/UC4.png}
+    \caption{Diagramma UML -- UC4: Gestione dello stato del firmware tramite LED}
+    \label{fig:uc4_diagram}
+\end{figure}
 
 \textbf{Attore:} utente.
 
@@ -195,15 +191,15 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} riflette lo stato operativo corrente del dispositivo.
+    \item Il LED riflette lo stato operativo corrente del dispositivo.
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware rileva un cambiamento nello stato operativo del dispositivo;
     \item il firmware seleziona il pattern di colore/lampeggio associato al nuovo stato;
-    \item il firmware applica il pattern al \gls{led};
-    \item l'utente osserva il \gls{led} e ne interpreta lo stato del dispositivo.
+    \item il firmware applica il pattern al LED;
+    \item l'utente osserva il LED e ne interpreta lo stato del dispositivo.
 \end{enumerate}
 
 \textbf{Scenari alternativi:}
@@ -221,30 +217,23 @@ effettivamente svolte durante il tirocinio.
 
 \subsubsection{UC4.1 -- Segnalazione di pairing WiFi}
 \label{uc:uc_led_pairing_wifi}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-1-pairing-wifi.jpeg}
-%     \caption{Diagramma UML -- UC4.1: Segnalazione di pairing WiFi}
-%     \label{fig:uc4_1_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
 \textbf{Precondizioni:}
 \begin{itemize}
-    \item È in corso una procedura di associazione (\textit{pairing}) con una rete WiFi.
+    \item È in corso una procedura di \textit{pairing} con una rete WiFi.
 \end{itemize}
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern blu con lampeggio veloce (circa 4 Hz).
+    \item Il LED mostra il pattern blu con lampeggio veloce (circa 4 Hz).
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware avvia la procedura di pairing WiFi;
-    \item il modulo di gestione del \gls{led} applica il pattern blu con lampeggio veloce;
+    \item il modulo di gestione del LED applica il pattern blu con lampeggio veloce;
     \item il pattern rimane attivo per l'intera durata del pairing;
     \item al termine della procedura, con esito positivo o negativo, il firmware richiama 
     \hyperref[uc:uc_stato_led]{UC4} per applicare il pattern corrispondente al nuovo stato.
@@ -256,32 +245,25 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Estensioni:} nessuna.
 
-\subsubsection{UC4.2 -- Segnalazione di pairing \gls{ble}}
+\subsubsection{UC4.2 -- Segnalazione di pairing BLE}
 \label{uc:uc_led_pairing_ble}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-2-pairing-ble.jpeg}
-%     \caption{Diagramma UML -- UC4.2: Segnalazione di pairing BLE}
-%     \label{fig:uc4_2_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
 \textbf{Precondizioni:}
 \begin{itemize}
-    \item È in corso una procedura di associazione (\textit{pairing}) con un dispositivo tramite \gls{ble}.
+    \item È in corso una procedura di associazione (\textit{pairing}) con un dispositivo tramite BLE.
 \end{itemize}
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern blu con lampeggio lento (circa 1 Hz).
+    \item Il LED mostra il pattern blu con lampeggio lento (circa 1 Hz).
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
-    \item Il firmware avvia la procedura di pairing \gls{ble};
-    \item il modulo di gestione del \gls{led} applica il pattern blu con lampeggio lento;
+    \item Il firmware avvia la procedura di pairing BLE;
+    \item il modulo di gestione del LED applica il pattern blu con lampeggio lento;
     \item il pattern rimane attivo per l'intera durata del pairing;
     \item al termine della procedura, con esito positivo o negativo, il firmware richiama 
     \hyperref[uc:uc_stato_led]{UC4} per applicare il pattern corrispondente al nuovo stato.
@@ -295,13 +277,6 @@ effettivamente svolte durante il tirocinio.
 
 \subsubsection{UC4.3 -- Segnalazione di dispositivo avviato in attesa di sessione}
 \label{uc:uc_led_standby}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-3-standby.jpeg}
-%     \caption{Diagramma UML -- UC4.3: Segnalazione di standby}
-%     \label{fig:uc4_3_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
@@ -313,13 +288,13 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern bianco fisso.
+    \item Il LED mostra il pattern bianco fisso.
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware completa la fase di avvio senza avviare alcuna sessione;
-    \item il modulo di gestione del \gls{led} applica il pattern bianco fisso;
+    \item il modulo di gestione del LED applica il pattern bianco fisso;
     \item il pattern rimane attivo fino all'avvio di una sessione di registrazione;
     \item all'avvio della sessione, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per applicare il 
     pattern di logging normale.
@@ -331,15 +306,8 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Estensioni:} nessuna.
 
-\subsubsection{UC4.4 -- Segnalazione di scheda SD mancante}
+\subsubsection{UC4.4 -- Segnalazione di scheda microSD mancante}
 \label{uc:uc_led_sd_mancante}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-4-sd-mancante.jpeg}
-%     \caption{Diagramma UML -- UC4.4: Segnalazione di SD mancante}
-%     \label{fig:uc4_4_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
@@ -350,13 +318,13 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern arancione con lampeggio regolare (circa 1 Hz)
+    \item Il LED mostra il pattern arancione con lampeggio regolare (circa 1 Hz)
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware rileva l'assenza della scheda microSD;
-    \item il modulo di gestione del \gls{led} applica il pattern arancione;
+    \item il modulo di gestione del LED applica il pattern arancione;
     \item il pattern rimane attivo finché la scheda microSD non viene rilevata correttamente;
     \item alla rilevazione della scheda microSD, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per 
     applicare il pattern corrispondente allo stato operativo corrente.
@@ -370,13 +338,6 @@ effettivamente svolte durante il tirocinio.
 
 \subsubsection{UC4.5 -- Segnalazione di logging normale}
 \label{uc:uc_led_logging}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-5-logging.jpeg}
-%     \caption{Diagramma UML -- UC4.5: Segnalazione di logging normale}
-%     \label{fig:uc4_5_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
@@ -387,13 +348,13 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern verde fisso.
+    \item Il LED mostra il pattern verde fisso.
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware avvia o riprende la sessione di registrazione;
-    \item il modulo di gestione del \gls{led} applica il pattern verde fisso;
+    \item il modulo di gestione del LED applica il pattern verde fisso;
     \item il pattern rimane attivo per l'intera durata della sessione;
     \item non appena la sessione termina o viene sospesa, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} 
     per applicare il pattern corrispondente al nuovo stato.
@@ -407,13 +368,6 @@ effettivamente svolte durante il tirocinio.
 
 \subsubsection{UC4.6 -- Segnalazione di sospensione per inattività}
 \label{uc:uc_led_sospensione}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-6-sospensione.jpeg}
-%     \caption{Diagramma UML -- UC4.6: Segnalazione di sospensione per inattività}
-%     \label{fig:uc4_6_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
@@ -425,13 +379,13 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern verde pulsante lento (effetto \textit{breathing}, circa 0.5 Hz).
+    \item Il LED mostra il pattern verde pulsante lento (effetto \textit{breathing}, circa 0.5 Hz).
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item \hyperref[uc:uc_sospensione_sensori]{UC6} sospende l'acquisizione dei sensori non essenziali;
-    \item il modulo di gestione del \gls{led} applica il pattern verde pulsante lento;
+    \item il modulo di gestione del LED applica il pattern verde pulsante lento;
     \item il pattern rimane attivo finché l'acquisizione sensori resta sospesa;
     \item al rilevamento di un nuovo movimento, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per 
     ripristinare il pattern di logging normale.
@@ -445,13 +399,6 @@ effettivamente svolte durante il tirocinio.
 
 \subsubsection{UC4.7 -- Segnalazione di errore generico}
 \label{uc:uc_led_errore}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\columnwidth]{img/usecase/uc4-7-errore.jpeg}
-%     \caption{Diagramma UML -- UC4.7: Segnalazione di errore generico}
-%     \label{fig:uc4_7_diagram}
-% \end{figure}
 
 \textbf{Attore:} utente.
 
@@ -462,14 +409,14 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il \gls{led} mostra il pattern rosso con lampeggio veloce (circa 4 Hz).
+    \item Il LED mostra il pattern rosso con lampeggio veloce (circa 4 Hz).
 \end{itemize}
 
 \textbf{Scenario principale:}
 \begin{enumerate}
     \item Il firmware rileva una condizione di errore;
-    \item il modulo di gestione del \gls{led} applica il pattern rosso con lampeggio veloce, con priorità 
-    su qualunque altro stato, incluso quello di SD mancante;
+    \item il modulo di gestione del LED applica il pattern rosso con lampeggio veloce, con priorità 
+    su qualunque altro stato, incluso quello di microSD mancante;
     \item il pattern rimane attivo finché la condizione di errore non viene risolta o il dispositivo 
     riavviato;
     \item non appena la condizione di errore viene risolta, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} 
@@ -482,27 +429,26 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Estensioni:} nessuna.
 
-\subsection{UC5 -- Configurazione dell'\gls{odrg} dei sensori}
+\subsection{UC5 -- Configurazione dell'\gls{odr} (ODR) dei sensori}
 \label{uc:uc_config_odr}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc5-config-odr.jpeg}
-%     \caption{Diagramma UML -- UC5: Configurazione dell'ODR dei sensori}
-%     \label{fig:uc5_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC5.png}
+    \caption{Diagramma UML -- UC5: Configurazione dell'ODR dei sensori}
+    \label{fig:uc5_diagram}
+\end{figure}
 
 \textbf{Attore:} utente.
 
 \textbf{Precondizioni:}
 \begin{itemize}
-    \item Il dispositivo è raggiungibile per la configurazione (es. tramite pairing \gls{ble} già 
+    \item Il dispositivo è raggiungibile per la configurazione (es. tramite pairing BLE già 
     stabilito cfr. \hyperref[uc:uc_led_pairing_ble]{UC4.2}).
 \end{itemize}
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item La nuova frequenza di campionamento (\gls{odr}) è salvata in memoria persistente e applicata alle 
+    \item La nuova frequenza di campionamento è salvata in memoria persistente e applicata alle 
     acquisizioni successive.
 \end{itemize}
 
@@ -522,13 +468,12 @@ effettivamente svolte durante il tirocinio.
 
 \subsection{UC6 -- Sospensione dell'acquisizione sensori in stato di inattività}
 \label{uc:uc_sospensione_sensori}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc6-sospensione-sensori.jpeg}
-%     \caption{Diagramma UML -- UC6: Sospensione dell'acquisizione sensori in stato di inattività}
-%     \label{fig:uc6_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{../img/usecase/thesis/files/img/usecase/UC6.png}
+    \caption{Diagramma UML -- UC6: Sospensione dell'acquisizione sensori in stato di inattività}
+    \label{fig:uc6_diagram}
+\end{figure}
 
 \textbf{Attore:} accelerometro.
 
@@ -568,13 +513,12 @@ effettivamente svolte durante il tirocinio.
 
 \subsection{UC7 -- Calibrazione dei sensori}
 \label{uc:uc_calibrazione_sensori}
-% TODO: inserire diagramma UML del caso d'uso
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\columnwidth]{img/usecase/uc7-calibrazione-sensori.jpeg}
-%     \caption{Diagramma UML -- UC7: Calibrazione dei sensori}
-%     \label{fig:uc7_diagram}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{../img/usecase/thesis/files/img/usecase/UC7.png}
+    \caption{Diagramma UML -- UC7: Calibrazione dei sensori}
+    \label{fig:uc7_diagram}
+\end{figure}
 
 \textbf{Attore:} utente.
 
@@ -607,34 +551,16 @@ effettivamente svolte durante il tirocinio.
 \textbf{Estensioni:} nessuna.
 
 \section{Tracciamento dei requisiti}
-Un requisito di un sistema software è definito da una descrizione di cosa il sistema dovrebbe fare, i 
-servizi che esso fornisce e i vincoli a cui deve sottostare. Più in particolare, un requisito si può 
-riconoscere come:
-\begin{itemize}
-    \item una capacità necessaria a un utente per risolvere un problema o raggiungere un obiettivo,
-    \item una capacità del sistema stesso di adempiere a un obbligo prestabilito.
-\end{itemize}
-
 In questa sezione si riporta la lista di requisiti rilevata in seguito all'analisi dell'utenza e degli use 
 case; i requisiti sono identificati da un codice definito con la seguente nomenclatura:
 \begin{center}
-R(Tipo)(Urgenza)-(Codice)
+\textbf{R-(Tipo)-(Urgenza)-(Codice)}
 \end{center}
 Dove:
 \begin{itemize}
-    \item (Tipo) è una lettera rappresentante la tipologia di requisito:
-    \begin{itemize}
-        \item F per i requisiti funzionali,
-        \item N per i requisiti non funzionali,
-        \item V per i requisiti di vincolo,
-    \end{itemize}
-    \item (Urgenza) è una lettera rappresentante l'urgenza del requisito:
-    \begin{itemize}
-        \item O per i requisiti obbligatori,
-        \item D per i requisiti desiderabili,
-        \item F per i requisiti facoltativi,
-    \end{itemize}
-    \item (Codice) è un numero identificativo sequenziale.
+    \item \textbf{Tipo}: F (Funzionale), N (Non funzionale) e V (Vincolo);
+    \item \textbf{Urgenza}: Ob (Obbligatoria), De (Desiderabile) e Op (Opzionale);
+    \item \textbf{Codice}: numero progressivo del requisito.
 \end{itemize}
 
 \subsection{Requisiti funzionali}
@@ -661,29 +587,29 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
     \endfoot
     \endlastfoot
 
-    RFO-1 & EggLog deve acquisire e serializzare in formato binario i dati provenienti dai 
+    R-F-Ob-1 & EggLog deve acquisire e serializzare in formato binario i dati provenienti dai 
     sensori, riducendo la dimensione del buffer in RAM & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
     \hline
-    RFO-2 & EggLog deve scrivere su scheda microSD i dati acquisiti in formato binario & 
+    R-F-Ob-2 & EggLog deve scrivere su scheda microSD i dati acquisiti in formato binario & 
     \hyperref[uc:uc_storage_binario_sd]{UC2} \\
     \hline
-    RFO-3 & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN & 
+    R-F-Ob-3 & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN & 
     \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
     \hline
-    RFO-4 & EggLog deve eseguire una procedura di calibrazione dei sensori a inizio sessione o 
+    R-F-Ob-4 & EggLog deve eseguire una procedura di calibrazione dei sensori a inizio sessione o 
     alla prima configurazione del dispositivo & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
     \hline
-    RFD-5 & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite pattern 
+    R-F-De-5 & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite pattern 
     di colore e lampeggio distinti, lo stato corrente del dispositivo & \hyperref[uc:uc_stato_led]{UC4}, 
     \hyperref[uc:uc_led_pairing_wifi]{UC4.1}, \hyperref[uc:uc_led_pairing_ble]{UC4.2}, 
     \hyperref[uc:uc_led_standby]{UC4.3}, \hyperref[uc:uc_led_sd_mancante]{UC4.4}, 
     \hyperref[uc:uc_led_logging]{UC4.5}, \hyperref[uc:uc_led_sospensione]{UC4.6}, 
     \hyperref[uc:uc_led_errore]{UC4.7} \\
     \hline
-    RFD-6 & L'utente deve poter configurare l'output rate (ODR) dei sensori nell'intervallo 10-100 Hz & 
+    R-F-De-6 & L'utente deve poter configurare l'output rate (ODR) dei sensori nell'intervallo 10-100 Hz & 
     \hyperref[uc:uc_config_odr]{UC5} \\
     \hline
-    RFD-7 & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in 
+    R-F-De-7 & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in 
     stato di inattività prolungata e riattivarla al rilevamento di movimento & 
     \hyperref[uc:uc_sospensione_sensori]{UC6} \\
     \hline
@@ -718,21 +644,21 @@ conforme alle aspettative e agli obiettivi preposti.
     \endfoot
     \endlastfoot
 
-    RNO-1 & Il consumo di RAM per il buffering dei dati sensore deve essere ridotto rispetto al formato 
+    R-N-Ob-1 & Il consumo di RAM per il buffering dei dati sensore deve essere ridotto rispetto al formato 
     testuale grazie alla serializzazione binaria & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
     \hline
-    RNO-2 & Il consumo energetico del dispositivo deve essere ridotto rispetto alla configurazione 
+    R-N-Ob-2 & Il consumo energetico del dispositivo deve essere ridotto rispetto alla configurazione 
     precedente grazie all'acquisizione/scrittura binaria e alla sospensione automatica in stato di 
     inattività & \hyperref[uc:uc_acquisizione_binaria]{UC1}, \hyperref[uc:uc_sospensione_sensori]{UC6} \\
     \hline
-    RND-3 & Il cambio di stato segnalato dal LED deve essere percepito come pressoché istantaneo 
+    R-N-Db-3 & Il cambio di stato segnalato dal LED deve essere percepito come pressoché istantaneo 
     dall'utente, e ogni pattern di colore/lampeggio deve risultare univocamente distinguibile dagli altri & 
     \hyperref[uc:uc_stato_led]{UC4}, \hyperref[uc:uc_led_pairing_wifi]{UC4.1}, 
     \hyperref[uc:uc_led_pairing_ble]{UC4.2}, \hyperref[uc:uc_led_standby]{UC4.3}, 
     \hyperref[uc:uc_led_sd_mancante]{UC4.4}, \hyperref[uc:uc_led_logging]{UC4.5}, 
     \hyperref[uc:uc_led_sospensione]{UC4.6}, \hyperref[uc:uc_led_errore]{UC4.7} \\
     \hline
-    RND-4 & L'accuratezza delle misurazioni successive alla calibrazione deve rientrare entro le tolleranze 
+    R-N-Db-4 & L'accuratezza delle misurazioni successive alla calibrazione deve rientrare entro le tolleranze 
     specificate dal produttore dei sensori & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
     \hline
     \hiderowcolors
@@ -766,15 +692,15 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \endfoot
     \endlastfoot
 
-    RVO-1 & EggLog del dispositivo deve appartenere alla famiglia ESP32, nello specifico 
+    R-V-Ob-1 & EggLog del dispositivo deve appartenere alla famiglia ESP32, nello specifico 
     ESP32-S3 & Tutti \\
     \hline
-    RVO-2 & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
+    R-V-Ob-2 & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
     \hline
-    RVO-3 & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo CAN 
+    R-V-Ob-3 & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo CAN 
     utilizzato dalla centralina (ECU) della moto & \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
     \hline
-    RVO-4 & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla scheda 
+    R-V-Ob-4 & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla scheda 
     ESP32-S3 & \hyperref[uc:uc_stato_led]{UC4} \\
     \hline
     \hiderowcolors

@@ -1,0 +1,130 @@
+@startuml UC1
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Sensori di bordo" as Sensors
+
+rectangle EggLog {
+    usecase "UC1\nAcquisizione binaria\ndei dati sensore" as UC1
+}
+
+Sensors --> UC1
+@enduml
+
+newpage
+
+@startuml UC2
+left to right direction
+
+actor "Scheda microSD" as SD
+
+rectangle EggLog {
+    usecase "UC2\nRegistrazione binaria\nsu SD" as UC2
+    usecase "UC4.4\nSD mancante" as UC44
+    usecase "UC4.7\nErrore generico" as UC47
+}
+
+SD --> UC2
+UC44 ..> UC2 : <<extend>>
+UC47 ..> UC2 : <<extend>>
+
+@enduml
+
+newpage
+
+@startuml UC3
+left to right direction
+
+actor "ECU\n(bus CAN)" as ECU
+
+rectangle EggLog {
+    usecase "UC3\nAcquisizione dati\nCAN" as UC3
+}
+
+ECU --> UC3
+
+@enduml
+
+newpage
+
+@startuml UC4
+left to right direction
+
+actor Utente
+
+rectangle EggLog {
+
+usecase "UC4\nGestione stato LED" as UC4
+
+usecase "UC4.1\nPairing WiFi" as UC41
+usecase "UC4.2\nPairing BLE" as UC42
+usecase "UC4.3\nStandby" as UC43
+usecase "UC4.4\nSD mancante" as UC44
+usecase "UC4.5\nLogging" as UC45
+usecase "UC4.6\nSospensione" as UC46
+usecase "UC4.7\nErrore" as UC47
+
+}
+
+Utente -left-> UC4
+
+UC41 ..> UC4 : <<extend>>
+UC42 ..> UC4 : <<extend>>
+UC43 ..> UC4 : <<extend>>
+UC44 ..> UC4 : <<extend>>
+UC45 ..> UC4 : <<extend>>
+UC46 ..> UC4 : <<extend>>
+UC47 ..> UC4 : <<extend>>
+
+@enduml
+
+newpage
+
+@startuml UC5
+left to right direction
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC5\nConfigurazione\nODR sensori" as UC5
+}
+
+Utente --> UC5
+
+@enduml
+
+newpage
+
+@startuml UC6
+left to right direction
+
+actor Accelerometro
+
+rectangle EggLog {
+
+usecase "UC6\nSospensione acquisizione\nsensori" as UC6
+usecase "UC4\nGestione stato LED" as UC4
+
+}
+
+Accelerometro --> UC6
+UC6 ..> UC4 : <<include>>
+
+@enduml
+
+newpage
+
+@startuml UC7
+left to right direction
+
+actor Utente
+
+rectangle EggLog {
+
+usecase "UC7\nCalibrazione\nsensori" as UC7
+
+}
+
+Utente --> UC7
+
+@enduml

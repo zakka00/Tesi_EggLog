@@ -17,9 +17,9 @@ componenti software già presenti e l'introduzione di nuove funzionalità volte 
 affidabile, efficiente e facilmente estendibile.
 
 Le attività svolte hanno coinvolto diversi aspetti del sistema, tra cui la gestione dello \textit{storage}
-su memoria SD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{bleg}) e Wi-Fi, la gestione del
+su memoria SD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{ble}) e Wi-Fi, la gestione del
 trasferimento dei dati acquisiti e l'analisi del traffico CAN proveniente dalla centralina elettronica
-(\gls{ecug} detta ECU) della moto mediante tecniche di \gls{cansniffing}.
+(\gls{ecu} detta ECU) della moto mediante tecniche di \gls{cansniffing}.
 
 \subsection{Competenze da acquisire}
 
@@ -34,12 +34,12 @@ Durante il periodo di tirocinio erano previste l'acquisizione e il consolidament
     \item gestione di sistemi di memorizzazione embedded e ottimizzazione delle operazioni di lettura e scrittura
     su memoria SD;
 
-    \item sviluppo e ottimizzazione di servizi \gls{ble} e Wi-Fi;
+    \item sviluppo e ottimizzazione di servizi BLE e Wi-Fi;
 
     \item analisi dei protocolli di comunicazione utilizzati in ambito automotive, con particolare riferimento
     al \gls{can};
 
-    \item acquisizione e analisi di messaggi dal \gls{can} provenienti dalla \gls{ecu} di un veicolo motorizzato;
+    \item acquisizione e analisi di messaggi dal bus CAN provenienti dalla ECU di un veicolo motorizzato;
 
     \item utilizzo di strumenti di \textit{debugging} e \textit{testing} per sistemi embedded;
 
@@ -72,7 +72,7 @@ e delle prestazioni del firmware esistente.
 
     \item \textbf{OO-3}: Ottimizzazione delle procedure di download dei dati memorizzati sulla scheda SD;
 
-    \item \textbf{OO-4}: Miglioramento dei servizi \gls{ble} e introduzione di nuovi comandi firmware;
+    \item \textbf{OO-4}: Miglioramento dei servizi BLE e introduzione di nuovi comandi firmware;
 
     \item \textbf{OO-5}: Produzione della documentazione tecnica relativa al firmware sviluppato.
 \end{itemize}
@@ -90,7 +90,7 @@ e al miglioramento delle modalità di trasferimento dei dati.
 
     \item \textbf{OD-3}: Valutazione e introduzione di tecniche di compressione dei dati;
 
-    \item \textbf{OD-4}: Integrazione dell'analisi e gestione dei dati proveninti dalla \gls{ecu};
+    \item \textbf{OD-4}: Integrazione dell'analisi e gestione dei dati proveninti dalla ECU;
 
     \item \textbf{OD-5}: Raccolta di metriche relative alle prestazioni dei trasferimenti dati con 
     relativi \gls{benchmark} per il confronto.
@@ -124,7 +124,7 @@ suddivise come segue:
     \item \textbf{Seconda settimana -- Studio delle tecnologie e analisi del firmware}
     \begin{itemize}
         \item Approfondimento della gestione della memoria microSD e del relativo \textit{file system};
-        \item Analisi dello stack \gls{ble} e dei servizi implementati;
+        \item Analisi dello stack BLE e dei servizi implementati;
         \item Studio dei protocolli di comunicazione utilizzati dal sistema;
         \item Individuazione delle principali criticità presenti nel firmware.
     \end{itemize}
@@ -134,7 +134,7 @@ suddivise come segue:
         \item Analisi dell'architettura software esistente e definizione degli interventi di \textit{refactoring};
         \item Progettazione delle modifiche relative alla gestione dello storage;
         \item Studio dei meccanismi di recupero e gestione dei dati in caso di errore;
-        \item Analisi preliminare del \gls{can} della moto e delle informazioni trasmesse dalla \gls{ecu}.
+        \item Analisi preliminare del bus CAN della moto e delle informazioni trasmesse dalla ECU.
     \end{itemize}
 
     \item \textbf{Quarta settimana -- Sviluppo e ottimizzazione dello storage}
@@ -150,14 +150,14 @@ suddivise come segue:
         \item Implementazione delle funzioni di calibrazione dei sensori;
         \item Ottimizzazione delle procedure di download dei dati memorizzati;
         \item Studio delle possibilità di compressione dei dati;
-        \item Miglioramento dei servizi \gls{ble}.
+        \item Miglioramento dei servizi BLE.
     \end{itemize}
 
-    \item \textbf{Sesta settimana -- Analisi del \gls{can} e integrazione firmware}
+    \item \textbf{Sesta settimana -- Analisi dei pacchetti CAN e integrazione firmware}
     \begin{itemize}
-        \item Acquisizione dei messaggi presenti sul \gls{can} tramite attività di \textit{sniffing};
-        \item Analisi degli identificativi e dei dati trasmessi nel \gls{can} dalla \gls{ecu};
-        \item Studio della possibile integrazione delle informazioni trasmesse nel \gls{can} all'interno 
+        \item Acquisizione dei messaggi presenti sul bus CAN tramite attività di \textit{sniffing};
+        \item Analisi degli identificativi e degli identificativi dei pacchetti CAN provenienti dalla ECU;
+        \item Studio della possibile integrazione delle informazioni trasmesse nel bus CAN all'interno 
         del sistema telemetrico;
         \item Evoluzione dei comandi e dei servizi firmware.
     \end{itemize}
@@ -217,11 +217,11 @@ che avrebbero potuto influenzare il corretto svolgimento del progetto.
     \item \textbf{Gestione dello storage e integrità dei dati}\\
     le operazioni di lettura, scrittura e trasferimento dei dati dalla memoria microSD rappresentavano una
     possibile criticità in termini di affidabilità. Il rischio è stato mitigato attraverso attività di
-    \textit{testing}, analisi delle prestazioni e utilizzo di \gls{benchmark}.
+    \textit{testing}, analisi delle prestazioni e utilizzo di \textit{benchmark}.
 
-    \item \textbf{Analisi del traffico \gls{can}}\\
-    l'acquisizione e l'interpretazione dei dati provenienti dalla \gls{ecu} della moto rappresentavano
-    una possibile criticità, in quanto i messaggi presenti sul \gls{can} non seguono necessariamente
+    \item \textbf{Analisi del traffico CAN}\\
+    l'acquisizione e l'interpretazione dei dati provenienti dalla ECU della moto rappresentavano
+    una possibile criticità, in quanto i messaggi presenti sul bus CAN non seguono necessariamente
     una codifica standardizzata.\\
     Inoltre, prima dell'attività di \textit{sniffing}, è stata quindi svolta un'analisi
     di fattibilità sia dal punto di vista hardware, valutando l'interfacciamento fisico con il veicolo,
