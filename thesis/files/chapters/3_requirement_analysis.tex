@@ -5,6 +5,16 @@
 svolte sul firmware embedded del dispositivo EggLog Motion Core (d'ora in poi solo EggLog) durante il 
 periodo di tirocinio, insieme alla relativa analisi dei requisiti.}
 
+\section{Stato attuale del firmware}
+Allo stato attuale, il firmware di EggLog è in grado di acquisire i dati provenienti dai sensori di bordo 
+(\gls{imu}, magnetometro, barometro e modulo GPS). 
+I dati acquisiti vengono temporaneamente memorizzati in buffer in \gls{ram} secondo uno schema di \gls{pingpongbuffering} 
+e successivamente scritti in formato testuale (\gls{csv}) su scheda microSD, organizzati in file 
+distinti all'interno di cartelle dedicate a ciascun sensore. 
+\\
+Il dispositivo espone inoltre un web server locale, raggiungibile via WiFi, che consente all'utente di configurare i parametri di funzionamento, 
+scaricare i dati archiviati in un intervallo temporale specifico e rimuoverli dalla scheda microSD.
+
 \section{Analisi degli utenti}
 Prima di affrontare le fasi di progettazione e sviluppo, è opportuno individuare a chi si rivolge il 
 prodotto finale, soprattutto quando questo non è ancora disponibile sul mercato.
@@ -61,7 +71,7 @@ effettivamente svolte durante il tirocinio.
 
 \textbf{Postcondizioni:}
 \begin{itemize}
-    \item Il buffer in \gls{ram} contiene i campioni acquisiti, serializzati in formato binario, pronti 
+    \item Il buffer in RAM contiene i campioni acquisiti, serializzati in formato binario, pronti 
     per essere scritti su SD.
 \end{itemize}
 
