@@ -205,33 +205,74 @@ applicazione mobile e infrastruttura software.
 
 \section{Analisi preventiva dei rischi}
 Prima dell'avvio delle attività è stata effettuata un'analisi preventiva dei principali rischi
-che avrebbero potuto influenzare il corretto svolgimento del progetto.
+che avrebbero potuto influenzare il corretto svolgimento del progetto. Per ciascun rischio
+individuato si riportano:
+\begin{itemize}
+    \item la probabilità di accadimento ( Improbabile, Poco probabile, Probabile, Altamente probabile );
+    \item le conseguenze in caso di accadimento ( Lieve, Medio, Grave, Gravissimo );
+    \item rimedi adottati per mitigarne la probabilità o le conseguenze.
+\end{itemize}
+
+I possibili rischi individuati sono:
 
 \begin{itemize}
 
-    \item \textbf{Comprensione del firmware esistente}\\
-    la necessità di intervenire su un sistema software già sviluppato ha richiesto una fase iniziale
-    di analisi dell'architettura firmware e dei meccanismi implementati, al fine di ridurre il rischio
-    di introdurre regressioni durante le modifiche.
+    \item \textbf{Introduzione di regressioni nel codice esistente}\\
+    \textbf{Probabilità: Probabile} -- il firmware esistente non dispone di test automatici,
+     per cui le modifiche apportate al codice possono alterare
+    comportamenti già funzionanti senza che ciò venga rilevato immediatamente.\\
+    \textbf{Conseguenze: Grave} -- una regressione non rilevata può compromettere
+    l'affidabilità dell'acquisizione o della scrittura dei dati, richiedendo una nuova
+    sessione di test per essere individuata.\\
+    \textbf{Rimedi}: prima di intervenire su ciascun modulo è stata condotta un'analisi puntuale
+    dell'architettura e del codice preesistente; dopo ogni modifica sono state eseguite sessioni
+    di test manuale mirate alle funzionalità potenzialmente impattate, seguite da revisione del
+    codice con il tutor aziendale.
 
-    \item \textbf{Gestione dello storage e integrità dei dati}\\
-    le operazioni di lettura, scrittura e trasferimento dei dati dalla memoria microSD rappresentavano una
-    possibile criticità in termini di affidabilità. Il rischio è stato mitigato attraverso attività di
-    \textit{testing}, analisi delle prestazioni e utilizzo di \textit{benchmark}.
+    \item \textbf{Mancato miglioramento delle prestazioni}\\
+    \textbf{Probabilità: Probabile} -- le modifiche introdotte per ottimizzare acquisizione,
+    buffering e trasferimento dei dati potrebbero non produrre l'atteso miglioramento
+    prestazionale, o addirittura peggiorarle rispetto alla versione precedente
+    del firmware.\\
+    \textbf{Conseguenze: Medio} -- un mancato miglioramento prestazionale vanificherebbe
+    l'obiettivo stesso delle ottimizzazioni introdotte durante il tirocinio, richiedendo
+    ulteriori interventi correttivi.\\
+    \textbf{Rimedi}: sono stati implementati dei test di \textit{benchmark} che misurano: il tempo 
+    impiegato per ogni operazione di scrittura, la quantità di dati scritti e il livello
+    di \gls{ram} occupato dal sistema di buffering (cfr. RIFERIMENTO AL BENCHMARK).\\
+    Tali \textit{benchmark} sono stati implementati anche nella versione precedente del firmware a 
+    scopo di confronto.
 
-    \item \textbf{Analisi del traffico CAN}\\
-    l'acquisizione e l'interpretazione dei dati provenienti dalla ECU della moto rappresentavano
-    una possibile criticità, in quanto i messaggi presenti sul bus CAN non seguono necessariamente
-    una codifica standardizzata.\\
-    Inoltre, prima dell'attività di \textit{sniffing}, è stata quindi svolta un'analisi
-    di fattibilità sia dal punto di vista hardware, valutando l'interfacciamento fisico con il veicolo,
-    sia dal punto di vista software, considerando l'acquisizione, l'elaborazione e l'interpretazione
-    dei dati raccolti.
+    \item \textbf{Inaffidabilità del trasferimento dei file di grandi dimensioni}\\
+    \textbf{Probabilità: Probabile} -- il rischio deriva dall'instabilità della connessione WiFi,
+    dato che il dispositivo è installato su un veicolo in movimento, e dai tempi di trasferimento
+    elevati per file di grandi dimensioni, che aumentano la finestra di esposizione al rischio di
+    interruzione.\\
+    \textbf{Conseguenze: Medio} -- un'interruzione della connessione a metà trasferimento
+    costringe l'utente a ripetere il download dall'inizio.\\
+    \textbf{Rimedi}: Per ridurre la quantità di dati da trasferire e, di conseguenza, i tempi di 
+    esposizione al rischio, si è scelto di utilizzare file binari successivamente compressi. Sono stati inoltre
+    condotti dei \textit{benchmark} di confronto con la versione precedente del firmware sia sulla
+    dimensione dei file trasferiti sia sul tempo impiegato per il trasferimento (cfr. RIFERIMENTO AL BENCHMARK).
 
-    \item \textbf{Coordinamento tra le componenti del sistema}\\
-    la presenza di più componenti sviluppate parallelamente poteva introdurre problematiche di
-    integrazione tra firmware, applicazione mobile e infrastruttura software. Tale rischio è stato
-    mitigato attraverso confronti periodici con il tutor aziendale, revisioni del codice e attività
-    di integrazione condivise.
+    \item \textbf{Interpretazione errata dei messaggi provenienti dal bus CAN}\\
+    \textbf{Probabilità : Altamente probabile } -- i messaggi trasmessi sul bus CAN dalla ECU della
+    moto non seguono una codifica standardizzata e pubblica, per cui è necessario ricostruirne il
+    significato tramite osservazione ed ipotesi, con concreto rischio di misinterpretazione.\\
+    \textbf{Conseguenze : Grave} -- un'errata interpretazione porta all'acquisizione di dati non
+    corretti o non significativi, invalidando le misurazioni raccolte e richiedendo di ripetere
+    l'analisi.\\
+    \textbf{Rimedi}: prima di avviare l'attività di \textit{sniffing} è stata condotta un'analisi
+    di realizzabilità software; l'interpretazione dei messaggi è stata poi validata in modo
+    incrementale confrontando i valori decodificati con misurazioni di riferimento note.
+
+    \item \textbf{Incompatibilità tra le componenti sviluppate in parallelo}\\
+    \textbf{Probabilità : Probabile} -- il firmware e l'applicazione mobile sono stati sviluppati contemporaneamente 
+    da persone diverse, con il rischio che le rispettive interfacce evolvano in modo incoerente tra loro.\\
+    \textbf{Conseguenze : Medio} -- un disallineamento tra componenti richiede lavoro aggiuntivo di
+    adattamento e può ritardare il completamento degli obiettivi predisposti.\\
+    \textbf{Rimedi}: sono stati organizzati confronti periodici con il tutor aziendale per
+    allineare le interfacce tra le componenti, affiancati da revisioni del codice e da sessioni di
+    integrazione condivise tra gli sviluppatori coinvolti.
 
 \end{itemize}
