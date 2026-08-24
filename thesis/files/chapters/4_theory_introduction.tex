@@ -144,26 +144,26 @@ In un sistema multitasking, il software viene suddiviso in più attività
 indipendenti. Quando il microcontrollore dispone di un singolo core, non è
 possibile eseguire fisicamente più istruzioni appartenenti a task differenti
 nello stesso istante. Il sistema operativo può tuttavia alternare rapidamente
-l'esecuzione delle task, dando l'impressione di una loro esecuzione
+l'esecuzione dei task, dando l'impressione di una loro esecuzione
 contemporanea.
 
 \vspace{.25cm}
 
-Il passaggio da una task a un'altra viene indicato come
+Il passaggio da un task a un altro viene indicato come
 \textit{context switch}. Durante questo processo il sistema conserva le
-informazioni necessarie per riprendere successivamente l'esecuzione della
-task sospesa e carica il contesto della task successiva.
-Nel caso di un processore dotato di più core, alcune task possono invece
-essere eseguite realmente in parallelo, purché siano disponibili core liberi
+informazioni necessarie per riprendere successivamente l'esecuzione del
+task sospeso e carica il contesto del task successivo.
+Nel caso di un processore dotato di più core, alcuni task possono invece
+essere eseguiti realmente in parallelo, purché siano disponibili core liberi
 e la configurazione dello scheduler lo permetta.
 
 \subsection{Scheduler e priorità}
-La componente di FreeRTOS responsabile della scelta della task da eseguire è
+La componente di FreeRTOS responsabile della scelta del task da eseguire è
 lo scheduler. A ogni task può essere assegnato un livello di priorità, che
 permette di stabilire quali attività debbano avere precedenza quando più
 task sono contemporaneamente pronte per l'esecuzione.
 
-Una task che non deve essere eseguita in un determinato momento può inoltre
+Un task che non deve essere eseguita in un determinato momento può inoltre
 rinunciare temporaneamente al processore, permettendo ad altre attività di
 utilizzarlo. Questo comportamento è particolarmente importante in sistemi
 embedded, poiché evita di consumare inutilmente risorse computazionali
@@ -179,7 +179,7 @@ frequenza di campionamento influenza direttamente la qualità dei dati
 registrati.
 
 \subsection{Task}
-Una task rappresenta un'unità indipendente di esecuzione gestita da
+Un task rappresenta un'unità indipendente di esecuzione gestita da
 FreeRTOS. Ogni task possiede un proprio contesto e viene definita
 specificando un insieme di parametri, riassunti in Tabella
 \ref{tab:freertos-task-params}.
@@ -190,17 +190,17 @@ specificando un insieme di parametri, riassunti in Tabella
         \hline
         \textbf{Parametro} & \textbf{Descrizione} \\
         \hline
-        Funzione & Punto di ingresso eseguito dalla task, contenente il codice associato all'attività. \\ \hline
-        Priorità & Valore numerico che determina la precedenza della task rispetto alle altre nella fase di scheduling. \\ \hline
-        Dimensione dello stack & Quantità di memoria riservata alla task per la gestione di variabili locali e chiamate a funzione. \\ \hline
-        Parametri & Dati opzionali passati alla funzione al momento della creazione della task. \\ \hline
-        Core di esecuzione & Nei microcontrollori multi-core, indica su quale core la task può essere schedulata. \\ \hline
+        Funzione & Punto di ingresso eseguito dal task, contenente il codice associato all'attività. \\ \hline
+        Priorità & Valore numerico che determina la precedenza del task rispetto ad altri nella fase di scheduling. \\ \hline
+        Dimensione dello stack & Quantità di memoria riservata al task per la gestione di variabili locali e chiamate a funzione. \\ \hline
+        Parametri & Dati opzionali passati alla funzione al momento della creazione del task. \\ \hline
+        Core di esecuzione & Nei microcontrollori multi-core, indica su quale core il task può essere \textit{schedulato}. \\ \hline
     \end{tabular}
-    \caption{Principali parametri di configurazione di una task in FreeRTOS}
+    \caption{Principali parametri di configurazione di un task in FreeRTOS}
     \label{tab:freertos-task-params}
 \end{table}
 
-Nel firmware le task sono state utilizzate per separare funzionalità che
+Nel firmware i task sono stati utilizzati per separare funzionalità che
 presentano caratteristiche temporali differenti. Ad esempio, l'acquisizione
 dei dati dei sensori può essere eseguita indipendentemente dalle operazioni
 di scrittura sulla scheda microSD.
@@ -209,8 +209,8 @@ Questa suddivisione permette di evitare che un'attività caratterizzata da
 tempi di esecuzione variabili blocchi un'altra attività che richiede invece
 un'esecuzione periodica.
 
-\subsection{Stati delle task}
-Durante la propria vita una task può assumere differenti stati, in funzione
+\subsection{Stati dei task}
+Durante la propria vita un task può assumere differenti stati, in funzione
 della possibilità di essere eseguita in un determinato momento.
 
 \begin{table}[H]
@@ -219,18 +219,18 @@ della possibilità di essere eseguita in un determinato momento.
         \hline
         \textbf{Stato} & \textbf{Descrizione} \\
         \hline
-        Running & La task è attualmente in esecuzione su uno dei core disponibili. \\ \hline
-        Ready & La task è pronta per essere eseguita, ma il processore è momentaneamente assegnato a un'altra task. \\ \hline
-        Blocked & La task è in attesa del verificarsi di un evento, di una notifica o della scadenza di un intervallo temporale. \\ \hline
-        Suspended & La task è stata esplicitamente esclusa dallo scheduling e rimane in questo stato fino a una successiva riattivazione. \\ \hline
+        Running & Il task è attualmente in esecuzione su uno dei core disponibili. \\ \hline
+        Ready & Il task è pronto per essere eseguito, ma il processore è momentaneamente assegnato a un altro task. \\ \hline
+        Blocked & Il task è in attesa del verificarsi di un evento, di una notifica o della scadenza di un intervallo temporale. \\ \hline
+        Suspended & Il task è stato esplicitamente escluso dallo scheduling e rimane in questo stato fino a una successiva riattivazione. \\ \hline
     \end{tabular}
     \caption{Principali stati di una task in FreeRTOS}
     \label{tab:freertos-states}
 \end{table}
 
 La distinzione tra \textit{Blocked} e \textit{Suspended} è particolarmente
-importante. Nel primo caso la task rimane in attesa di una condizione
-specifica, mentre nel secondo viene sospesa esplicitamente e non esiste
+importante. Nel primo caso il task rimane in attesa di una condizione
+specifica, mentre nel secondo viene sospeso esplicitamente e non esiste
 un evento che possa determinarne autonomamente il risveglio.
 Questa caratteristica può essere sfruttata, ad esempio, per disabilitare
 temporaneamente attività che non sono necessarie in una determinata fase
@@ -248,8 +248,8 @@ due task, $A$ e $B$, che devono entrambe incrementarla di una unità.
 Sebbene l'istruzione concettuale sia semplicemente ``incrementare $x$'', a
 livello macchina l'operazione viene scomposta in tre passaggi elementari:
 lettura del valore corrente, modifica del valore letto e scrittura del
-nuovo valore in memoria. Se una task viene interrotta tra uno di questi
-passaggi e lo scheduler permette all'altra task di operare sulla stessa
+nuovo valore in memoria. Se un task viene interrotto tra uno di questi
+passaggi e lo scheduler permette all'altro task di operare sulla stessa
 variabile, si può verificare l'interleaving mostrato in Tabella
 \ref{tab:race-condition}.
 
@@ -270,17 +270,17 @@ variabile, si può verificare l'interleaving mostrato in Tabella
     \label{tab:race-condition}
 \end{table}
 
-Nonostante entrambe le task abbiano eseguito un incremento, il valore
+Nonostante entrambi i task abbiano eseguito un incremento, il valore
 finale di $x$ è 1 anziché 2, poiché la scrittura effettuata da $B$
 sovrascrive quella di $A$ sulla base di un valore letto prima che
 l'incremento di $A$ venisse reso visibile. Il risultato è una \textit{race
-condition}, ovvero un comportamento dipendente dall'ordine con cui le task
+condition}, ovvero un comportamento dipendente dall'ordine con cui i task
 accedono alla risorsa condivisa.
 
 \subsection{Mutex}
 Per proteggere le sezioni di codice che accedono a risorse condivise è
 possibile utilizzare un mutex, abbreviazione di \textit{mutual exclusion}.
-Il mutex permette a una sola task per volta di entrare nella sezione critica
+Il mutex permette a un solo task per volta di entrare nella sezione critica
 associata alla risorsa protetta.
 
 Il funzionamento è riassunto in Tabella \ref{tab:mutex-fasi}.
@@ -291,18 +291,18 @@ Il funzionamento è riassunto in Tabella \ref{tab:mutex-fasi}.
         \hline
         \textbf{Fase} & \textbf{Descrizione} \\
         \hline
-        Richiesta & La task richiede l'acquisizione del mutex prima di accedere alla sezione critica. \\ \hline
-        Mutex libero & Se il mutex non è occupato, la task lo acquisisce ed entra nella sezione critica. \\ \hline
-        Mutex occupato & Se il mutex è già occupato da un'altra task, la task richiedente viene posta in stato di attesa. \\ \hline
-        Rilascio & Al termine dell'accesso alla risorsa, la task rilascia il mutex. \\ \hline
-        Sblocco & Una delle eventuali task in attesa viene sbloccata e può quindi procedere. \\ \hline
+        Richiesta & Il task richiede l'acquisizione del mutex prima di accedere alla sezione critica. \\ \hline
+        Mutex libero & Se il mutex non è occupato, il task lo acquisisce ed entra nella sezione critica. \\ \hline
+        Mutex occupato & Se il mutex è già occupato da un altro task, il task richiedente viene posto in stato di attesa. \\ \hline
+        Rilascio & Al termine dell'accesso alla risorsa, il task rilascia il mutex. \\ \hline
+        Sblocco & Uno degli eventuali task in attesa viene sbloccato e può quindi procedere. \\ \hline
     \end{tabular}
     \caption{Fasi di utilizzo di un mutex}
     \label{tab:mutex-fasi}
 \end{table}
 
 In questo modo le operazioni che devono essere eseguite senza interferenze
-da parte delle altre task vengono protette, impedendo accessi concorrenti
+da parte degli altri task vengono protette, impedendo accessi concorrenti
 incompatibili.
 
 Nel firmware questa tecnica risulta utile quando più attività devono
@@ -311,7 +311,7 @@ non possono essere utilizzate contemporaneamente.
 
 \subsection{Comunicazione tra task}
 FreeRTOS mette inoltre a disposizione meccanismi specifici per consentire
-alle task di scambiarsi informazioni senza ricorrere necessariamente a
+ai task di scambiarsi informazioni senza ricorrere necessariamente a
 variabili globali condivise.
 
 Tra questi strumenti rientrano principalmente le \textit{queue} e le
@@ -325,9 +325,9 @@ Tra questi strumenti rientrano principalmente le \textit{queue} e le
         & \textbf{Queue} & \textbf{Task notification} \\
         \hline
         Contenuto & Trasferisce dati veri e propri tra task & Trasporta un semplice valore o segnale di evento \\ \hline
-        Modalità & Produttore-consumatore, con più elementi in coda & Diretta, verso una singola task specifica \\ \hline
+        Modalità & Produttore-consumatore, con più elementi in coda & Diretta, verso un singolo task specifico \\ \hline
         Overhead & Maggiore, dovuto alla gestione della coda & Ridotto, essendo un meccanismo più leggero \\ \hline
-        Utilizzo tipico & Scambio di dati acquisiti tra task diverse & Notifica rapida di un evento (es. dato pronto) \\ \hline
+        Utilizzo tipico & Scambio di dati acquisiti tra task diversi & Notifica rapida di un evento (es. dato pronto) \\ \hline
     \end{tabular}
     \caption{Confronto tra queue e task notification in FreeRTOS}
     \label{tab:freertos-comunicazione}
@@ -335,7 +335,7 @@ Tra questi strumenti rientrano principalmente le \textit{queue} e le
 
 Questi meccanismi consentono di progettare componenti maggiormente
 indipendenti, riducendo la necessità di condividere direttamente lo stato
-interno delle singole task.
+interno dei singoli task.
 
 \section{Expo \& React Native}
 
