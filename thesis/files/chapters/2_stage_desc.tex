@@ -13,12 +13,12 @@ L'obiettivo principale dello stage è stato l'evoluzione e l'ottimizzazione del 
 in ambito motorsport, sviluppata su piattaforma ESP32.
 
 Il lavoro riguarda principalmente l'analisi dell'architettura firmware esistente, il miglioramento dei
-componenti software già presenti e l'introduzione di nuove funzionalità volte a rendere il sistema più
-affidabile, efficiente e facilmente estendibile.
+componenti software già presenti, sia su firmware che nell'applicazione mobile, e l'introduzione di nuove funzionalità 
+volte a rendere il sistema più affidabile, efficiente e facilmente estendibile.
 
 Le attività svolte hanno coinvolto diversi aspetti del sistema, tra cui la gestione dello \textit{storage}
-su memoria SD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{ble}) e Wi-Fi, la gestione del
-trasferimento dei dati acquisiti e l'analisi del traffico CAN proveniente dalla centralina elettronica
+su memoria miscroSD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{ble}), la gestione del
+trasferimento dei dati acquisiti real-time e l'analisi del traffico CAN proveniente dalla centralina elettronica
 (\gls{ecu} detta ECU) della moto mediante tecniche di \gls{cansniffing}.
 
 \subsection{Competenze da acquisire}
@@ -26,25 +26,18 @@ trasferimento dei dati acquisiti e l'analisi del traffico CAN proveniente dalla 
 Durante il periodo di tirocinio erano previste l'acquisizione e il consolidamento delle seguenti competenze:
 
 \begin{itemize}
-
     \item sviluppo e manutenzione di firmware embedded in linguaggio \gls{cpp} su piattaforma ESP32;
-
     \item analisi, \textit{refactoring} e ottimizzazione di codice embedded esistente;
-
     \item gestione di sistemi di memorizzazione embedded e ottimizzazione delle operazioni di lettura e scrittura
     su memoria SD;
-
-    \item sviluppo e ottimizzazione di servizi BLE e Wi-Fi;
-
+    \item sviluppo e ottimizzazione di servizi BLE;
     \item analisi dei protocolli di comunicazione utilizzati in ambito automotive, con particolare riferimento
     al \gls{can};
-
     \item acquisizione e analisi di messaggi dal bus CAN provenienti dalla ECU di un veicolo motorizzato;
-
+    \item     integrazione lato applicazione mobile delle nuove funzionalità sviluppate lato firmware, attraverso 
+    l’implementazione delle relative funzionalità di comunicazione e gestione dei dati;
     \item utilizzo di strumenti di \textit{debugging} e \textit{testing} per sistemi embedded;
-
     \item produzione di documentazione tecnica relativa al firmware e ai protocolli di comunicazione analizzati.
-
 \end{itemize}
 
 
@@ -67,14 +60,24 @@ e delle prestazioni del firmware esistente.
 \begin{itemize}
     \item \textbf{OO-1}: \textit{Refactoring} e ottimizzazione del sistema di lettura e scrittura su scheda SD;
 
-    \item \textbf{OO-2}: Completamento del sistema di rotazione dei file con introduzione di meccanismi
-    di recupero in caso di interruzioni impreviste;
+    \item \textbf{OO-2}: Completamento del sistema di rotazione dei file mediante l'utilizzo di ring-buffer;
 
-    \item \textbf{OO-3}: Ottimizzazione delle procedure di download dei dati memorizzati sulla scheda SD;
+    \item \textbf{OO-3}: Implementare la scrittura e salvataggio dei dati raccolti direttamente in formato binario;
 
-    \item \textbf{OO-4}: Miglioramento dei servizi BLE e introduzione di nuovi comandi firmware;
+    \item \textbf{OO-4}: Implementazione di un sistema di \textit{recovery} che permette di riprendere la scrittura su SD
+    in caso di guasti o rimozione della stessa del suo \textit{slot}.
 
-    \item \textbf{OO-5}: Produzione della documentazione tecnica relativa al firmware sviluppato.
+    \item \textbf{OO-5}: Miglioramento dei servizi BLE e introduzione di nuovi comandi firmware;
+    
+    \item \textbf{00-6}: Aggiunta di metriche di confronto per poter stimare il miglioramente rispetto 
+    alla versione precedente del firmware;
+
+    \item \textbf{OO-7}: Implementare un protocollo di calibrazione dei sensori;
+    
+    \item \textbf{OO-8}: Aggiungere una logica di sessionamento, attivando i sensori solamente all'avvio della sessione e disattivandoli 
+    quando termina la sessione;
+
+    \item \textbf{OO-9}: Produzione della documentazione tecnica relativa al firmware sviluppato.
 \end{itemize}
 
 
@@ -84,16 +87,12 @@ Gli obiettivi desiderabili erano principalmente orientati all'introduzione di fu
 e al miglioramento delle modalità di trasferimento dei dati.
 
 \begin{itemize}
-    \item \textbf{OD-1}: Implementazione del trasferimento dei dati tramite connessione Wi-Fi;
+    \item \textbf{OD-1}: Migliorare la visualizzazione dei dati in tempo reale sul dispositivo mobile;
 
-    \item \textbf{OD-2}: Introduzione di meccanismi di supporto alla ripresa dei trasferimenti interrotti;
+    \item \textbf{OD-2}: Permettere la visualizzazione della moto in tempo reale con un modellino 3D;
 
-    \item \textbf{OD-3}: Valutazione e introduzione di tecniche di compressione dei dati;
+    \item \textbf{OD-3}: Integrazione dell'analisi e gestione dei dati proveninti dalla ECU;
 
-    \item \textbf{OD-4}: Integrazione dell'analisi e gestione dei dati proveninti dalla ECU;
-
-    \item \textbf{OD-5}: Raccolta di metriche relative alle prestazioni dei trasferimenti dati con 
-    relativi \gls{benchmark} per il confronto.
 \end{itemize}
 
 
@@ -102,6 +101,9 @@ e al miglioramento delle modalità di trasferimento dei dati.
 \begin{itemize}
     \item \textbf{OF-1}: Implementazione di un sistema avanzato di indicizzazione delle sessioni
     memorizzate sulla scheda SD.
+
+    \item \textbf{OF-2}: Implementazione di un sistema di \textbf{intactivity} per permettere la disattivazione dei sensori
+    quando non viene rilevato alcun movimento per un tempo configurabile dall'utente.
 \end{itemize}
 
 
@@ -117,7 +119,7 @@ suddivise come segue:
     \begin{itemize}
         \item Introduzione al sistema \textbf{EggLog Motion Core} e all'architettura generale della piattaforma;
         \item Configurazione dell'ambiente di sviluppo e degli strumenti di compilazione e debugging;
-        \item Analisi della struttura del firmware esistente e delle principali componenti software;
+        \item Analisi della struttura del firmware, dell'app esistente e delle principali componenti software e hardware;
         \item Studio delle modalità di acquisizione, memorizzazione e trasferimento dei dati.
     \end{itemize}
 
@@ -148,9 +150,11 @@ suddivise come segue:
     \item \textbf{Quinta settimana -- Gestione dei dati e comunicazioni}
     \begin{itemize}
         \item Implementazione delle funzioni di calibrazione dei sensori;
-        \item Ottimizzazione delle procedure di download dei dati memorizzati;
-        \item Studio delle possibilità di compressione dei dati;
-        \item Miglioramento dei servizi BLE.
+        \item Miglioramento della qualità dei dati inviati via BLE, inteso 
+        come invio di dati già calibrati;
+        \item Miglioramento dei servizi BLE;
+        \item Implementazione di un sistema di inattività, basato su GPS con \textit{fallback}
+        su accelleromentro.
     \end{itemize}
 
     \item \textbf{Sesta settimana -- Analisi dei pacchetti CAN e integrazione firmware}
@@ -159,14 +163,13 @@ suddivise come segue:
         \item Analisi degli identificativi e degli identificativi dei pacchetti CAN provenienti dalla ECU;
         \item Studio della possibile integrazione delle informazioni trasmesse nel bus CAN all'interno 
         del sistema telemetrico;
-        \item Evoluzione dei comandi e dei servizi firmware.
     \end{itemize}
 
     \item \textbf{Settima settimana -- Testing e validazione}
     \begin{itemize}
         \item Esecuzione di test funzionali sul firmware modificato;
         \item Raccolta di metriche sulle prestazioni del sistema;
-        \item Esecuzione di benchmark sulle operazioni di memorizzazione e trasferimento dati;
+        \item Esecuzione di benchmark sulle operazioni di memorizzazione e occupazione della CPU;
         \item Analisi e risoluzione delle problematiche emerse durante i test.
     \end{itemize}
 
@@ -208,8 +211,8 @@ Prima dell'avvio delle attività è stata effettuata un'analisi preventiva dei p
 che avrebbero potuto influenzare il corretto svolgimento del progetto. Per ciascun rischio
 individuato si riportano:
 \begin{itemize}
-    \item la probabilità di accadimento ( Improbabile, Poco probabile, Probabile, Altamente probabile );
-    \item le conseguenze in caso di accadimento ( Lieve, Medio, Grave, Gravissimo );
+    \item la probabilità di accadimento (Improbabile, Poco probabile, Probabile, Altamente probabile);
+    \item le conseguenze in caso di accadimento (Lieve, Medio, Grave, Gravissimo);
     \item rimedi adottati per mitigarne la probabilità o le conseguenze.
 \end{itemize}
 
@@ -219,8 +222,8 @@ I possibili rischi individuati sono:
 
     \item \textbf{Introduzione di regressioni nel codice esistente}\\
     \textbf{Probabilità: Probabile} -- il firmware esistente non dispone di test automatici,
-     per cui le modifiche apportate al codice possono alterare
-    comportamenti già funzionanti senza che ciò venga rilevato immediatamente.\\
+    per cui le modifiche apportate al codice possono alterare comportamenti già funzionanti
+    senza che ciò venga rilevato immediatamente.\\
     \textbf{Conseguenze: Grave} -- una regressione non rilevata può compromettere
     l'affidabilità dell'acquisizione o della scrittura dei dati, richiedendo una nuova
     sessione di test per essere individuata.\\
@@ -231,35 +234,26 @@ I possibili rischi individuati sono:
 
     \item \textbf{Mancato miglioramento delle prestazioni}\\
     \textbf{Probabilità: Probabile} -- le modifiche introdotte per ottimizzare acquisizione,
-    buffering e trasferimento dei dati potrebbero non produrre l'atteso miglioramento
-    prestazionale, o addirittura peggiorarle rispetto alla versione precedente
-    del firmware.\\
+    buffering e trasferimento dei dati comportano un \textit{overhead} computazionale e di occupazione
+    \gls{ram} che potrebbe annullare, in tutto o in parte, il guadagno prestazionale atteso,
+    specialmente se il compromesso tra velocità e memoria non viene bilanciato correttamente.\\
     \textbf{Conseguenze: Medio} -- un mancato miglioramento prestazionale vanificherebbe
     l'obiettivo stesso delle ottimizzazioni introdotte durante il tirocinio, richiedendo
     ulteriori interventi correttivi.\\
-    \textbf{Rimedi}: sono stati implementati dei test di \textit{benchmark} che misurano: il tempo 
-    impiegato per ogni operazione di scrittura, la quantità di dati scritti e il livello
-    di \gls{ram} occupato dal sistema di buffering (cfr. RIFERIMENTO AL BENCHMARK).\\
-    Tali \textit{benchmark} sono stati implementati anche nella versione precedente del firmware a 
-    scopo di confronto.
-
-    \item \textbf{Inaffidabilità del trasferimento dei file di grandi dimensioni}\\
-    \textbf{Probabilità: Probabile} -- il rischio deriva dall'instabilità della connessione WiFi,
-    dato che il dispositivo è installato su un veicolo in movimento, e dai tempi di trasferimento
-    elevati per file di grandi dimensioni, che aumentano la finestra di esposizione al rischio di
-    interruzione.\\
-    \textbf{Conseguenze: Medio} -- un'interruzione della connessione a metà trasferimento
-    costringe l'utente a ripetere il download dall'inizio.\\
-    \textbf{Rimedi}: Per ridurre la quantità di dati da trasferire e, di conseguenza, i tempi di 
-    esposizione al rischio, si è scelto di utilizzare file binari successivamente compressi. Sono stati inoltre
-    condotti dei \textit{benchmark} di confronto con la versione precedente del firmware sia sulla
-    dimensione dei file trasferiti sia sul tempo impiegato per il trasferimento (cfr. RIFERIMENTO AL BENCHMARK).
+    \textbf{Rimedi}: per prevenire il rischio, la scelta delle strutture dati e degli algoritmi
+    di buffering è stata guidata da una stima preventiva del loro costo computazionale e di
+    memoria, con verifiche incrementali ad ogni modulo sviluppato anziché un'unica misurazione
+    finale. Per individuare tempestivamente eventuali regressioni prestazionali sono stati inoltre
+    implementati dei test di \textit{benchmark} che misurano: il tempo impiegato per ogni
+    operazione di scrittura, la quantità di dati scritti e il livello di \gls{ram} occupato dal
+    sistema di buffering (cfr.~\ref{sec:benchmark}). Tali \textit{benchmark} sono stati
+    implementati anche nella versione precedente del firmware a scopo di confronto.
 
     \item \textbf{Interpretazione errata dei messaggi provenienti dal bus CAN}\\
-    \textbf{Probabilità : Altamente probabile } -- i messaggi trasmessi sul bus CAN dalla ECU della
+    \textbf{Probabilità: Altamente probabile} -- i messaggi trasmessi sul bus CAN dalla ECU della
     moto non seguono una codifica standardizzata e pubblica, per cui è necessario ricostruirne il
     significato tramite osservazione ed ipotesi, con concreto rischio di misinterpretazione.\\
-    \textbf{Conseguenze : Grave} -- un'errata interpretazione porta all'acquisizione di dati non
+    \textbf{Conseguenze: Grave} -- un'errata interpretazione porta all'acquisizione di dati non
     corretti o non significativi, invalidando le misurazioni raccolte e richiedendo di ripetere
     l'analisi.\\
     \textbf{Rimedi}: prima di avviare l'attività di \textit{sniffing} è stata condotta un'analisi
@@ -267,12 +261,15 @@ I possibili rischi individuati sono:
     incrementale confrontando i valori decodificati con misurazioni di riferimento note.
 
     \item \textbf{Incompatibilità tra le componenti sviluppate in parallelo}\\
-    \textbf{Probabilità : Probabile} -- il firmware e l'applicazione mobile sono stati sviluppati contemporaneamente 
-    da persone diverse, con il rischio che le rispettive interfacce evolvano in modo incoerente tra loro.\\
-    \textbf{Conseguenze : Medio} -- un disallineamento tra componenti richiede lavoro aggiuntivo di
-    adattamento e può ritardare il completamento degli obiettivi predisposti.\\
-    \textbf{Rimedi}: sono stati organizzati confronti periodici con il tutor aziendale per
-    allineare le interfacce tra le componenti, affiancati da revisioni del codice e da sessioni di
-    integrazione condivise tra gli sviluppatori coinvolti.
+    \textbf{Probabilità: Probabile} -- il firmware e l'applicazione mobile sono stati sviluppati
+    contemporaneamente da persone diverse, con il rischio che le rispettive interfacce evolvano in
+    modo incoerente tra loro.\\
+    \textbf{Conseguenze: Medio} -- un eventuale disallineamento richiederebbe comunque lavoro
+    aggiuntivo di adattamento e potrebbe ritardare il completamento degli obiettivi predisposti.\\
+    \textbf{Rimedi}: per le funzionalità introdotte nel corso del tirocinio, le modifiche lato
+    firmware e la relativa integrazione lato applicativo sono state implementate in modo
+    contestuale dalla stessa persona, garantendo coerenza tra le interfacce senza necessità di
+    sincronizzazione con altri sviluppatori; sono stati inoltre organizzati confronti periodici
+    con il tutor aziendale per validare le scelte effettuate.
 
 \end{itemize}

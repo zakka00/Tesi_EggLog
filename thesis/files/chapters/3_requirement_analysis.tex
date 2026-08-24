@@ -2,8 +2,8 @@
 \label{chap:analisi-requisiti}
 
 \textit{Questo capitolo presenta gli use case rilevanti per le attività di ottimizzazione ed evoluzione 
-svolte sul firmware embedded del dispositivo EggLog Motion Core (d'ora in poi solo EggLog) durante il 
-periodo di tirocinio, insieme alla relativa analisi dei requisiti.}
+svolte sul firmware embedded del dispositivo EggLog Motion Core e dell'applicazione mobile (d'ora in poi 
+solo EggLog e EggLog App) durante il periodo di tirocinio, insieme alla relativa analisi dei requisiti.}
 
 \section{Stato attuale del firmware}
 Allo stato attuale, il firmware di EggLog è in grado di acquisire i dati provenienti dai sensori di bordo 
@@ -32,536 +32,1042 @@ categorie di utenti:
 
 \section{Lista degli \textit{use case}}
 
-Per facilitare la comprensione dei casi d'uso, questi saranno descritti da un diagramma
-ciascuno, che rispetta la sintassi \gls{uml}. La descrizione
-testuale deve contenere le seguenti informazioni:
+Per facilitare la comprensione dei casi d'uso, questi saranno descritti da uno o più diagrammi
+ciascuno, che rispettano la sintassi \gls{uml}. Ciascun caso d'uso è identificato da un codice
+seguito dalla lettera \textbf{F} o \textbf{A}, che ne indica rispettivamente l'appartenenza al
+\textbf{firmware} del dispositivo o all'\textbf{applicazione mobile}; i casi d'uso relativi ai due componenti sono
+presentati in un ordine unico, in modo da mantenere adiacenti quelli tra loro correlati anche
+quando appartengono a sistemi diversi. La descrizione testuale deve contenere le seguenti
+informazioni:
 \begin{itemize}
-    \item \textbf{Attore}: rappresenta il ruolo che un'entità esterna al
+    \item \textbf{Attore Primario}: rappresenta il ruolo che un'entità esterna al
     sistema assume quando interagisce con esso per raggiungere un obiettivo.
     \item \textbf{Precondizioni}: condizioni che devono essere vere nello stato del sistema prima
     che il caso d'uso inizi la sua esecuzione.
     \item \textbf{Postcondizioni}: condizioni che devono essere vere nello stato del sistema dopo
     che il caso d'uso è terminato.
-    \item \textbf{Scenario principale}: interazioni tra attore e sistema che portano al raggiungimento
+    \item \textbf{Flusso Principale}: interazioni tra attore e sistema che portano al raggiungimento
     dell'obiettivo del caso d'uso con successo.
-    \item \textbf{Scenari alternativi}: variazioni rispetto al flusso principale.
+    \item \textbf{Flusso Alternativo}: variazioni rispetto al flusso principale.
     \item \textbf{Inclusioni}: riferimenti ai casi d'uso inclusi.
     \item \textbf{Estensioni}: riferimenti ai casi d'uso di estensione.
 \end{itemize}
 
-Di seguito sono riportati esclusivamente gli use case relativi alle attività di ottimizzazione ed evoluzione 
-effettivamente svolte durante il tirocinio.
-
-\subsection{UC1 -- Acquisizione binaria dei dati sensore}
+\subsection{UC1-F -- Acquisizione binaria dei dati sensore}
 \label{uc:uc_acquisizione_binaria}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC1.png}
-    \caption{Diagramma UML -- UC1: Acquisizione binaria dei dati sensore}
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC1.png}
+    \caption{UC1-F -- Acquisizione binaria dei dati sensore}
     \label{fig:uc1_diagram}
 \end{figure}
 
-\textbf{Attore:} sensori di bordo.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item I sensori sono stati inizializzati e calibrati (cfr. \hyperref[uc:uc_calibrazione_sensori]{UC7});
-    \item È in corso una sessione di registrazione attiva.
+    \item \textbf{Attore Primario:} sensori di bordo.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item I sensori sono stati inizializzati e, se necessario, calibrati (cfr.
+        \hyperref[uc:uc_calibrazione_imu]{UC16-F}, \hyperref[uc:uc_calibrazione_altitudine]{UC20-F});
+        \item è in corso una sessione di registrazione attiva (cfr. \hyperref[uc:uc_sessione_ble]{UC15-F}).
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} il buffer in RAM contiene i campioni acquisiti, serializzati in
+    formato binario, pronti per essere scritti su SD.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware recupera un nuovo campione da ciascun sensore attivo, secondo la frequenza di
+        campionamento configurata;
+        \item ciascun sensore restituisce il valore misurato;
+        \item il firmware associa a ogni campione il timestamp corrente;
+        \item il firmware serializza il campione in formato binario nativo;
+        \item il firmware inserisce il campione serializzato nel buffer in RAM;
+        \item se il buffer ha raggiunto la soglia di scrittura, il firmware avvia
+        \hyperref[uc:uc_storage_binario_sd]{UC2-F}.
+    \end{enumerate}
+
+    \item \textbf{Inclusioni:} \hyperref[uc:uc_storage_binario_sd]{UC2-F}.
 \end{itemize}
 
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il buffer in RAM contiene i campioni acquisiti, serializzati in formato binario, pronti 
-    per essere scritti su SD.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware richiede un nuovo campione a ciascun sensore attivo, secondo la frequenza di 
-    campionamento configurata (cfr. \hyperref[uc:uc_config_odr]{UC5});
-    \item ciascun sensore restituisce il valore misurato;
-    \item il firmware associa a ogni campione il timestamp corrente;
-    \item il firmware serializza il campione in formato binario nativo;
-    \item il firmware inserisce il campione serializzato nel buffer in RAM;
-    \item se il buffer ha raggiunto la soglia di scrittura, il firmware avvia \hyperref[uc:uc_storage_binario_sd]{UC2}.
-\end{enumerate}
-
-\textbf{Scenari alternativi:}
-\begin{itemize}
-    \item[2a.] un sensore non risponde entro il timeout previsto: il campione viene marcato come non 
-    valido e l'acquisizione prosegue con i restanti sensori.
-\end{itemize}
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsection{UC2 -- Registrazione binaria dei dati sensore su SD}
+\subsection{UC2-F -- Registrazione dei dati binari dei sensori su SD}
 \label{uc:uc_storage_binario_sd}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\columnwidth]{../img/usecase/thesis/files/img/usecase/UC2.png}
-    \caption{Diagramma UML -- UC2: Registrazione binaria dei dati sensore su SD}
+    \includegraphics[width=0.85\columnwidth]{../img/diagrammi/usecase/UC2_incl.png}
+    \caption{Inclusioni UC2-F -- Registrazione dei dati sensore su SD}
+    \label{fig:uc2_incl_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} scheda microSD.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item il buffer di acquisizione (cfr. \hyperref[uc:uc_acquisizione_binaria]{UC1-F}) contiene
+        dei dati binari pronti per la scrittura;
+        \item la scheda microSD è presente e correttamente montata;
+        \item è stata creata la cartella dedicata alla sessione corrente (cfr.
+        \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}), contenente i file destinati a ciascun sensore.
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} i dati sono persistiti nel file dedicato al sensore all'interno
+    della cartella di sessione e il buffer in RAM viene svuotato.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware verifica che il buffer abbia raggiunto la soglia di scrittura;
+        \item il firmware accede al file dedicato al sensore all'interno della cartella di sessione corrente;
+        \item il firmware scrive il contenuto del buffer in coda al file;
+        \item il firmware svuota il buffer in RAM;
+        \item il firmware calcola lo spazio occupato dal file (cfr.
+        \hyperref[uc:uc_calcolo_spazio]{UC3-F}) e ne verifica la capacità (cfr.
+        \hyperref[uc:uc_gestione_capacita]{UC5-F});
+        \item il firmware conferma l'avvenuta scrittura.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se la scheda microSD non è presente, la scrittura viene rimandata in attesa del
+        reinserimento della scheda, mentre il firmware ne segnala l'assenza via BLE all'applicazione
+        (cfr. \hyperref[uc:uc_notifica_sd_mancante]{UC8-F});
+        \item se la scrittura fallisce (SD piena o guasta), il firmware segnala l'errore
+        (cfr. \hyperref[uc:uc_led_errore]{UC12.2-F}).
+    \end{itemize}
+
+    \item \textbf{Inclusioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_calcolo_spazio]{UC3-F};
+        \item \hyperref[uc:uc_gestione_capacita]{UC5-F}.
+    \end{itemize}
+
+    \item \textbf{Estensioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_notifica_sd_mancante]{UC8-F};
+        \item \hyperref[uc:uc_led_errore]{UC12.2-F}.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC2.png}
+    \caption{UC2-F -- Registrazione dei dati sensore su SD}
     \label{fig:uc2_diagram}
 \end{figure}
 
-\textbf{Attore:} scheda microSD.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item Il buffer di acquisizione (cfr. \hyperref[uc:uc_acquisizione_binaria]{UC1}) contiene almeno un 
-    pacchetto di dati binari pronto per la scrittura;
-    \item la scheda microSD è presente e correttamente montata.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item I dati sono persistiti sulla scheda microSD in formato binario e il buffer in RAM viene svuotato.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware verifica che il buffer abbia raggiunto la soglia di scrittura;
-    \item il firmware accede al file su scheda microSD associato al sensore a cui appartiene il buffer;
-    \item il firmware scrive il contenuto del buffer sul file in formato binario;
-    \item il firmware svuota il buffer in RAM;
-    \item il firmware conferma l'avvenuta scrittura.
-\end{enumerate}
-
-\textbf{Scenari alternativi:}
-\begin{itemize}
-    \item[1a.] la scheda microSD non è presente: la scrittura viene rimandata e i dati restano nel buffer fino 
-    a un numero massimo di tentativi;
-    \item[3a.] la scrittura fallisce (SD piena o guasta): il firmware segnala l'errore e applica una 
-    politica di retry.
-\end{itemize}
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} \hyperref[uc:uc_led_sd_mancante]{UC4.4}, \hyperref[uc:uc_led_errore]{UC4.7}.
-
-\subsection{UC3 -- Acquisizione dati dal bus CAN}
-\label{uc:uc_lettura_can_ecu}
+\subsection{UC3-F -- Calcolo dello spazio occupato dai dati registrati}
+\label{uc:uc_calcolo_spazio}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC3.png}
-    \caption{Diagramma UML -- UC3: Acquisizione dati dal CAN}
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC3.png}
+    \caption{UC3-F -- Calcolo dello spazio occupato dai dati registrati}
     \label{fig:uc3_diagram}
 \end{figure}
 
-\textbf{Attore:} ECU del veicolo mediante bus CAN.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item Il modulo di interfaccia CAN è collegato al bus dati del veicolo;
-    \item è in corso una sessione di registrazione attiva.
+    \item \textbf{Attore Primario:} nessuno; il caso d'uso è innescato internamente da
+    \hyperref[uc:uc_storage_binario_sd]{UC2-F}.
+
+    \item \textbf{Precondizioni:} è stata completata una scrittura di dati sul file dedicato a un sensore.
+
+    \item \textbf{Postcondizioni:} lo spazio occupato dai dati all'interno del file relativo al
+    sensore viene calcolato in modo da poterlo inviare all'applicazione via BLE (cfr.
+    \hyperref[uc:uc_visualizzazione_spazio]{UC4-A}) e per la verifica dei limiti di capacità
+    (cfr. \hyperref[uc:uc_gestione_capacita]{UC5-F}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware calcola la quantità spazio occupato dai dati scritti nel file relativo al sensore e lo
+        converte in percentuale;
+        \item il firmware invia all'applicazione la percentuale di spazio occupato associato al sensore.
+    \end{enumerate}
 \end{itemize}
 
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item I dati ECU acquisiti sono timestampati, sincronizzati con gli altri sensori e resi 
-    disponibili per la registrazione (cfr. \hyperref[uc:uc_storage_binario_sd]{UC2}).
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware si mette in ascolto sul bus CAN;
-    \item la ECU trasmette periodicamente i messaggi contenenti i parametri motore;
-    \item il firmware riceve e decodifica ciascun messaggio CAN;
-    \item il firmware associa a ciascun dato il timestamp corrente;
-    \item il firmware serializza i dati in formato binario, coerentemente con \hyperref[uc:uc_acquisizione_binaria]{UC1};
-    \item il firmware inserisce i dati nel buffer di acquisizione.
-\end{enumerate}
-
-\textbf{Scenari alternativi:}
-\begin{itemize}
-    \item[3a.] il messaggio CAN ricevuto non è riconosciuto o risulta malformato: il messaggio viene 
-    scartato.
-\end{itemize}
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsection{UC4 -- Gestione dello stato del firmware tramite \gls{led}}
-\label{uc:uc_stato_led}
+\subsection{UC4-A -- Visualizzazione dello spazio di archiviazione occupato}
+\label{uc:uc_visualizzazione_spazio}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\columnwidth]{../img/usecase/thesis/files/img/usecase/UC4.png}
-    \caption{Diagramma UML -- UC4: Gestione dello stato del firmware tramite LED}
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC4.png}
+    \caption{UC4-A -- Visualizzazione dello spazio di archiviazione occupato}
     \label{fig:uc4_diagram}
 \end{figure}
 
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item Il dispositivo è alimentato e il firmware è in esecuzione.
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item è in corso una sessione di registrazione attiva;
+        \item il firmware ha calcolato lo spazio occupato per ciascun sensore
+        (cfr. \hyperref[uc:uc_calcolo_spazio]{UC3-F}).
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} l'utente visualizza la percentuale di spazio occupato da ogni
+    sensore all'interno del proprio file.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item l'applicazione riceve periodicamente lo stato di occupazione dello spazio dal firmware;
+        \item l'applicazione effettua un controllo sui limiti delle percentuali di spazio occupato;
+        \item l'applicazione mostra all'utente la percentuale di spazio occupato.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se per un sensore diverso dal GPS lo spazio disponibile ha raggiunto il limite e sono
+        in corso sovrascritture dei dati meno recenti, l'applicazione mostra, sotto la percentuale,
+        l'indicazione \textit{"rewriting"}.
+    \end{itemize}
 \end{itemize}
 
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED riflette lo stato operativo corrente del dispositivo.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware rileva un cambiamento nello stato operativo del dispositivo;
-    \item il firmware seleziona il pattern di colore/lampeggio associato al nuovo stato;
-    \item il firmware applica il pattern al LED;
-    \item l'utente osserva il LED e ne interpreta lo stato del dispositivo.
-\end{enumerate}
-
-\textbf{Scenari alternativi:}
-\begin{itemize}
-    \item[1a.] si verificano più condizioni contemporaneamente: il firmware seleziona il pattern relativo 
-    alla condizione a priorità più alta.
-\end{itemize}
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} \hyperref[uc:uc_led_pairing_wifi]{UC4.1}, \hyperref[uc:uc_led_pairing_ble]{UC4.2}, 
-\hyperref[uc:uc_led_standby]{UC4.3}, \hyperref[uc:uc_led_sd_mancante]{UC4.4}, 
-\hyperref[uc:uc_led_logging]{UC4.5}, \hyperref[uc:uc_led_sospensione]{UC4.6}, 
-\hyperref[uc:uc_led_errore]{UC4.7}.
-
-\subsubsection{UC4.1 -- Segnalazione di pairing WiFi}
-\label{uc:uc_led_pairing_wifi}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item È in corso una procedura di \textit{pairing} con una rete WiFi.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern blu con lampeggio veloce (circa 4 Hz).
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware avvia la procedura di pairing WiFi;
-    \item il modulo di gestione del LED applica il pattern blu con lampeggio veloce;
-    \item il pattern rimane attivo per l'intera durata del pairing;
-    \item al termine della procedura, con esito positivo o negativo, il firmware richiama 
-    \hyperref[uc:uc_stato_led]{UC4} per applicare il pattern corrispondente al nuovo stato.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.2 -- Segnalazione di pairing BLE}
-\label{uc:uc_led_pairing_ble}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item È in corso una procedura di associazione (\textit{pairing}) con un dispositivo tramite BLE.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern blu con lampeggio lento (circa 1 Hz).
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware avvia la procedura di pairing BLE;
-    \item il modulo di gestione del LED applica il pattern blu con lampeggio lento;
-    \item il pattern rimane attivo per l'intera durata del pairing;
-    \item al termine della procedura, con esito positivo o negativo, il firmware richiama 
-    \hyperref[uc:uc_stato_led]{UC4} per applicare il pattern corrispondente al nuovo stato.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.3 -- Segnalazione di dispositivo avviato in attesa di sessione}
-\label{uc:uc_led_standby}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item Il dispositivo è stato avviato correttamente ma non ha ancora avviato alcuna sessione di 
-    registrazione.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern bianco fisso.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware completa la fase di avvio senza avviare alcuna sessione;
-    \item il modulo di gestione del LED applica il pattern bianco fisso;
-    \item il pattern rimane attivo fino all'avvio di una sessione di registrazione;
-    \item all'avvio della sessione, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per applicare il 
-    pattern di logging normale.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.4 -- Segnalazione di scheda microSD mancante}
-\label{uc:uc_led_sd_mancante}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item La scheda microSD risulta assente.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern arancione con lampeggio regolare (circa 1 Hz)
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware rileva l'assenza della scheda microSD;
-    \item il modulo di gestione del LED applica il pattern arancione;
-    \item il pattern rimane attivo finché la scheda microSD non viene rilevata correttamente;
-    \item alla rilevazione della scheda microSD, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per 
-    applicare il pattern corrispondente allo stato operativo corrente.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.5 -- Segnalazione di logging normale}
-\label{uc:uc_led_logging}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item È in corso una regolare sessione di registrazione dati.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern verde fisso.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware avvia o riprende la sessione di registrazione;
-    \item il modulo di gestione del LED applica il pattern verde fisso;
-    \item il pattern rimane attivo per l'intera durata della sessione;
-    \item non appena la sessione termina o viene sospesa, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} 
-    per applicare il pattern corrispondente al nuovo stato.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.6 -- Segnalazione di sospensione per inattività}
-\label{uc:uc_led_sospensione}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item Si verifica la sospensione automatica dell'acquisizione sensori descritta in 
-    \hyperref[uc:uc_sospensione_sensori]{UC6}.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern verde pulsante lento (effetto \textit{breathing}, circa 0.5 Hz).
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item \hyperref[uc:uc_sospensione_sensori]{UC6} sospende l'acquisizione dei sensori non essenziali;
-    \item il modulo di gestione del LED applica il pattern verde pulsante lento;
-    \item il pattern rimane attivo finché l'acquisizione sensori resta sospesa;
-    \item al rilevamento di un nuovo movimento, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per 
-    ripristinare il pattern di logging normale.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsubsection{UC4.7 -- Segnalazione di errore generico}
-\label{uc:uc_led_errore}
-
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
-\begin{itemize}
-    \item Si verifica una condizione di errore o malfunzionamento generica.
-\end{itemize}
-
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item Il LED mostra il pattern rosso con lampeggio veloce (circa 4 Hz).
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware rileva una condizione di errore;
-    \item il modulo di gestione del LED applica il pattern rosso con lampeggio veloce, con priorità 
-    su qualunque altro stato, incluso quello di microSD mancante;
-    \item il pattern rimane attivo finché la condizione di errore non viene risolta o il dispositivo 
-    riavviato;
-    \item non appena la condizione di errore viene risolta, il firmware richiama \hyperref[uc:uc_stato_led]{UC4} 
-    per applicare il pattern corrispondente allo stato operativo corrente.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsection{UC5 -- Configurazione dell'\gls{odr} (ODR) dei sensori}
-\label{uc:uc_config_odr}
+\subsection{UC5-F -- Gestione della capacità di registrazione e blocco automatico}
+\label{uc:uc_gestione_capacita}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\columnwidth]{../img/usecase/thesis/files/img/usecase/UC5.png}
-    \caption{Diagramma UML -- UC5: Configurazione dell'ODR dei sensori}
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC5.png}
+    \caption{UC5-F -- Gestione della capacità di registrazione e blocco automatico}
     \label{fig:uc5_diagram}
 \end{figure}
 
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item Il dispositivo è raggiungibile per la configurazione (es. tramite pairing BLE già 
-    stabilito cfr. \hyperref[uc:uc_led_pairing_ble]{UC4.2}).
+    \item \textbf{Attore Primario:} nessuno; il caso d'uso è innescato internamente da
+    \hyperref[uc:uc_storage_binario_sd]{UC2-F}.
+
+    \item \textbf{Precondizioni:} lo spazio occupato dal file relativo a un sensore è stato calcolato
+    (cfr. \hyperref[uc:uc_calcolo_spazio]{UC3-F}).
+
+    \item \textbf{Postcondizioni:} la sessione risulta interrotta oppure i dati meno recenti del
+    sensore risultano sovrascritti, in base al fatto che il GPS abbia o meno raggiunto la capacità
+    massima di archiviazione dentro al proprio file.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware verifica se lo spazio occupato dal file del sensore ha raggiunto il limite
+        previsto per quel sensore;
+        \item se il sensore è il modulo GPS, il firmware interrompe automaticamente la sessione di
+        registrazione e lo notifica all'applicazione (cfr. \hyperref[uc:uc_notifica_blocco_gps]{UC6-A});
+        \item se il sensore invece è l'IMU, il barometro oppure il magnetometro, il firmware
+        prosegue la registrazione sovrascrivendo i dati meno recenti presenti nel file.
+    \end{enumerate}
 \end{itemize}
 
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item La nuova frequenza di campionamento è salvata in memoria persistente e applicata alle 
-    acquisizioni successive.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item L'utente richiede la modifica della frequenza di campionamento;
-    \item il firmware riceve il nuovo valore richiesto;
-    \item il firmware salva la nuova configurazione in memoria persistente;
-    \item il firmware applica la nuova frequenza alle acquisizioni successive.
-\end{enumerate}
-
-\textbf{Scenari alternativi:} nessuno.
-
-\textbf{Inclusioni:} nessuna.
-
-\textbf{Estensioni:} nessuna.
-
-\subsection{UC6 -- Sospensione dell'acquisizione sensori in stato di inattività}
-\label{uc:uc_sospensione_sensori}
+\subsection{UC6-A -- Notifica di sessione bloccata per spazio GPS esaurito}
+\label{uc:uc_notifica_blocco_gps}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\columnwidth]{../img/usecase/thesis/files/img/usecase/UC6.png}
-    \caption{Diagramma UML -- UC6: Sospensione dell'acquisizione sensori in stato di inattività}
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC6.png}
+    \caption{UC6-A -- Notifica di sessione bloccata per spazio GPS esaurito}
     \label{fig:uc6_diagram}
 \end{figure}
 
-\textbf{Attore:} accelerometro.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item È in corso una sessione di registrazione attiva.
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} il file dedicato al modulo GPS ha raggiunto il limite massimo di
+    spazio previsto (cfr. \hyperref[uc:uc_gestione_capacita]{UC5-F}).
+
+    \item \textbf{Postcondizioni:} la sessione di registrazione risulta interrotta e l'utente è stato
+    informato del motivo dell'interruzione.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware notifica all'applicazione l'interruzione della sessione;
+        \item l'applicazione mostra all'utente un messaggio che indica il raggiungimento della
+        capacità massima prevista per i dati GPS.
+    \end{enumerate}
 \end{itemize}
 
-\textbf{Postcondizioni:}
-\begin{itemize}
-    \item L'acquisizione dei sensori non essenziali risulta sospesa o riattivata in base allo stato di 
-    movimento rilevato.
-\end{itemize}
-
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware monitora costantemente i dati dell'accelerometro;
-    \item il firmware verifica se non si sono registrate variazioni significative per l'intervallo di 
-    tempo configurato;
-    \item al superamento dell'intervallo, il firmware sospende l'acquisizione dei sensori non essenziali;
-    \item il firmware richiama \hyperref[uc:uc_stato_led]{UC4} per applicare il pattern LED di sospensione 
-    (cfr. \hyperref[uc:uc_led_sospensione]{UC4.6});
-    \item il firmware continua a monitorare l'accelerometro per rilevare un nuovo movimento;
-    \item al rilevamento di movimento, il firmware riattiva l'acquisizione e applica  
-    \hyperref[uc:uc_stato_led]{UC4} per ripristinare il pattern di logging normale.
-\end{enumerate}
-
-\textbf{Scenari alternativi:}
-\begin{itemize}
-    \item[1a.] la sospensione automatica è stata disabilitata dall'utente: il firmware non sospende mai 
-    l'acquisizione, indipendentemente dallo stato di movimento rilevato.
-\end{itemize}
-
-\textbf{Inclusioni:} \hyperref[uc:uc_stato_led]{UC4}.
-
-\textbf{Estensioni:} nessuna.
-
-\subsection{UC7 -- Calibrazione dei sensori}
-\label{uc:uc_calibrazione_sensori}
+\subsection{UC7-F -- Recupero della sessione dopo rimozione SD}
+\label{uc:uc_recovery_sessione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\columnwidth]{../img/usecase/thesis/files/img/usecase/UC7.png}
-    \caption{Diagramma UML -- UC7: Calibrazione dei sensori}
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC7.png}
+    \caption{UC7-F -- Recupero della sessione dopo rimozione SD}
     \label{fig:uc7_diagram}
 \end{figure}
 
-\textbf{Attore:} utente.
-
-\textbf{Precondizioni:}
 \begin{itemize}
-    \item Il dispositivo è alla prima configurazione oppure non esiste una calibrazione valida in memoria 
-    per la sessione corrente.
+    \item \textbf{Attore Primario:} scheda microSD.
+
+    \item \textbf{Precondizioni:} era in corso una sessione di registrazione, interrotta in modo
+    imprevisto a causa della rimozione della scheda microSD.
+
+    \item \textbf{Postcondizioni:} la registrazione riprende dal punto corretto all'interno dei file
+    di sessione, senza perdita né sovrascrittura dei dati già acquisiti.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item al reinserimento della scheda microSD, il firmware rileva la presenza di una sessione
+        precedentemente interrotta;
+        \item il firmware individua, per ciascun file di sessione, l'ultima posizione di scrittura valida;
+        \item il firmware ripristina lo stato di scrittura a partire da tale posizione;
+        \item il firmware riprende la registrazione dei dati in coda ai file esistenti.
+    \end{enumerate}
 \end{itemize}
 
-\textbf{Postcondizioni:}
+\subsection{UC8-F -- Notifica di rimozione della scheda microSD}
+\label{uc:uc_notifica_sd_mancante}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC8.png}
+    \caption{UC8-F -- Notifica di rimozione della scheda microSD}
+    \label{fig:uc8_diagram}
+\end{figure}
+
 \begin{itemize}
-    \item I parametri di calibrazione sono salvati in memoria persistente e applicati alle letture sensore 
-    successive.
+    \item \textbf{Attore Primario:} scheda microSD.
+
+    \item \textbf{Precondizioni:} è in corso, oppure si sta tentando di avviare, una sessione di
+    registrazione.
+
+    \item \textbf{Postcondizioni:} l'applicazione è stata informata dell'assenza della scheda microSD.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware rileva l'assenza della scheda microSD;
+        \item il firmware notifica lo stato di assenza della scheda all'applicazione;
+        \item il firmware applica il pattern LED corrispondente (cfr. \hyperref[uc:uc_led_sd_mancante]{UC12.1-F}).
+    \end{enumerate}
+
+    \item \textbf{Inclusioni:} \hyperref[uc:uc_led_sd_mancante]{UC12.1-F}.
 \end{itemize}
 
-\textbf{Scenario principale:}
-\begin{enumerate}
-    \item Il firmware rileva l'assenza di una calibrazione valida;
-    \item il firmware avvia la procedura di calibrazione, richiedendo che il dispositivo esegua determinati movimenti;
-    \item il firmware calcola gli offset di calibrazione;
-    \item il firmware salva i parametri di calibrazione in memoria persistente;
-    \item il firmware applica i parametri di calibrazione alle acquisizioni successive (cfr. 
-    \hyperref[uc:uc_acquisizione_binaria]{UC1}).
-\end{enumerate}
+\subsection{UC9-A -- Gestione della rimozione SD durante la sessione}
+\label{uc:uc_gestione_sd_rimossa}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC9.png}
+    \caption{UC9-A -- Gestione della rimozione SD durante la sessione}
+    \label{fig:uc9_diagram}
+\end{figure}
 
-\textbf{Scenari alternativi:} nessuno.
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
 
-\textbf{Inclusioni:} nessuna.
+    \item \textbf{Precondizioni:} è in corso una sessione di registrazione attiva e il firmware ha
+    notificato l'assenza della scheda microSD (cfr. \hyperref[uc:uc_notifica_sd_mancante]{UC8-F}).
 
-\textbf{Estensioni:} nessuna.
+    \item \textbf{Postcondizioni:} la sessione risulta sospesa oppure interrotta, in base alla scelta
+    dell'utente o al successivo reinserimento della scheda.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item l'applicazione riceve la notifica di assenza della scheda microSD;
+        \item l'applicazione sospende la sessione e mostra il messaggio di sheda microSD mancante,
+        offrendo la possibilità di interromperla manualmente;
+        \item l'utente reinserisce la scheda microSD;
+        \item l'applicazione rileva il ripristino della scheda, chiude il messaggio e la sessione
+        riprende normalmente.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se l'utente preme il tasto per interrompere la sessione, la sessione viene terminata
+        definitivamente.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC10-A -- Gestione dell'assenza della SD all'avvio sessione}
+\label{uc:uc_gestione_sd_assente_avvio}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC10.png}
+    \caption{UC10-A -- Gestione dell'assenza della SD all'avvio sessione}
+    \label{fig:uc10_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} l'utente ha richiesto l'avvio di una nuova sessione di registrazione
+    e il firmware ha notificato l'assenza della scheda microSD (cfr.
+    \hyperref[uc:uc_notifica_sd_mancante]{UC8-F}).
+
+    \item \textbf{Postcondizioni:} la sessione viene avviata solo dopo che la scheda microSD risulta
+    correttamente inserita.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item l'utente richiede l'avvio di una nuova sessione;
+        \item l'applicazione riceve la notifica di assenza della scheda microSD;
+        \item l'applicazione mostra il messaggio di scheda microSD mancante con il pulsante per ritentare l'avvio della sessione;
+        \item l'utente inserisce la scheda microSD e ritenta l'avvio della sessione;
+        \item il firmware verifica la presenza della scheda e, in parallelo con l'applicazione,
+         avvia la sessione (cfr. \hyperref[uc:uc_sessione_ble]{UC15-F}).
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se la scheda risulta ancora assente, l'applicazione mostra nuovamente il messaggio
+        di scheda microSD mancante con il pulsante per ritentare l'avvio della sessione.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC11-F -- Acquisizione dati dal bus CAN}
+\label{uc:uc_lettura_can_ecu}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC11.png}
+    \caption{UC11-F -- Acquisizione dati dal CAN}
+    \label{fig:uc11_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} ECU del veicolo mediante bus CAN.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item il modulo di interfaccia CAN è collegato al bus dati del veicolo;
+        \item è in corso una sessione di registrazione attiva.
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} i dati ECU acquisiti sono associati ad un timestamp e resi disponibili per la registrazione (cfr.
+    \hyperref[uc:uc_storage_binario_sd]{UC2-F}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware si mette in ascolto sul bus CAN;
+        \item la ECU trasmette periodicamente i messaggi contenenti i parametri motore;
+        \item il firmware riceve e decodifica ciascun messaggio CAN;
+        \item il firmware associa a ciascun dato il timestamp corrente;
+        \item il firmware serializza i dati in formato binario;;
+        \item il firmware inserisce i dati nel buffer di acquisizione.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se il messaggio CAN ricevuto non è riconosciuto o risulta malformato, il messaggio
+        viene scartato.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC12-F -- Gestione dello stato del firmware tramite \gls{led}}
+\label{uc:uc_stato_led}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{../img/diagrammi/usecase/UC12.png}
+    \caption{UC12-F -- Gestione dello stato del firmware tramite LED}
+    \label{fig:uc12_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} il dispositivo è alimentato e il firmware è in esecuzione.
+
+    \item \textbf{Postcondizioni:} il LED riflette lo stato operativo corrente del dispositivo,
+    secondo un ordine di priorità tra le condizioni concorrenti.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware rileva un cambiamento nello stato operativo del dispositivo;
+        \item il firmware seleziona il pattern di colore/lampeggio associato alla condizione a
+        priorità più alta tra quelle attive;
+        \item il firmware applica il pattern al LED;
+        \item l'utente osserva il LED e ne interpreta lo stato del dispositivo.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se si verificano più condizioni contemporaneamente, il firmware seleziona il pattern
+        relativo alla condizione a priorità più alta.
+    \end{itemize}
+
+    \item \textbf{Estensioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_led_sd_mancante]{UC12.1-F};
+        \item \hyperref[uc:uc_led_errore]{UC12.2-F};
+        \item \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F};
+        \item \hyperref[uc:uc_led_pairing_ble]{UC12.4-F};
+        \item \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F};
+        \item \hyperref[uc:uc_led_calibrazione]{UC12.6-F};
+        \item \hyperref[uc:uc_led_download]{UC12.7-F};
+        \item \hyperref[uc:uc_led_eliminazione]{UC12.8-F};
+        \item \hyperref[uc:uc_led_sospensione]{UC12.9-F};
+        \item \hyperref[uc:uc_led_logging]{UC12.10-F};
+        \item \hyperref[uc:uc_led_standby]{UC12.11-F}.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{UC12.1-F -- Segnalazione di scheda microSD mancante}
+\label{uc:uc_led_sd_mancante}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_1.png}
+    \caption{UC12.1-F -- Segnalazione di scheda microSD mancante}
+    \label{fig:uc12_1_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} la scheda microSD risulta assente (cfr.
+    \hyperref[uc:uc_notifica_sd_mancante]{UC8-F}) e si sta tentando di avviare una sessione oppure si è 
+    in piana sessione di registrazione.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern rosso con lampeggio veloce,
+    con priorità massima su ogni altro stato.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'assenza della scheda microSD;
+        \item il modulo applica il pattern rosso con lampeggio veloce;
+        \item il pattern resta attivo finché la scheda non viene rilevata correttamente.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.2-F -- Segnalazione di errore generico}
+\label{uc:uc_led_errore}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_2.png}
+    \caption{UC12.2-F -- Segnalazione di errore generico}
+    \label{fig:uc12_2_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} si verifica una condizione di errore o malfunzionamento generica.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern rosso fisso, con priorità su ogni stato
+    successivo.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva la condizione di errore;
+        \item il modulo applica il pattern rosso fisso;
+        \item il pattern resta attivo finché l'errore non viene risolto o il dispositivo riavviato.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.3-F -- Segnalazione di pairing WiFi}
+\label{uc:uc_led_pairing_wifi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_3.png}
+    \caption{UC12.3-F -- Segnalazione di pairing WiFi}
+    \label{fig:uc12_3_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso una procedura di associazione \textit{pairing} con una rete WiFi.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern blu con lampeggio veloce.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio della procedura di pairing WiFi;
+        \item il modulo applica il pattern blu con lampeggio veloce;
+        \item il pattern rimane attivo per l'intera durata del pairing.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.4-F -- Segnalazione di pairing BLE}
+\label{uc:uc_led_pairing_ble}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_4.png}
+    \caption{UC12.4-F -- Segnalazione di pairing BLE}
+    \label{fig:uc12_4_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso una procedura di associazione (\textit{pairing}) con un
+    dispositivo tramite BLE.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern blu con lampeggio lento.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio della procedura di pairing BLE;
+        \item il modulo applica il pattern blu con lampeggio lento;
+        \item il pattern rimane attivo per l'intera durata del pairing.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.5-F -- Segnalazione di recupero dati per calibrazione}
+\label{uc:uc_led_recupero_calibrazione}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_5.png}
+    \caption{UC12.5-F -- Segnalazione di recupero dati per calibrazione}
+    \label{fig:uc12_5_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso l'acquisizione dei campioni necessari a una procedura
+    di calibrazione (cfr. \hyperref[uc:uc_calibrazione_imu]{UC16-F}).
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern giallo fisso.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio dell'acquisizione dei campioni di calibrazione;
+        \item il modulo applica il pattern giallo fisso;
+        \item il pattern rimane attivo per l'intera durata della fase di acquisizione dei dati di
+        calibrazione.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.6-F -- Segnalazione di calibrazione in corso}
+\label{uc:uc_led_calibrazione}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_6.png}
+    \caption{UC12.6-F -- Segnalazione di calibrazione in corso}
+    \label{fig:uc12_6_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso l'elaborazione dei dati di calibrazione.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern giallo pulsante (effetto \textit{breathing}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio dell'elaborazione dei dati di calibrazione;
+        \item il modulo applica il pattern giallo pulsante;
+        \item il pattern rimane attivo finché la calibrazione non è completata.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.7-F -- Segnalazione di download dati}
+\label{uc:uc_led_download}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_7.png}
+    \caption{UC12.7-F -- Segnalazione di download dati}
+    \label{fig:uc12_7_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso il download dei dati registrati verso l'applicazione.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern viola fisso.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio del download dei dati;
+        \item il modulo applica il pattern viola fisso;
+        \item il pattern rimane attivo per l'intera durata del download.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.8-F -- Segnalazione di eliminazione dati}
+\label{uc:uc_led_eliminazione}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_8.png}
+    \caption{UC12.8-F -- Segnalazione di eliminazione dati}
+    \label{fig:uc12_8_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso l'eliminazione dei dati registrati dalla scheda microSD.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern viola con lampeggio regolare.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio dell'eliminazione dei dati;
+        \item il modulo applica il pattern viola con lampeggio regolare;
+        \item il pattern rimane attivo per l'intera durata dell'eliminazione.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.9-F -- Segnalazione di sospensione per inattività}
+\label{uc:uc_led_sospensione}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_9.png}
+    \caption{UC12.9-F -- Segnalazione di sospensione per inattività}
+    \label{fig:uc12_9_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} si verifica la sospensione automatica dell'acquisizione sensori
+    descritta in \hyperref[uc:uc_sospensione_sensori]{UC13-F}.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern verde pulsante lento (effetto
+    \textit{breathing}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva la sospensione dell'acquisizione sensori;
+        \item il modulo applica il pattern verde pulsante lento;
+        \item il pattern rimane attivo finché l'acquisizione sensori resta sospesa.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.10-F -- Segnalazione di logging attivo}
+\label{uc:uc_led_logging}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_10.png}
+    \caption{UC12.10-F -- Segnalazione di logging attivo}
+    \label{fig:uc12_10_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso una regolare sessione di registrazione dati (cfr.
+    \hyperref[uc:uc_sessione_ble]{UC15-F}).
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern verde fisso.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'avvio, o la ripresa, della sessione di registrazione;
+        \item il modulo applica il pattern verde fisso;
+        \item il pattern rimane attivo per l'intera durata della sessione.
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{UC12.11-F -- Segnalazione di dispositivo avviato in attesa di sessione}
+\label{uc:uc_led_standby}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_11.png}
+    \caption{UC12.11-F -- Segnalazione di dispositivo avviato in attesa di sessione}
+    \label{fig:uc12_11_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} il dispositivo è stato avviato correttamente, oppure una sessione
+    precedente è appena terminata (cfr. \hyperref[uc:uc_sessione_ble]{UC15-F}), e non è attiva
+    alcuna delle altre condizioni.
+
+    \item \textbf{Postcondizioni:} il LED mostra il pattern bianco fisso.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il modulo di gestione del LED rileva l'assenza di ogni altra condizione a priorità
+        più alta;
+        \item il modulo applica il pattern bianco fisso;
+        \item il pattern resta attivo finché non si presenta una condizione a priorità più alta.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{UC13-F -- Sospensione dell'acquisizione sensori in stato di inattività}
+\label{uc:uc_sospensione_sensori}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{../img/diagrammi/usecase/UC13.png}
+    \caption{UC13-F -- Sospensione dell'acquisizione sensori in stato di inattività}
+    \label{fig:uc13_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} modulo GPS 
+    
+    \item \textbf{Attore Secondario} IMU (accelerometro).
+
+    \item \textbf{Precondizioni:} è in corso una sessione di registrazione attiva.
+
+    \item \textbf{Postcondizioni:} l'acquisizione dei sensori non essenziali risulta sospesa o
+    riattivata in base allo stato di movimento rilevato.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item se il modulo GPS dispone di un \textit{fix} valido, il firmware monitora la velocità
+        rilevata dal GPS; in caso contrario monitora i dati dell'accelerometro dell'IMU;
+        \item il firmware verifica se non si sono registrate variazioni significative per
+        l'intervallo di tempo configurato;
+        \item al superamento dell'intervallo, il firmware sospende l'acquisizione dei sensori non
+        essenziali;
+        \item il firmware applica il pattern LED di sospensione (cfr. \hyperref[uc:uc_led_sospensione]{UC12.9-F});
+        \item il firmware continua a monitorare la sorgente disponibile (GPS o IMU) per rilevare un
+        nuovo movimento;
+        \item al rilevamento di movimento, il firmware riattiva l'acquisizione e applica
+        \hyperref[uc:uc_led_logging]{UC12.10-F} per ripristinare il pattern di logging attivo.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se la sospensione automatica è stata disabilitata dall'utente (cfr.
+        \hyperref[uc:uc_config_timeout]{UC14-A}), il firmware non sospende mai l'acquisizione,
+        indipendentemente dallo stato di movimento rilevato.
+    \end{itemize}
+
+    \item \textbf{Inclusioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_led_sospensione]{UC12.9-F};
+        \item \hyperref[uc:uc_led_logging]{UC12.10-F}.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC14-A -- Configurazione del tempo di inattività}
+\label{uc:uc_config_timeout}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{../img/diagrammi/usecase/UC14.png}
+    \caption{UC14-A -- Configurazione del tempo di inattività}
+    \label{fig:uc14_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è stabilita una connessione BLE tra dispositivo e applicazione.
+
+    \item \textbf{Postcondizioni:} il valore configurato per il tempo di inattività è salvato e
+    applicato alla sospensione automatica dell'acquisizione (cfr.
+    \hyperref[uc:uc_sospensione_sensori]{UC13-F}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item l'utente seleziona uno dei valori disponibili per il tempo di inattività;
+        \item l'applicazione trasmette il valore selezionato al firmware;
+        \item il firmware salva la nuova configurazione e la applica alle sessioni successive.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{UC15-F -- Avvio e interruzione sessione tramite comandi BLE}
+\label{uc:uc_sessione_ble}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC15.png}
+    \caption{UC15-F -- Avvio e interruzione sessione tramite comandi BLE}
+    \label{fig:uc15_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} applicazione.
+
+    \item \textbf{Precondizioni:} è stabilita una connessione BLE tra dispositivo e applicazione.
+
+    \item \textbf{Postcondizioni:} la sessione di registrazione risulta avviata o interrotta in base
+    al comando ricevuto; i sensori non essenziali restano dormienti al di fuori di una sessione attiva.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware riceve, tramite BLE, un comando di avvio o interruzione sessione;
+        \item se il comando è di avvio, il firmware attiva i sensori, crea la cartella di sessione
+        (cfr. \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}), esegue le calibrazioni automatiche
+        previste (cfr. \hyperref[uc:uc_calibrazione_altitudine]{UC20-F}) e applica il pattern LED
+        di logging attivo (cfr. \hyperref[uc:uc_led_logging]{UC12.10-F});
+        \item se il comando è di interruzione, il firmware termina la registrazione, pone i sensori
+        non essenziali in stato dormiente e applica il pattern LED di attesa sessione (cfr.
+        \hyperref[uc:uc_led_standby]{UC12.11-F}).
+    \end{enumerate}
+
+    \item \textbf{Inclusioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_led_logging]{UC12.10-F};
+        \item \hyperref[uc:uc_led_standby]{UC12.11-F}.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC16-F -- Calibrazione dell'IMU}
+\label{uc:uc_calibrazione_imu}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC16.png}
+    \caption{UC16-F -- Calibrazione dell'IMU}
+    \label{fig:uc16_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è stabilita una connessione BLE tra dispositivo e applicazione.
+
+    \item \textbf{Postcondizioni:} i parametri di calibrazione, calcolati a partire dai dati di
+    giroscopio e accelerometro dell'IMU, sono salvati (cfr.
+    \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}) e applicati alle letture sensore successive,
+    indipendentemente dal posizionamento del dispositivo sul veicolo.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware avvia la procedura di calibrazione, guidando l'utente attraverso una
+        sequenza di movimenti (cfr. \hyperref[uc:uc_sequenza_calibrazione]{UC17-A});
+        \item per ciascun movimento, il firmware acquisisce i campioni di giroscopio e accelerometro,
+        applicando il pattern LED corrispondente (cfr. \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F});
+        \item il firmware elabora i dati raccolti applicando il pattern LED corrispondente (cfr. \hyperref[uc:uc_led_calibrazione]{UC12.6-F});
+        \item il firmware applica la matrice di calibrazione e i dati di calibrazione alle acquisizioni
+        successive (cfr. \hyperref[uc:uc_acquisizione_binaria]{UC1-F}).
+    \end{enumerate}
+
+    \item \textbf{Inclusioni:}
+    \begin{itemize}
+        \item \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F};
+        \item \hyperref[uc:uc_led_calibrazione]{UC12.6-F};
+        \item \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC17-A -- Sequenza guidata di calibrazione dell'IMU}
+\label{uc:uc_sequenza_calibrazione}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC17.png}
+    \caption{UC17-A -- Sequenza guidata di calibrazione dell'IMU}
+    \label{fig:uc17_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è stata avviata una procedura di calibrazione dell'IMU (cfr.
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F}).
+
+    \item \textbf{Postcondizioni:} l'utente ha completato correttamente i tre movimenti richiesti
+    dalla procedura di calibrazione.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item l'applicazione richiede all'utente di tenere la moto ferma e perfettamente in piedi;
+        \item l'applicazione richiede all'utente di inclinare la moto verso destra;
+        \item l'applicazione richiede all'utente di camminare per 2-3 metri in avanti con la moto;
+        \item al termine dei tre passaggi, l'applicazione mostra l'esito della calibrazione.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:}
+    \begin{itemize}
+        \item se i dati raccolti durante uno dei tre passaggi risultano poco significativi o non
+        conformi rispetto al passaggio precedente, l'applicazione mostra un messaggio che richiede
+        la ripetizione del movimento corrente.
+    \end{itemize}
+\end{itemize}
+
+\subsection{UC18-A -- Visualizzazione dei dati calibrati}
+\label{uc:uc_visualizzazione_dati_calibrati}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC18.png}
+    \caption{UC18-A -- Visualizzazione dei dati calibrati}
+    \label{fig:uc18_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item l'utente ha avviato una sessione;
+        \item sono state completate le calibrazioni previste per la sessione (cfr.
+        \hyperref[uc:uc_calibrazione_imu]{UC16-F}, \hyperref[uc:uc_calibrazione_altitudine]{UC20-F}).
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} l'utente visualizza i dati sensore corretti secondo i parametri
+    di calibrazione applicati.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware trasmette all'applicazione i dati sensore già calibrati (cfr.
+        \hyperref[uc:uc_salvataggio_dati_calibrati]{UC21-F});
+        \item l'applicazione mostra i valori corretti all'utente.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{UC19-A -- Visualizzazione dei movimenti della moto in tempo reale}
+\label{uc:uc_visualizzazione_movimenti}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{../img/diagrammi/usecase/UC19.png}
+    \caption{UC19-A -- Visualizzazione dei movimenti della moto in tempo reale}
+    \label{fig:uc19_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} utente.
+
+    \item \textbf{Precondizioni:} è in corso una sessione di registrazione con calibrazione IMU
+    completata (cfr. \hyperref[uc:uc_calibrazione_imu]{UC16-F}).
+
+    \item \textbf{Postcondizioni:} l'utente visualizza in tempo reale i movimenti della moto rilevati
+    dall'IMU.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware trasmette in tempo reale all'applicazione i dati calibrati di inclinazione
+        frontale, inclinazione laterale e accelerazione frontale;
+        \item l'applicazione mostra tali valori numerici all'utente;
+        \item l'applicazione applica gli stessi dati a un modello tridimensionale della moto,
+        replicando i movimenti sui rispettivi assi X, Y e Z.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{UC20-F -- Calibrazione automatica dell'altitudine a inizio sessione}
+\label{uc:uc_calibrazione_altitudine}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC20.png}
+    \caption{UC20-F -- Calibrazione automatica dell'altitudine a inizio sessione}
+    \label{fig:uc20_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} barometro.
+
+    \item \textbf{Precondizioni:} è stata avviata una nuova sessione di registrazione (cfr.
+    \hyperref[uc:uc_sessione_ble]{UC15-F}).
+
+    \item \textbf{Postcondizioni:} il valore di altitudine iniziale, calcolato tramite il barometro,
+    è salvato e associato alla sessione corrente (cfr. \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item all'avvio della sessione, il firmware acquisisce le letture del barometro;
+        \item il firmware calcola il valore di altitudine di riferimento;
+        \item il firmware applica tale valore come riferimento alle letture di altitudine successive.
+    \end{enumerate}
+
+    \item \textbf{Flusso Alternativo:} i dati raccolti dal barometro non risultano abbastanza stabili per cui la sessione 
+    si avvia senza una calibrazione dell'altitudine di partenza.
+
+    \item \textbf{Inclusioni:} \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}.
+\end{itemize}
+
+\subsection{UC21-F -- Salvataggio delle calibrazioni collegate alla sessione}
+\label{uc:uc_salvataggio_calibrazioni}
+\label{uc:uc_salvataggio_dati_calibrati}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC21.png}
+    \caption{UC21-F -- Salvataggio delle calibrazioni collegate alla sessione}
+    \label{fig:uc21_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} nessuno; il caso d'uso è innescato internamente da
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F} e da \hyperref[uc:uc_calibrazione_altitudine]{UC20-F}.
+
+    \item \textbf{Precondizioni:} è stata completata una procedura di calibrazione (IMU o altitudine).
+
+    \item \textbf{Postcondizioni:} i dati di calibrazione dell'altitudine sono salvati all'interno
+    della cartella di sessione, mentre i dati di calibrazione dell'IMU sono salvati nella cartella
+    principale contenente tutte le cartelle di sessione.
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware crea, se non già presenti, la cartella dedicata al salvataggio delle
+        sessioni e la cartella della sessione corrente;
+        \item il firmware salva il file di calibrazione dell'altitudine all'interno della cartella
+        di sessione, mentre salva il file di calibrazione dell'IMU nella cartella principale.
+    \end{enumerate}
+\end{itemize}
 
 \section{Tracciamento dei requisiti}
-In questa sezione si riporta la lista di requisiti rilevata in seguito all'analisi dell'utenza e degli use 
+In questa sezione si riporta la lista di requisiti rilevata in seguito all'analisi dell'utenza e degli use
 case; i requisiti sono identificati da un codice definito con la seguente nomenclatura:
 \begin{center}
 \textbf{R-(Tipo)-(Urgenza)-(Codice)}
@@ -574,7 +1080,7 @@ Dove:
 \end{itemize}
 
 \subsection{Requisiti funzionali}
-Nella Tabella \ref{tab:requisiti_funzionali} si riporta il tracciamento dei requisiti funzionali, ovvero le 
+Nella Tabella \ref{tab:requisiti_funzionali} si riporta il tracciamento dei requisiti funzionali, ovvero le
 funzionalità e i servizi che il sistema deve offrire per essere conforme alle aspettative.
 
 \begin{center}
@@ -597,31 +1103,84 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
     \endfoot
     \endlastfoot
 
-    R-F-Ob-1 & EggLog deve acquisire e serializzare in formato binario i dati provenienti dai 
-    sensori, riducendo la dimensione del buffer in RAM & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
+    R-F-Ob-1\label{req:rf1} & EggLog deve acquisire e serializzare in formato binario i dati provenienti dai
+    sensori & \hyperref[uc:uc_acquisizione_binaria]{UC1-F} \\
     \hline
-    R-F-Ob-2 & EggLog deve scrivere su scheda microSD i dati acquisiti in formato binario & 
-    \hyperref[uc:uc_storage_binario_sd]{UC2} \\
+    R-F-Ob-2\label{req:rf2} & EggLog deve scrivere su scheda microSD i dati acquisiti in formato binario &
+    \hyperref[uc:uc_storage_binario_sd]{UC2-F} \\
     \hline
-    R-F-Ob-3 & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN & 
-    \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
+    R-F-Ob-3\label{req:rf3} & EggLog deve calcolare e trasmettere all'applicazione, per ciascun sensore, la
+    percentuale di spazio occupato nel relativo file di sessione &
+    \hyperref[uc:uc_calcolo_spazio]{UC3-F} \\
     \hline
-    R-F-Ob-4 & EggLog deve eseguire una procedura di calibrazione dei sensori a inizio sessione o 
-    alla prima configurazione del dispositivo & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
+    R-F-De-4\label{req:rf4} & L'utente deve poter visualizzare in EggLog App la percentuale di spazio di
+    archiviazione occupato da ciascun sensore, incluso lo stato di sovrascrittura in corso &
+    \hyperref[uc:uc_visualizzazione_spazio]{UC4-A} \\
     \hline
-    R-F-De-5 & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite pattern 
-    di colore e lampeggio distinti, lo stato corrente del dispositivo & \hyperref[uc:uc_stato_led]{UC4}, 
-    \hyperref[uc:uc_led_pairing_wifi]{UC4.1}, \hyperref[uc:uc_led_pairing_ble]{UC4.2}, 
-    \hyperref[uc:uc_led_standby]{UC4.3}, \hyperref[uc:uc_led_sd_mancante]{UC4.4}, 
-    \hyperref[uc:uc_led_logging]{UC4.5}, \hyperref[uc:uc_led_sospensione]{UC4.6}, 
-    \hyperref[uc:uc_led_errore]{UC4.7} \\
+    R-F-Ob-5\label{req:rf5} & EggLog deve interrompere automaticamente la sessione al raggiungimento della
+    capacità massima dei dati GPS, mentre deve proseguire la registrazione sovrascrivendo i dati
+    meno recenti per gli altri sensori & \hyperref[uc:uc_gestione_capacita]{UC5-F} \\
     \hline
-    R-F-De-6 & L'utente deve poter configurare l'output rate (ODR) dei sensori nell'intervallo 10-100 Hz & 
-    \hyperref[uc:uc_config_odr]{UC5} \\
+    R-F-Ob-6\label{req:rf6} & L'utente deve essere informato in EggLog App quando la sessione viene interrotta per
+    esaurimento dello spazio dedicato ai dati GPS & \hyperref[uc:uc_notifica_blocco_gps]{UC6-A} \\
     \hline
-    R-F-De-7 & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in 
-    stato di inattività prolungata e riattivarla al rilevamento di movimento & 
-    \hyperref[uc:uc_sospensione_sensori]{UC6} \\
+    R-F-Ob-7\label{req:rf7} & EggLog deve poter riprendere una sessione interrotta in modo imprevisto (rimozione della
+    scheda microSD oppure un guasto al modulo SD) senza perdita né sovrascrittura dei dati già
+    acquisiti & \hyperref[uc:uc_recovery_sessione]{UC7-F} \\
+    \hline
+    R-F-Ob-8\label{req:rf8} & EggLog deve rilevare e notificare a EggLog App l'assenza della scheda microSD &
+    \hyperref[uc:uc_notifica_sd_mancante]{UC8-F} \\
+    \hline
+    R-F-De-9\label{req:rf9} & EggLog App deve sospendere la visualizzazione della sessione in corso quando la
+    scheda microSD viene rimossa, offrendo la possibilità di interromperla manualmente o di
+    riprenderla al reinserimento & \hyperref[uc:uc_gestione_sd_rimossa]{UC9-A} \\
+    \hline
+    R-F-De-10\label{req:rf10} & EggLog App deve impedire l'avvio di una nuova sessione in assenza della scheda
+    microSD, offrendo la possibilità di riprovare dopo il suo inserimento &
+    \hyperref[uc:uc_gestione_sd_assente_avvio]{UC10-A} \\
+    \hline
+    R-F-Ob-11\label{req:rf11} & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN &
+    \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
+    \hline
+    R-F-De-12\label{req:rf12} & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite
+    pattern di colore e lampeggio distinti e reciprocamente esclusivi, lo stato corrente del
+    dispositivo & \hyperref[uc:uc_stato_led]{UC12-F}, \hyperref[uc:uc_led_sd_mancante]{UC12.1-F},
+    \hyperref[uc:uc_led_errore]{UC12.2-F}, \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F},
+    \hyperref[uc:uc_led_pairing_ble]{UC12.4-F}, \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F},
+    \hyperref[uc:uc_led_calibrazione]{UC12.6-F}, \hyperref[uc:uc_led_download]{UC12.7-F},
+    \hyperref[uc:uc_led_eliminazione]{UC12.8-F}, \hyperref[uc:uc_led_sospensione]{UC12.9-F},
+    \hyperref[uc:uc_led_logging]{UC12.10-F}, \hyperref[uc:uc_led_standby]{UC12.11-F} \\
+    \hline
+    R-F-De-13\label{req:rf13} & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in
+    stato di inattività prolungata e riattivarla al rilevamento di movimento &
+    \hyperref[uc:uc_sospensione_sensori]{UC13-F} \\
+    \hline
+    R-F-Op-14\label{req:rf14} & L'utente deve poter configurare da EggLog App il tempo di inattività che determina
+    la sospensione automatica dei sensori (mai, 10, 30 o 60 minuti) &
+    \hyperref[uc:uc_config_timeout]{UC14-A} \\
+    \hline
+    R-F-Ob-15\label{req:rf15} & EggLog deve avviare e interrompere la sessione di registrazione in seguito a comandi
+    BLE ricevuti da EggLog App & \hyperref[uc:uc_sessione_ble]{UC15-F} \\
+    \hline
+    R-F-Ob-16\label{req:rf16} & EggLog deve calibrare l'IMU guidando l'utente, tramite EggLog App, attraverso una
+    sequenza di movimenti predefinita, applicando poi tali calibrazioni alle letture
+    successive &
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F}, \hyperref[uc:uc_sequenza_calibrazione]{UC17-A} \\
+    \hline
+    R-F-De-17\label{req:rf17} & L'utente deve poter visualizzare in EggLog App i dati sensore corretti secondo i
+    parametri di calibrazione applicati & \hyperref[uc:uc_visualizzazione_dati_calibrati]{UC18-A} \\
+    \hline
+    R-F-De-18\label{req:rf18} & L'utente deve poter visualizzare in tempo reale, tramite un modello tridimensionale
+    in EggLog App, i movimenti della moto rilevati dall'IMU (inclinazione frontale, inclinazione
+    laterale e accelerazione frontale) & \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} \\
+    \hline
+    R-F-Ob-19\label{req:rf19} & EggLog deve calcolare automaticamente, tramite il barometro, un valore di altitudine
+    di riferimento a inizio sessione e applicarlo alle letture successive &
+    \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} \\
+    \hline
+    R-F-Ob-20\label{req:rf20} & EggLog deve salvare i dati di calibrazione dell'IMU nella cartella principale delle
+    sessioni e i dati di calibrazione dell'altitudine all'interno della cartella della sessione
+    corrente & \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F} \\
     \hline
     \hiderowcolors
     \caption{Tracciamento dei requisiti funzionali.}
@@ -630,8 +1189,8 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
 \end{center}
 
 \subsection{Requisiti non funzionali}
-Nella Tabella \ref{tab:requisiti_non_funzionali} si riporta il tracciamento dei requisiti non funzionali, 
-ovvero l'insieme di criteri quantificabili di qualità che il sistema sviluppato deve rispettare per essere 
+Nella Tabella \ref{tab:requisiti_non_funzionali} si riporta il tracciamento dei requisiti non funzionali,
+ovvero l'insieme di criteri quantificabili di qualità che il sistema sviluppato deve rispettare per essere
 conforme alle aspettative e agli obiettivi preposti.
 
 \begin{center}
@@ -654,22 +1213,36 @@ conforme alle aspettative e agli obiettivi preposti.
     \endfoot
     \endlastfoot
 
-    R-N-Ob-1 & Il consumo di RAM per il buffering dei dati sensore deve essere ridotto rispetto al formato 
-    testuale grazie alla serializzazione binaria & \hyperref[uc:uc_acquisizione_binaria]{UC1} \\
+    R-N-Ob-1\label{req:rn1} & Il consumo di RAM per il buffering dei dati sensore deve essere ridotto rispetto alla 
+    configurazione precedente del firmware & \hyperref[uc:uc_acquisizione_binaria]{UC1-F} \\
     \hline
-    R-N-Ob-2 & Il consumo energetico del dispositivo deve essere ridotto rispetto alla configurazione 
-    precedente grazie all'acquisizione/scrittura binaria e alla sospensione automatica in stato di 
-    inattività & \hyperref[uc:uc_acquisizione_binaria]{UC1}, \hyperref[uc:uc_sospensione_sensori]{UC6} \\
+    R-N-Ob-2\label{req:rn2} & Il consumo di CPU del dispositivo deve essere ridotto rispetto alla configurazione 
+    precedente & \hyperref[uc:uc_acquisizione_binaria]{UC1-F}, \hyperref[uc:uc_sospensione_sensori]{UC13-F} \\
     \hline
-    R-N-Db-3 & Il cambio di stato segnalato dal LED deve essere percepito come pressoché istantaneo 
-    dall'utente, e ogni pattern di colore/lampeggio deve risultare univocamente distinguibile dagli altri & 
-    \hyperref[uc:uc_stato_led]{UC4}, \hyperref[uc:uc_led_pairing_wifi]{UC4.1}, 
-    \hyperref[uc:uc_led_pairing_ble]{UC4.2}, \hyperref[uc:uc_led_standby]{UC4.3}, 
-    \hyperref[uc:uc_led_sd_mancante]{UC4.4}, \hyperref[uc:uc_led_logging]{UC4.5}, 
-    \hyperref[uc:uc_led_sospensione]{UC4.6}, \hyperref[uc:uc_led_errore]{UC4.7} \\
+    R-N-Ob-3\label{req:rn3} & Il ripristino di una sessione interrotta in modo imprevisto non deve comportare
+    perdita né duplicazione dei dati già acquisiti & \hyperref[uc:uc_recovery_sessione]{UC7-F} \\
     \hline
-    R-N-Db-4 & L'accuratezza delle misurazioni successive alla calibrazione deve rientrare entro le tolleranze 
-    specificate dal produttore dei sensori & \hyperref[uc:uc_calibrazione_sensori]{UC7} \\
+    R-N-De-4\label{req:rn4} & Il cambio di stato segnalato dal LED deve essere percepito come pressoché istantaneo
+    dall'utente, e ogni pattern di colore/lampeggio deve risultare univocamente distinguibile dagli
+    altri & \hyperref[uc:uc_stato_led]{UC12-F}, \hyperref[uc:uc_led_sd_mancante]{UC12.1-F},
+    \hyperref[uc:uc_led_errore]{UC12.2-F}, \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F},
+    \hyperref[uc:uc_led_pairing_ble]{UC12.4-F}, \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F},
+    \hyperref[uc:uc_led_calibrazione]{UC12.6-F}, \hyperref[uc:uc_led_download]{UC12.7-F},
+    \hyperref[uc:uc_led_eliminazione]{UC12.8-F}, \hyperref[uc:uc_led_sospensione]{UC12.9-F},
+    \hyperref[uc:uc_led_logging]{UC12.10-F}, \hyperref[uc:uc_led_standby]{UC12.11-F} \\
+    \hline
+    R-N-De-5\label{req:rn5} & L'accuratezza delle misurazioni successive alla calibrazione deve rientrare entro le
+    tolleranze specifiche & \hyperref[uc:uc_calibrazione_imu]{UC16-F},
+    \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} \\
+    \hline
+    R-N-De-6\label{req:rn6} & Le notifiche relative a eventi critici (assenza scheda microSD, esaurimento spazio
+    GPS) devono essere recapitate a EggLog App entro un tempo breve dal loro verificarsi &
+    \hyperref[uc:uc_notifica_sd_mancante]{UC8-F}, \hyperref[uc:uc_notifica_blocco_gps]{UC6-A},
+    \hyperref[uc:uc_gestione_sd_rimossa]{UC9-A}, \hyperref[uc:uc_gestione_sd_assente_avvio]{UC10-A} \\
+    \hline
+    R-N-Op-7\label{req:rn7} & L'aggiornamento dei dati di movimento mostrati sul modello tridimensionale in tempo
+    reale deve risultare fluido e privo di percepibili ritardi &
+    \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} \\
     \hline
     \hiderowcolors
     \caption{Tracciamento dei requisiti non funzionali.}
@@ -678,8 +1251,8 @@ conforme alle aspettative e agli obiettivi preposti.
 \end{center}
 
 \subsection{Requisiti di vincolo}
-Nella Tabella \ref{tab:requisiti_vincolo} si riporta il tracciamento dei requisiti di vincolo, ovvero 
-l'insieme delle limitazioni tecnologico-organizzative a cui il dispositivo deve sottostare per essere 
+Nella Tabella \ref{tab:requisiti_vincolo} si riporta il tracciamento dei requisiti di vincolo, ovvero
+l'insieme delle limitazioni tecnologico-organizzative a cui il dispositivo deve sottostare per essere
 conforme alle aspettative e alle esigenze degli stakeholder.
 
 \begin{center}
@@ -702,16 +1275,21 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \endfoot
     \endlastfoot
 
-    R-V-Ob-1 & EggLog del dispositivo deve appartenere alla famiglia ESP32, nello specifico 
-    ESP32-S3 & Tutti \\
+    R-V-Ob-1\label{req:rv1} & Il microcontrollore del dispositivo deve appartenere alla famiglia ESP32, nello
+    specifico ESP32-S3 & Tutti \\
     \hline
-    R-V-Ob-2 & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
+    R-V-Ob-2\label{req:rv2} & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
     \hline
-    R-V-Ob-3 & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo CAN 
-    utilizzato dalla centralina (ECU) della moto & \hyperref[uc:uc_lettura_can_ecu]{UC3} \\
+    R-V-Ob-3\label{req:rv3} & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo
+    CAN utilizzato dalla centralina (ECU) della moto & \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
     \hline
-    R-V-Ob-4 & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla scheda 
-    ESP32-S3 & \hyperref[uc:uc_stato_led]{UC4} \\
+    R-V-Ob-4\label{req:rv4} & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla
+    scheda ESP32-S3 & \hyperref[uc:uc_stato_led]{UC12-F} \\
+    \hline
+    R-V-Ob-5\label{req:rv5} & La comunicazione tra EggLog ed EggLog App per la configurazione, il controllo della
+    sessione e lo scambio dati in tempo reale deve avvenire tramite BLE &
+    \hyperref[uc:uc_config_timeout]{UC14-A}, \hyperref[uc:uc_sessione_ble]{UC15-F},
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F} \\
     \hline
     \hiderowcolors
     \caption{Tracciamento dei requisiti di vincolo.}
@@ -719,26 +1297,120 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \end{longtable}
 \end{center}
 
+\subsection{Tracciamento Fonti -- Requisiti}
+Nella Tabella \ref{tab:tracciamento_fonti_requisiti} si riporta, per ciascun caso d'uso, l'elenco dei
+requisiti da esso derivati, a complemento del tracciamento inverso riportato nelle tabelle precedenti.
+
+\begin{center}
+    \rowcolors{1}{}{tableGray}
+    \begin{longtable}{|p{3cm}|p{10.5cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Fonte}} & \multicolumn{1}{c|}{\textbf{Requisiti}}\\
+    \hline
+    \endfirsthead
+    \rowcolor{white}
+    \multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Fonte}} & \multicolumn{1}{c|}{\textbf{Requisiti}}\\
+    \hline
+    \endhead
+    \hline
+    \rowcolor{white}
+    \multicolumn{2}{|r|}{{Continua nella prossima pagina...}}\\
+    \hline
+    \endfoot
+    \endlastfoot
+
+    \hyperref[uc:uc_acquisizione_binaria]{UC1-F} & \hyperref[req:rf1]{R-F-Ob-1}, \hyperref[req:rn1]{R-N-Ob-1}, \hyperref[req:rn2]{R-N-Ob-2} \\
+    \hline
+    \hyperref[uc:uc_storage_binario_sd]{UC2-F} & \hyperref[req:rf2]{R-F-Ob-2} \\
+    \hline
+    \hyperref[uc:uc_calcolo_spazio]{UC3-F} & \hyperref[req:rf3]{R-F-Ob-3} \\
+    \hline
+    \hyperref[uc:uc_visualizzazione_spazio]{UC4-A} & \hyperref[req:rf4]{R-F-De-4} \\
+    \hline
+    \hyperref[uc:uc_gestione_capacita]{UC5-F} & \hyperref[req:rf5]{R-F-Ob-5} \\
+    \hline
+    \hyperref[uc:uc_notifica_blocco_gps]{UC6-A} & \hyperref[req:rf6]{R-F-Ob-6}, \hyperref[req:rn6]{R-N-De-6} \\
+    \hline
+    \hyperref[uc:uc_recovery_sessione]{UC7-F} & \hyperref[req:rf7]{R-F-Ob-7}, \hyperref[req:rn3]{R-N-Ob-3} \\
+    \hline
+    \hyperref[uc:uc_notifica_sd_mancante]{UC8-F} & \hyperref[req:rf8]{R-F-Ob-8}, \hyperref[req:rn6]{R-N-De-6} \\
+    \hline
+    \hyperref[uc:uc_gestione_sd_rimossa]{UC9-A} & \hyperref[req:rf9]{R-F-De-9}, \hyperref[req:rn6]{R-N-De-6} \\
+    \hline
+    \hyperref[uc:uc_gestione_sd_assente_avvio]{UC10-A} & \hyperref[req:rf10]{R-F-De-10}, \hyperref[req:rn6]{R-N-De-6} \\
+    \hline
+    \hyperref[uc:uc_lettura_can_ecu]{UC11-F} & \hyperref[req:rf11]{R-F-Ob-11}, \hyperref[req:rv3]{R-V-Ob-3} \\
+    \hline
+    \hyperref[uc:uc_stato_led]{UC12-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4}, \hyperref[req:rv4]{R-V-Ob-4} \\
+    \hline
+    \hyperref[uc:uc_led_sd_mancante]{UC12.1-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_errore]{UC12.2-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_pairing_ble]{UC12.4-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_calibrazione]{UC12.6-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_download]{UC12.7-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_eliminazione]{UC12.8-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_sospensione]{UC12.9-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_logging]{UC12.10-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_led_standby]{UC12.11-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hline
+    \hyperref[uc:uc_sospensione_sensori]{UC13-F} & \hyperref[req:rf13]{R-F-De-13}, \hyperref[req:rn2]{R-N-Ob-2} \\
+    \hline
+    \hyperref[uc:uc_config_timeout]{UC14-A} & \hyperref[req:rf14]{R-F-Op-14}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hline
+    \hyperref[uc:uc_sessione_ble]{UC15-F} & \hyperref[req:rf15]{R-F-Ob-15}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hline
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F} & \hyperref[req:rf16]{R-F-Ob-16}, \hyperref[req:rn5]{R-N-De-5}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hline
+    \hyperref[uc:uc_sequenza_calibrazione]{UC17-A} & \hyperref[req:rf16]{R-F-Ob-16} \\
+    \hline
+    \hyperref[uc:uc_visualizzazione_dati_calibrati]{UC18-A} & \hyperref[req:rf17]{R-F-De-17} \\
+    \hline
+    \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} & \hyperref[req:rf18]{R-F-De-18}, \hyperref[req:rn7]{R-N-Op-7} \\
+    \hline
+    \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} & \hyperref[req:rf19]{R-F-Ob-19}, \hyperref[req:rn5]{R-N-De-5} \\
+    \hline
+    \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F} & \hyperref[req:rf20]{R-F-Ob-20} \\
+    \hline
+    Tutti & \hyperref[req:rv1]{R-V-Ob-1}, \hyperref[req:rv2]{R-V-Ob-2} \\
+    \hline
+    \hiderowcolors
+    \caption{Tracciamento Fonti -- Requisiti.}
+    \label{tab:tracciamento_fonti_requisiti}
+    \end{longtable}
+\end{center}
+
 \subsection{Riepilogo dei requisiti}
-Nella Tabella \ref{tab:riepilogo_requisiti} si riporta il numero di requisiti per categoria e per urgenza; 
-in totale sono stati rilevati 15 requisiti.
+Nella Tabella \ref{tab:riepilogo_requisiti} si riporta il numero di requisiti per categoria e per urgenza;
+in totale sono stati rilevati 32 requisiti.
 
 \begin{center}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
- & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Facoltativi} & \textbf{TOTALE} \\
+ & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Opzionali} & \textbf{TOTALE} \\
 \hline
-RF & 4 & 3 & 0 & 7 \\
+RF & 12 & 7 & 1 & 20 \\
 \hline
-RN & 2 & 2 & 0 & 4 \\
+RN & 3 & 3 & 1 & 7 \\
 \hline
-RV & 4 & 0 & 0 & 4 \\
+RV & 5 & 0 & 0 & 5 \\
 \hline
-\textbf{TOTALE} & \textbf{10} & \textbf{5} & \textbf{0} & \textbf{15} \\
+\textbf{TOTALE} & \textbf{20} & \textbf{10} & \textbf{2} & \textbf{32} \\
 \hline
 \end{tabular}
 \captionof{table}{Conteggio dei requisiti tracciati.}
 \label{tab:riepilogo_requisiti}
 \end{center}
-
-\newpage

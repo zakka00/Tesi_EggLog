@@ -1,0 +1,563 @@
+@startuml UC1
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Sensori di bordo" as Sensors
+
+rectangle EggLog {
+    usecase "UC1-F\nAcquisizione binaria\ndei dati sensore" as UC1
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
+}
+
+Sensors -- UC1
+UC1 ..> UC2 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC2
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Scheda microSD" as SD
+
+rectangle EggLog {
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
+    usecase "UC8-F\nNotifica di rimozione\ndella SD" as UC8
+    usecase "UC12.2-F\nErrore generico" as UC122
+}
+
+SD -- UC2
+UC8 ..> UC2 : <<extend>>
+UC122 ..> UC2 : <<extend>>
+
+note as N1
+Condizione
+La scheda microSD non è presente
+end note
+UC8 .. N1
+
+note as N2
+Condizione
+La scrittura fallisce
+(SD piena o guasta)
+end note
+UC122 .. N2
+@enduml
+
+newpage
+
+@startuml UC2_incl
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Scheda microSD" as SD
+
+rectangle EggLog {
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
+    usecase "UC3-F\nCalcolo dello spazio\noccupato" as UC3
+    usecase "UC5-F\nGestione della capacità\ndi registrazione" as UC5
+}
+
+SD -- UC2
+UC2 ..> UC3 : <<include>>
+UC2 ..> UC5 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC3
+left to right direction
+skinparam packageStyle rectangle
+
+rectangle EggLog {
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
+    usecase "UC3-F\nCalcolo dello spazio\noccupato" as UC3
+}
+
+UC2 ..> UC3 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC4
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC4-A\nVisualizzazione dello\nspazio di archiviazione\noccupato" as UC4A
+}
+
+Utente -- UC4A
+@enduml
+
+newpage
+
+@startuml UC5
+left to right direction
+skinparam packageStyle rectangle
+
+rectangle EggLog {
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
+    usecase "UC5-F\nGestione della capacità\ndi registrazione" as UC5
+}
+
+UC2 ..> UC5 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC6
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC6-A\nNotifica di sessione\nbloccata (spazio GPS\nesaurito)" as UC6A
+}
+
+Utente -- UC6A
+@enduml
+
+newpage
+
+@startuml UC7
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Scheda microSD" as SD
+
+rectangle EggLog {
+    usecase "UC7-F\nRecupero della sessione\ndopo rimozione SD" as UC7
+}
+
+SD -- UC7
+
+@enduml
+
+newpage
+
+@startuml UC8
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Scheda microSD" as SD
+
+rectangle EggLog {
+    usecase "UC8-F\nNotifica di rimozione\ndella SD" as UC8
+    usecase "UC12.1-F\nSD mancante" as UC121
+}
+
+SD -- UC8
+UC8 ..> UC121 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC9
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC9-A\nGestione della rimozione\nSD durante la sessione" as UC9A
+}
+
+Utente -- UC9A
+@enduml
+
+newpage
+
+@startuml UC10
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC10-A\nGestione dell'assenza\ndella SD all'avvio\nsessione" as UC10A
+}
+
+Utente -- UC10A
+@enduml
+
+newpage
+
+@startuml UC11
+left to right direction
+skinparam packageStyle rectangle
+
+actor "ECU\n(bus CAN)" as ECU
+
+rectangle EggLog {
+    usecase "UC11-F\nAcquisizione dati\ndal bus CAN" as UC11
+}
+
+ECU -- UC11
+@enduml
+
+newpage
+
+@startuml UC12
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+
+usecase "UC12-F\nGestione dello stato\ndel firmware tramite LED" as UC12
+
+usecase "UC12.1-F\nSD mancante" as UC121
+usecase "UC12.2-F\nErrore generico" as UC122
+usecase "UC12.3-F\nPairing WiFi" as UC123
+usecase "UC12.4-F\nPairing BLE" as UC124
+usecase "UC12.5-F\nRecupero dati per\ncalibrazione" as UC125
+usecase "UC12.6-F\nCalibrazione" as UC126
+usecase "UC12.7-F\nDownload" as UC127
+usecase "UC12.8-F\nEliminazione dati" as UC128
+usecase "UC12.9-F\nLogging sospeso" as UC129
+usecase "UC12.10-F\nLogging attivo" as UC1210
+usecase "UC12.11-F\nStandby" as UC1211
+
+}
+
+Utente -left- UC12
+
+UC121 ..> UC12 : <<extend>>
+UC122 ..> UC12 : <<extend>>
+UC123 ..> UC12 : <<extend>>
+UC124 ..> UC12 : <<extend>>
+UC125 ..> UC12 : <<extend>>
+UC126 ..> UC12 : <<extend>>
+UC127 ..> UC12 : <<extend>>
+UC128 ..> UC12 : <<extend>>
+UC129 ..> UC12 : <<extend>>
+UC1210 ..> UC12 : <<extend>>
+UC1211 ..> UC12 : <<extend>>
+@enduml
+
+newpage
+
+@startuml UC12_1
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.1-F\nSegnalazione di scheda\nmicroSD mancante" as UC121
+}
+
+Utente -- UC121
+@enduml
+
+newpage
+
+@startuml UC12_2
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.2-F\nSegnalazione di\nerrore generico" as UC122
+}
+
+Utente -- UC122
+@enduml
+
+newpage
+
+@startuml UC12_3
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.3-F\nSegnalazione di\npairing WiFi" as UC123
+}
+
+Utente -- UC123
+@enduml
+
+newpage
+
+@startuml UC12_4
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.4-F\nSegnalazione di\npairing BLE" as UC124
+}
+
+Utente -- UC124
+@enduml
+
+newpage
+
+@startuml UC12_5
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.5-F\nSegnalazione di recupero\ndati per calibrazione" as UC125
+}
+
+Utente -- UC125
+@enduml
+
+newpage
+
+@startuml UC12_6
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.6-F\nSegnalazione di\ncalibrazione in corso" as UC126
+}
+
+Utente -- UC126
+@enduml
+
+newpage
+
+@startuml UC12_7
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.7-F\nSegnalazione di\ndownload dati" as UC127
+}
+
+Utente -- UC127
+@enduml
+
+newpage
+
+@startuml UC12_8
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.8-F\nSegnalazione di\neliminazione dati" as UC128
+}
+
+Utente -- UC128
+@enduml
+
+newpage
+
+@startuml UC12_9
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.9-F\nSegnalazione di sospensione\nper inattività" as UC129
+}
+
+Utente -- UC129
+@enduml
+
+newpage
+
+@startuml UC12_10
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.10-F\nSegnalazione di\nlogging attivo" as UC1210
+}
+
+Utente -- UC1210
+@enduml
+
+newpage
+
+@startuml UC12_11
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC12.11-F\nSegnalazione di dispositivo\navviato in attesa di sessione" as UC1211
+}
+
+Utente -- UC1211
+@enduml
+
+newpage
+
+@startuml UC13
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Modulo GPS" as GPS
+actor "IMU\n(accelerometro)" as IMU
+
+rectangle EggLog {
+
+usecase "UC13-F\nSospensione acquisizione\nsensori in stato di\ninattività" as UC13
+usecase "UC12.9-F\nLogging sospeso" as UC129
+usecase "UC12.10-F\nLogging attivo" as UC1210
+
+}
+
+GPS -- UC13
+IMU -- UC13
+UC13 ..> UC129 : <<include>>
+UC13 ..> UC1210 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC14
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC14-A\nConfigurazione del\ntimeout di inattività" as UC14A
+}
+
+Utente -- UC14A
+@enduml
+
+newpage
+
+@startuml UC15
+left to right direction
+skinparam packageStyle rectangle
+
+actor Applicazione
+
+rectangle EggLog {
+    usecase "UC15-F\nAvvio e interruzione\nsessione tramite\ncomandi BLE" as UC15
+    usecase "UC12.10-F\nLogging attivo" as UC1210
+    usecase "UC12.11-F\nStandby" as UC1211
+}
+
+Applicazione -- UC15
+UC15 ..> UC1210 : <<include>>
+UC15 ..> UC1211 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC16
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle EggLog {
+    usecase "UC16-F\nCalibrazione dell'IMU" as UC16
+    usecase "UC12.5-F\nRecupero dati per\ncalibrazione" as UC125
+    usecase "UC12.6-F\nCalibrazione" as UC126
+    usecase "UC21-F\nSalvataggio delle\ncalibrazioni collegate\nalla sessione" as UC21
+}
+
+Utente -- UC16
+UC16 ..> UC125 : <<include>>
+UC16 ..> UC126 : <<include>>
+UC16 ..> UC21 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC17
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC17-A\nSequenza guidata di\ncalibrazione dell'IMU" as UC17A
+}
+
+Utente -- UC17A
+@enduml
+
+newpage
+
+@startuml UC18
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC18-A\nVisualizzazione dei\ndati calibrati" as UC18A
+}
+
+Utente -- UC18A
+@enduml
+
+newpage
+
+@startuml UC19
+left to right direction
+skinparam packageStyle rectangle
+
+actor Utente
+
+rectangle "EggLog App" as ELApp {
+    usecase "UC19-A\nVisualizzazione dei\nmovimenti della moto\nin tempo reale" as UC19A
+}
+
+Utente -- UC19A
+@enduml
+
+newpage
+
+@startuml UC20
+left to right direction
+skinparam packageStyle rectangle
+
+actor Barometro
+
+rectangle EggLog {
+    usecase "UC20-F\nCalibrazione automatica\ndell'altitudine a\ninizio sessione" as UC20
+    usecase "UC21-F\nSalvataggio delle\ncalibrazioni collegate\nalla sessione" as UC21
+}
+
+Barometro -- UC20
+UC20 ..> UC21 : <<include>>
+@enduml
+
+newpage
+
+@startuml UC21
+left to right direction
+skinparam packageStyle rectangle
+
+rectangle EggLog {
+    usecase "UC16-F\nCalibrazione dell'IMU" as UC16
+    usecase "UC20-F\nCalibrazione automatica\ndell'altitudine" as UC20
+    usecase "UC21-F\nSalvataggio delle\ncalibrazioni collegate\nalla sessione" as UC21
+}
+
+UC16 ..> UC21 : <<include>>
+UC20 ..> UC21 : <<include>>
+@enduml

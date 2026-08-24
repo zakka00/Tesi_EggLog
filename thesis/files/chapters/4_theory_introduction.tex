@@ -1,4 +1,464 @@
 \chapter{Tecnologie utilizzate}
 \label{chap:theory_introduction}
+\textit{ In questa sezione vengono presentate le principali tecnologie impiegate durante lo
+sviluppo del progetto. La descrizione ha lo scopo di fornire il contesto necessario
+alla comprensione delle scelte implementative illustrate nei capitoli successivi.}
+
+\section{ESP32-S3-DevKitC-1}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{../img/tecnologie/esp32-s3-devkitc-1.png}
+    \caption{Scheda di sviluppo ESP32-S3-DevKitC-1}
+    \label{fig:esp32-s3-devkitc1}
+\end{figure}
+
+La \textit{ESP32-S3-DevKitC-1} è una scheda di sviluppo basata sul microcontrollore
+ESP32-S3, prodotto da Espressif Systems. La scheda mette a disposizione le
+principali periferiche del microcontrollore attraverso un'interfaccia adatta alla
+prototipazione e allo sviluppo di applicazioni embedded.
+
+L'ESP32-S3 integra un processore dual-core e dispone di memoria e periferiche
+sufficienti per supportare applicazioni caratterizzate dalla presenza simultanea di
+più attività. Tra le funzionalità disponibili rientrano inoltre la connettività
+\textbf{Wi-Fi} e \textbf{BLE}, caratteristiche particolarmente rilevanti per
+il progetto in esame.
+
+\vspace{.25cm}
+
+La scheda è stata utilizzata come piattaforma hardware principale per lo sviluppo
+del firmware, permettendo di gestire contemporaneamente l'acquisizione dei dati
+provenienti dai sensori, la memorizzazione e le comunicazioni con dispositivi
+esterni.
+
+\section{ESP-WROOM-32}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{../img/tecnologie/esp-wroom-32.png}
+    \caption{Modulo ESP-WROOM-32}
+    \label{fig:esp-wroom32}
+\end{figure}
+
+L'ESP-WROOM-32 è un modulo basato sulla famiglia di microcontrollori ESP32.
+A differenza della ESP32-S3-DevKitC-1, che è una scheda di sviluppo, l'ESP-WROOM-32
+costituisce principalmente un modulo hardware \textbf{compatto}
+integrabile all'interno di una scheda elettronica.
+
+Il modulo integra il microcontrollore e i componenti necessari al suo
+funzionamento, oltre alle funzionalità di comunicazione wireless Wi-Fi e
+BLE. Le sue dimensioni contenute lo rendono particolarmente adatto
+all'integrazione in dispositivi embedded destinati alla produzione.
+
+\vspace{.25cm}
+
+Nel progetto, l'ESP-WROOM-32 è stato utilizzato come dispositivo dedicato
+all'attività di \textit{sniffing} del bus CAN, mantenendolo fisicamente
+separato dall'unità principale responsabile dell'acquisizione dei dati
+dai sensori. Questa scelta è stata adottata al fine di ridurre il rischio
+di danneggiamento dei componenti del sistema principale, considerando
+l'ambiente elettrico particolarmente critico di una motocicletta, caratterizzato
+da possibili disturbi e variazioni di tensione dovuti ai sistemi di alimentazione
+e agli attuatori presenti a bordo. In questo modo, eventuali anomalie o
+sovratensioni provenienti dall'interfacciamento con il bus CAN rimangono
+confinate, per quanto possibile, al dispositivo dedicato, preservando gli
+altri componenti del sistema.
+
+\section{C++20}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.30\textwidth]{../img/tecnologie/c++.png}
+    \caption{Logo del linguaggio C++}
+    \label{fig:cpp}
+\end{figure}
+
+Il firmware del dispositivo è stato sviluppato utilizzando il linguaggio C++,
+facendo riferimento allo standard C++20. La scelta di questo linguaggio è legata
+principalmente alla necessità di mantenere un controllo diretto sulle risorse
+hardware e computazionali del microcontrollore.
+
+\vspace{.25cm}
+
+In un sistema embedded, infatti, memoria, tempo di esecuzione e capacità
+computazionale sono risorse limitate che devono essere gestite con attenzione.
+C++ permette di operare a un livello sufficientemente vicino all'hardware,
+offrendo allo stesso tempo strumenti di astrazione come classi, ereditarietà,
+incapsulamento e polimorfismo.
+
+\section{ESP32 Arduino Core}
+
+Lo sviluppo del firmware è stato effettuato utilizzando \textit{ESP32 Arduino
+Core}, un framework che permette di programmare i microcontrollori ESP32
+attraverso le API e le modalità di sviluppo tipiche dell'ecosistema Arduino.
+
+Il framework fornisce un livello di astrazione rispetto alle API native di
+ESP-IDF, rendendo più semplice l'utilizzo delle periferiche e delle funzionalità
+messe a disposizione dal microcontrollore. Questa caratteristica consente di
+ridurre la complessità del codice applicativo, mantenendo comunque la possibilità
+di accedere alle funzionalità specifiche della piattaforma quando necessario.
+
+\vspace{.25cm}
+
+La scelta di questo framework ha permesso di concentrare lo sviluppo sulle
+funzionalità richieste dal progetto, evitando di dover gestire direttamente
+l'intera complessità dell'ESP-IDF.
+
+\section{FreeRTOS}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{../img/tecnologie/Logo_freeRTOS.png}
+    \caption{FreeRTOS}
+    \label{fig:freertos}
+\end{figure}
+
+FreeRTOS è un kernel real-time progettato per sistemi embedded nei quali
+diverse attività devono essere eseguite in modo concorrente e rispettando
+specifici requisiti temporali. Il kernel fornisce principalmente un sistema
+di gestione delle attività, denominato task scheduling, e una serie di
+primitive per coordinare l'accesso alle risorse condivise.
+
+\vspace{.25cm}
+
+Nel firmware sviluppato durante il progetto sono presenti numerose attività
+che devono operare con frequenze e tempi di risposta differenti. L'acquisizione
+dei dati provenienti dai sensori, la scrittura sulla memoria microSD e la
+gestione delle comunicazioni costituiscono infatti attività indipendenti,
+che devono poter essere eseguite senza bloccare reciprocamente il sistema.
+L'utilizzo di FreeRTOS permette di suddividere il comportamento del firmware
+in task indipendenti e lasciare al kernel la gestione dell'accesso al
+processore.
+
+\subsection{Sistemi real-time e concorrenza}
+Per comprendere l'utilità di un kernel come FreeRTOS è utile richiamare
+brevemente il concetto di concorrenza. In un programma eseguito in maniera
+sequenziale, le istruzioni vengono normalmente eseguite una dopo l'altra
+secondo l'ordine stabilito dal programma. Questo modello diventa poco adatto
+quando il dispositivo deve gestire contemporaneamente più sorgenti di dati
+o eventi.
+
+\vspace{.25cm}
+
+In un sistema multitasking, il software viene suddiviso in più attività
+indipendenti. Quando il microcontrollore dispone di un singolo core, non è
+possibile eseguire fisicamente più istruzioni appartenenti a task differenti
+nello stesso istante. Il sistema operativo può tuttavia alternare rapidamente
+l'esecuzione delle task, dando l'impressione di una loro esecuzione
+contemporanea.
+
+\vspace{.25cm}
+
+Il passaggio da una task a un'altra viene indicato come
+\textit{context switch}. Durante questo processo il sistema conserva le
+informazioni necessarie per riprendere successivamente l'esecuzione della
+task sospesa e carica il contesto della task successiva.
+Nel caso di un processore dotato di più core, alcune task possono invece
+essere eseguite realmente in parallelo, purché siano disponibili core liberi
+e la configurazione dello scheduler lo permetta.
+
+\subsection{Scheduler e priorità}
+La componente di FreeRTOS responsabile della scelta della task da eseguire è
+lo scheduler. A ogni task può essere assegnato un livello di priorità, che
+permette di stabilire quali attività debbano avere precedenza quando più
+task sono contemporaneamente pronte per l'esecuzione.
+
+Una task che non deve essere eseguita in un determinato momento può inoltre
+rinunciare temporaneamente al processore, permettendo ad altre attività di
+utilizzarlo. Questo comportamento è particolarmente importante in sistemi
+embedded, poiché evita di consumare inutilmente risorse computazionali
+durante i periodi di attesa.
+
+\vspace{.25cm}
+
+Il concetto di real-time non implica quindi semplicemente che il sistema
+sia veloce, ma che le operazioni importanti possano essere completate entro
+limiti temporali definiti. Nel progetto questo aspetto è rilevante soprattutto
+per l'acquisizione periodica dei dati dei sensori, dove il rispetto della
+frequenza di campionamento influenza direttamente la qualità dei dati
+registrati.
+
+\subsection{Task}
+Una task rappresenta un'unità indipendente di esecuzione gestita da
+FreeRTOS. Ogni task possiede un proprio contesto e viene definita
+specificando un insieme di parametri, riassunti in Tabella
+\ref{tab:freertos-task-params}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lp{9cm}}
+        \hline
+        \textbf{Parametro} & \textbf{Descrizione} \\
+        \hline
+        Funzione & Punto di ingresso eseguito dalla task, contenente il codice associato all'attività. \\ \hline
+        Priorità & Valore numerico che determina la precedenza della task rispetto alle altre nella fase di scheduling. \\ \hline
+        Dimensione dello stack & Quantità di memoria riservata alla task per la gestione di variabili locali e chiamate a funzione. \\ \hline
+        Parametri & Dati opzionali passati alla funzione al momento della creazione della task. \\ \hline
+        Core di esecuzione & Nei microcontrollori multi-core, indica su quale core la task può essere schedulata. \\ \hline
+    \end{tabular}
+    \caption{Principali parametri di configurazione di una task in FreeRTOS}
+    \label{tab:freertos-task-params}
+\end{table}
+
+Nel firmware le task sono state utilizzate per separare funzionalità che
+presentano caratteristiche temporali differenti. Ad esempio, l'acquisizione
+dei dati dei sensori può essere eseguita indipendentemente dalle operazioni
+di scrittura sulla scheda microSD.
+
+Questa suddivisione permette di evitare che un'attività caratterizzata da
+tempi di esecuzione variabili blocchi un'altra attività che richiede invece
+un'esecuzione periodica.
+
+\subsection{Stati delle task}
+Durante la propria vita una task può assumere differenti stati, in funzione
+della possibilità di essere eseguita in un determinato momento.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lp{9cm}}
+        \hline
+        \textbf{Stato} & \textbf{Descrizione} \\
+        \hline
+        Running & La task è attualmente in esecuzione su uno dei core disponibili. \\ \hline
+        Ready & La task è pronta per essere eseguita, ma il processore è momentaneamente assegnato a un'altra task. \\ \hline
+        Blocked & La task è in attesa del verificarsi di un evento, di una notifica o della scadenza di un intervallo temporale. \\ \hline
+        Suspended & La task è stata esplicitamente esclusa dallo scheduling e rimane in questo stato fino a una successiva riattivazione. \\ \hline
+    \end{tabular}
+    \caption{Principali stati di una task in FreeRTOS}
+    \label{tab:freertos-states}
+\end{table}
+
+La distinzione tra \textit{Blocked} e \textit{Suspended} è particolarmente
+importante. Nel primo caso la task rimane in attesa di una condizione
+specifica, mentre nel secondo viene sospesa esplicitamente e non esiste
+un evento che possa determinarne autonomamente il risveglio.
+Questa caratteristica può essere sfruttata, ad esempio, per disabilitare
+temporaneamente attività che non sono necessarie in una determinata fase
+del funzionamento del dispositivo.
+
+\subsection{Race condition e sincronizzazione}
+La suddivisione del firmware in più task introduce un ulteriore problema:
+più attività possono avere bisogno di utilizzare contemporaneamente una
+stessa risorsa.
+
+\vspace{.25cm}
+
+Si consideri una variabile condivisa $x$, inizialmente impostata a zero, e
+due task, $A$ e $B$, che devono entrambe incrementarla di una unità.
+Sebbene l'istruzione concettuale sia semplicemente ``incrementare $x$'', a
+livello macchina l'operazione viene scomposta in tre passaggi elementari:
+lettura del valore corrente, modifica del valore letto e scrittura del
+nuovo valore in memoria. Se una task viene interrotta tra uno di questi
+passaggi e lo scheduler permette all'altra task di operare sulla stessa
+variabile, si può verificare l'interleaving mostrato in Tabella
+\ref{tab:race-condition}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        \textbf{Istante} & \textbf{Task A} & \textbf{Task B} & \textbf{Valore di $x$ in memoria} \\
+        \hline
+        $t_0$ & legge $x$ (0) & --- & 0 \\ \hline
+        $t_1$ & --- & legge $x$ (0) & 0 \\ \hline
+        $t_2$ & calcola $x+1$ & --- & 0 \\ \hline
+        $t_3$ & --- & calcola $x+1$ & 0 \\ \hline
+        $t_4$ & scrive $x = 1$ & --- & 1 \\ \hline
+        $t_5$ & --- & scrive $x = 1$ & 1 \\ \hline
+    \end{tabular}
+    \caption{Esempio di interleaving che genera una race condition}
+    \label{tab:race-condition}
+\end{table}
+
+Nonostante entrambe le task abbiano eseguito un incremento, il valore
+finale di $x$ è 1 anziché 2, poiché la scrittura effettuata da $B$
+sovrascrive quella di $A$ sulla base di un valore letto prima che
+l'incremento di $A$ venisse reso visibile. Il risultato è una \textit{race
+condition}, ovvero un comportamento dipendente dall'ordine con cui le task
+accedono alla risorsa condivisa.
+
+\subsection{Mutex}
+Per proteggere le sezioni di codice che accedono a risorse condivise è
+possibile utilizzare un mutex, abbreviazione di \textit{mutual exclusion}.
+Il mutex permette a una sola task per volta di entrare nella sezione critica
+associata alla risorsa protetta.
+
+Il funzionamento è riassunto in Tabella \ref{tab:mutex-fasi}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lp{9cm}}
+        \hline
+        \textbf{Fase} & \textbf{Descrizione} \\
+        \hline
+        Richiesta & La task richiede l'acquisizione del mutex prima di accedere alla sezione critica. \\ \hline
+        Mutex libero & Se il mutex non è occupato, la task lo acquisisce ed entra nella sezione critica. \\ \hline
+        Mutex occupato & Se il mutex è già occupato da un'altra task, la task richiedente viene posta in stato di attesa. \\ \hline
+        Rilascio & Al termine dell'accesso alla risorsa, la task rilascia il mutex. \\ \hline
+        Sblocco & Una delle eventuali task in attesa viene sbloccata e può quindi procedere. \\ \hline
+    \end{tabular}
+    \caption{Fasi di utilizzo di un mutex}
+    \label{tab:mutex-fasi}
+\end{table}
+
+In questo modo le operazioni che devono essere eseguite senza interferenze
+da parte delle altre task vengono protette, impedendo accessi concorrenti
+incompatibili.
+
+Nel firmware questa tecnica risulta utile quando più attività devono
+accedere a risorse condivise, come strutture dati comuni o periferiche che
+non possono essere utilizzate contemporaneamente.
+
+\subsection{Comunicazione tra task}
+FreeRTOS mette inoltre a disposizione meccanismi specifici per consentire
+alle task di scambiarsi informazioni senza ricorrere necessariamente a
+variabili globali condivise.
+
+Tra questi strumenti rientrano principalmente le \textit{queue} e le
+\textit{task notification}, riassunte e confrontate in Tabella
+\ref{tab:freertos-comunicazione}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lp{5cm}p{5cm}}
+        \hline
+        & \textbf{Queue} & \textbf{Task notification} \\
+        \hline
+        Contenuto & Trasferisce dati veri e propri tra task & Trasporta un semplice valore o segnale di evento \\ \hline
+        Modalità & Produttore-consumatore, con più elementi in coda & Diretta, verso una singola task specifica \\ \hline
+        Overhead & Maggiore, dovuto alla gestione della coda & Ridotto, essendo un meccanismo più leggero \\ \hline
+        Utilizzo tipico & Scambio di dati acquisiti tra task diverse & Notifica rapida di un evento (es. dato pronto) \\ \hline
+    \end{tabular}
+    \caption{Confronto tra queue e task notification in FreeRTOS}
+    \label{tab:freertos-comunicazione}
+\end{table}
+
+Questi meccanismi consentono di progettare componenti maggiormente
+indipendenti, riducendo la necessità di condividere direttamente lo stato
+interno delle singole task.
+
+\section{Expo \& React Native}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../img/tecnologie/expo_react_native.png}
+    \caption{Logo di Expo \& React Native}
+    \label{fig:react-native}
+\end{figure}
+
+React Native è un framework open source che consente di sviluppare
+applicazioni mobili multipiattaforma utilizzando Typescript (o Javascript)
+e il paradigma dichiarativo tipico di React.
+React Native traduce i componenti dell'interfaccia in
+elementi grafici nativi, permettendo di ottenere prestazioni e un aspetto
+più vicini a quelli di un'applicazione sviluppata nativamente per Android
+o iOS, pur mantenendo un'unica base di codice condivisa tra le due
+piattaforme.
+
+\vspace{.25cm}
+
+Nel progetto React Native è stato utilizzato insieme a \textit{Expo}, un
+insieme di strumenti che semplifica la configurazione, la compilazione e
+l'esecuzione di applicazioni React Native. In particolare, lo sviluppo
+dell'applicazione è stato condotto tramite \textit{development build},
+generando ed eseguendo un progetto nativo sul dispositivo di test
+attraverso i comandi \texttt{npx expo run:ios} e \texttt{npx expo
+run:android}, a seconda della piattaforma di destinazione.
+
+\section{TypeScript}
+
+TypeScript è un linguaggio di programmazione sviluppato da Microsoft come
+soprainsieme (\textit{superset}) di JavaScript, al quale aggiunge un
+sistema di tipizzazione statica opzionale. Il codice TypeScript viene
+tradotto (\textit{transpiled}) in JavaScript standard prima
+dell'esecuzione, mantenendo piena compatibilità con l'ecosistema e le
+librerie già disponibili per quest'ultimo.
+
+La tipizzazione statica consente di individuare in fase di sviluppo, anziché
+a runtime, numerosi errori legati a un uso scorretto dei dati, come il
+passaggio di un parametro di tipo errato a una funzione o l'accesso a una
+proprietà inesistente di un oggetto. Questo aspetto risulta particolarmente
+utile in un'applicazione di dimensioni non trascurabili come quella
+sviluppata nel progetto, dove il numero di componenti, funzioni e strutture
+dati scambiate tra le diverse parti del codice rende più difficile
+individuare manualmente questo tipo di errori.
+
+\vspace{.25cm}
+
+Nel progetto TypeScript è stato utilizzato per l'intero sviluppo
+dell'applicazione React Native, contribuendo a rendere il codice più
+leggibile e manutenibile, oltre a facilitare l'integrazione con l'editor
+di sviluppo grazie al supporto per l'autocompletamento e il controllo dei
+tipi in tempo reale.
+
+\section{Git}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.25\textwidth]{img/tecnologie/git.png}
+    \caption{Git}
+    \label{fig:git}
+\end{figure}
+
+Git è un sistema distribuito per il controllo della versione, utilizzato per
+registrare e organizzare l'evoluzione del codice sorgente nel tempo. Ogni
+modifica significativa può essere salvata all'interno della cronologia del
+progetto, permettendo di recuperare versioni precedenti e analizzare le
+variazioni introdotte.
+
+Il progetto utilizza Git per la gestione del codice sorgente del firmware,
+facilitando inoltre lo sviluppo parallelo e la collaborazione tra più
+sviluppatori.
+
+\section{PlatformIO}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\textwidth]{../img/tecnologie/platformio.png}
+    \caption{PlatformIO}
+    \label{fig:platformio}
+\end{figure}
+
+PlatformIO è un ambiente di sviluppo dedicato principalmente alla
+programmazione di sistemi embedded. Nel progetto è stato utilizzato
+all'interno di Visual Studio Code per gestire il ciclo di sviluppo del
+firmware.
+
+Lo strumento automatizza diverse operazioni necessarie durante lo sviluppo,
+tra cui la compilazione del codice, il caricamento del firmware sulla scheda (\textit{flash}),
+la gestione delle librerie e delle relative dipendenze e l'utilizzo del
+monitor seriale.
+
+Un ulteriore vantaggio è rappresentato dalla gestione centralizzata della
+configurazione del progetto, attraverso la quale è possibile specificare la
+scheda utilizzata, il framework, le dipendenze e le impostazioni relative
+alla compilazione.
+
+\section{\LaTeX}
+
+\LaTeX{} è un sistema di composizione tipografica particolarmente diffuso nella
+produzione di documenti scientifici e accademici. A differenza dei comuni
+editor visuali, la struttura del documento viene definita attraverso un
+linguaggio di markup, separando il contenuto dalla sua formattazione.
+
+\section{PlantUML}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\textwidth]{../img/tecnologie/plantUML.png}
+    \caption{Esempio di diagramma generato con PlantUML}
+    \label{fig:plantuml}
+\end{figure}
+
+PlantUML è uno strumento che consente di generare diagrammi UML a partire da
+una descrizione testuale. Questa modalità permette di definire la struttura
+del diagramma direttamente all'interno di file di testo, rendendo semplice
+la modifica e il mantenimento dei diagrammi nel tempo.
+
+Nel progetto PlantUML è stato utilizzato per la realizzazione dei diagrammi
+UML impiegati nella documentazione del sistema.
+La generazione automatica dei diagrammi consente inoltre di mantenere
+separati il contenuto descrittivo del diagramma e la sua rappresentazione
+grafica, facilitandone l'aggiornamento durante l'evoluzione del progetto.
 
 \newpage
