@@ -187,18 +187,37 @@ Utente -- UC10A
 
 newpage
 
-@startuml UC11
+@startuml UC11_S
 left to right direction
 skinparam packageStyle rectangle
 
 actor "ECU\n(bus CAN)" as ECU
 
-rectangle EggLog {
-    usecase "UC11-F\nAcquisizione dati\ndal bus CAN" as UC11
+rectangle "EggLog CAN Sniffer" as Sniffer {
+    usecase "UC11-S\nAcquisizione dati CAN e\ntrasmissione broadcast BLE" as UC11S
 }
 
-ECU -- UC11
+ECU -- UC11S
 @enduml
+
+newpage
+
+@startuml UC11
+left to right direction
+skinparam packageStyle rectangle
+
+actor "EggLog\nCAN Sniffer" as Sniffer
+
+rectangle EggLog {
+    usecase "UC11-F\nRicezione dati telemetria\nCAN via BLE broadcast" as UC11
+    usecase "UC11.1-F\nGestione dati CAN\nassenti o obsoleti" as UC111
+}
+
+Sniffer -- UC11
+UC111 ..> UC11 : <<extend>>
+@enduml
+
+newpage
 
 newpage
 

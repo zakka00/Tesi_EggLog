@@ -1,0 +1,150 @@
+@startuml C4_Context_EggLog
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagramma di contesto - Sistema EggLog
+
+Person(pilota, "Pilota", "Utilizza il dispositivo durante l'attività in moto")
+
+System(egglog, "EggLog", "Dispositivo di logging: acquisisce e persiste i dati dei sensori (GPS, IMU, barometro, ecc.)")
+System(app, "EggLog App", "App mobile per configurare il dispositivo, avviare/fermare sessioni e scaricare i dati")
+System(sniffer, "EggLog CAN Sniffer", "Nodo prototipale indipendente che intercetta il bus CAN e trasmette telemetria via BLE advertising")
+
+System_Ext(moto, "Bus CAN del motoveicolo", "Rete di centraline del veicolo")
+SystemDb_Ext(sd, "Scheda microSD", "Supporto di memorizzazione rimovibile")
+
+Rel(pilota, app, "Configura, avvia/ferma sessioni, scarica dati", "BLE")
+Rel(app, egglog, "Invia comandi\n(START/STOP/RESUME)", "BLE GATT")
+Rel(egglog, app, "Trasmette dati real-time\ne notifiche di stato", "BLE GATT")
+Rel(egglog, sd, "Legge/scrive i superfile di sessione")
+Rel(sniffer, moto, "Ascolto passivo (listen-only)", "CAN bus")
+Rel(sniffer, egglog, "Stesso canale radio,\nnessuna connessione applicativa", "BLE Advertising")
+
+UpdateRelStyle(sniffer, egglog, $lineColor="grey", $lineStyle=DashedLine())
+
+@enduml
+
+@startuml C4_Container_EggLog
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagramma dei container - Sistema EggLog
+
+Person(pilota, "Pilota", "Utilizza il dispositivo durante l'attività in moto")
+
+System_Boundary(egglog, "EggLog") {
+    Container(fw, "Firmware EggLog", "ESP32 / C++", "Acquisisce ed elabora i dati dei sensori, gestisce sessioni, stato e segnalazione")
+    ContainerDb(sd, "Superfile su microSD", "FAT / file binari", "Persistenza dei dati acquisiti durante la sessione")
+}
+
+System_Ext(app, "EggLog App", "App mobile per configurare il dispositivo, avviare/fermare sessioni e scaricare i dati")
+System_Ext(sniffer, "EggLog CAN Sniffer", "Nodo prototipale indipendente che intercetta il bus CAN e trasmette telemetria via BLE advertising")
+
+Rel(pilota, app, "Configura, avvia/ferma sessioni,\nscarica dati")
+Rel(app, fw, "Invia comandi\n(START/STOP/RESUME)", "BLE GATT")
+Rel(fw, app, "Trasmette dati real-time\ne notifiche di stato", "BLE GATT")
+Rel(fw, sd, "Legge/scrive i superfile di sessione")
+Rel(sniffer, fw, "Stesso canale radio,\nnessuna connessione applicativa", "BLE Advertising")
+
+UpdateRelStyle(sniffer, fw, $lineColor="grey", $lineStyle=DashedLine())
+
+@enduml
+
+@startuml C4_Component_EggLog_Persistenza
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagramma dei componenti - Persistenza e stato condiviso
+
+Container_Boundary(egglog_fw, "Firmware EggLog") {
+    Component(prodcons, "Producer/Consumer", "Modulo", "Acquisizione dati e scrittura su coda")
+    Component(superfile, "SuperFile", "Modulo", "Persistenza dei dati su microSD secondo il formato a superfile")
+    Component(globalstate, "GlobalState", "Modulo", "Stato condiviso e centralizzato del dispositivo")
+}
+
+ContainerDb_Ext(sd, "Scheda microSD", "Supporto di memorizzazione")
+
+Rel(prodcons, superfile, "Richieste di scrittura")
+Rel(superfile, sd, "Legge/scrive")
+Rel(prodcons, globalstate, "Legge/aggiorna stato")
+
+@enduml
+
+@startuml C4_Component_EggLog_Segnalazione
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagramma dei componenti - Segnalazione e monitoraggio sensori
+
+Container_Boundary(egglog_fw, "Firmware EggLog") {
+    Component(led, "LED Signaling", "Modulo", "Traduce lo stato globale in pattern visivi")
+    Component(inactivity, "Inactivity Manager", "Modulo", "Sospende/riattiva i sensori in base al movimento")
+    Component(globalstate, "GlobalState", "Modulo", "Stato condiviso e centralizzato del dispositivo")
+    Component(prodcons, "Producer/Consumer", "Modulo", "Acquisizione dati e scrittura su coda")
+}
+
+Rel(led, globalstate, "Legge indicatori di stato")
+Rel(inactivity, prodcons, "Sospende/riattiva")
+Rel(inactivity, globalstate, "Legge stato sessione")
+
+@enduml
+
+@startuml C4_Component_EggLog_Sessione
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+
+LAYOUT_WITH_LEGEND()
+title Diagramma dei componenti - Sessione e calibrazioni
+
+Container_Boundary(egglog_fw, "Firmware EggLog") {
+    Component(ble, "BLE Interface", "Modulo", "Riceve comandi e trasmette dati real-time e notifiche di stato verso l'app")
+    Component(session, "Session", "Modulo", "Orchestratore di sessione: gestisce i comandi START/STOP/RESUME")
+    Component(altcal, "Altitude Calibration", "Modulo", "Calibrazione dell'altitudine per la sessione corrente")
+    Component(imucal, "IMU Calibration", "Modulo", "Calibrazione dell'IMU (macchina a stati)")
+    Component(globalstate, "GlobalState", "Modulo", "Stato condiviso e centralizzato del dispositivo")
+    Component(prodcons, "Producer/Consumer", "Modulo", "Acquisizione dati e scrittura su coda")
+    Component(superfile, "SuperFile", "Modulo", "Persistenza dei dati su microSD secondo il formato a superfile")
+}
+
+System_Ext(app, "EggLog App", "Applicazione mobile")
+
+Rel(app, ble, "Invia comandi")
+Rel(ble, session, "Inoltra comandi\ndi sessione")
+Rel(ble, imucal, "Inoltra comandi\ndi calibrazione")
+Rel(prodcons, ble, "Fornisce dati real-time")
+Rel(ble, app, "Trasmette dati real-time\ne notifiche di stato")
+Rel(session, altcal, "Avvia la\ncalibrazione")
+Rel(session, globalstate, "Aggiorna lo stato\nLOGGING\nSTAND_BY")
+Rel(session, prodcons, "Avvia o blocca i\nproducer e consumer")
+Rel(session, superfile, "Crea/chiude i file\ndi sessione")
+Rel(imucal, prodcons, "Abilita copia\ncampioni IMU")
+Rel(imucal, globalstate, "Imposta/rimuove l'indicatore\ndi calibrazione in corso")
+
+@enduml
+
+@startuml C4_Component_Sniffer
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagramma dei componenti - Nodo Sniffer CAN (architettura esagonale)
+
+Container_Boundary(sniffer_fw, "Firmware Sniffer CAN") {
+    Component(usecase, "Sniffing Service", "Caso d'uso", "Orchestra il flusso: riceve i frame, ne richiede la decodifica e pubblica lo snapshot risultante")
+    Component(canadapter, "Adattatore Bus CAN", "Adapter", "Implementa la porta di accesso al bus fisico in modalità ascolto passivo (listen-only)")
+    Component(vehicleadapter, "Adattatore Profilo Veicolo", "Adapter", "Implementa la porta di decodifica specifica per un modello di veicolo supportato")
+    Component(factory, "Vehicle Profile Factory", "Factory", "Seleziona e crea il profilo veicolo attivo")
+    Component(bleadapter, "Adattatore Trasporto BLE", "Adapter", "Implementa la porta di trasporto pubblicando i dati nel payload di advertising")
+}
+
+System_Ext(bus, "Bus CAN del motoveicolo", "Rete di centraline del veicolo")
+System_Ext(central, "Nodo centrale EggLog", "Osservatore passivo dei dati trasmessi in broadcast")
+
+Rel(bus, canadapter, "Frame CAN grezzi")
+Rel(canadapter, usecase, "Fornisce i frame ricevuti", "Porta CAN Bus")
+Rel(usecase, vehicleadapter, "Richiede la decodifica del frame", "Porta Decodifica Veicolo")
+Rel(factory, vehicleadapter, "Crea l'istanza attiva")
+Rel(usecase, bleadapter, "Pubblica lo snapshot aggiornato", "Porta Trasporto")
+Rel(bleadapter, central, "Trasmette in broadcast", "BLE Advertising")
+
+@enduml
+

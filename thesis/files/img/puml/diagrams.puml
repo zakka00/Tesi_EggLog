@@ -1,0 +1,364 @@
+@startuml producer-consumer
+skinparam packageStyle rectangle
+title Architettura producer-consumer (preesistente)
+
+package "Producer (Baro, GPS, IMU, Mag)" {
+  component "Producer Task" as P
+  database "Buffer A" as BA
+  database "Buffer B" as BB
+}
+
+component "Consumer Task" as C
+queue "WriteJob Queue" as Q
+database "Scheda SD" as SD
+
+P -down-> BA : scrive
+P -down-> BB : scrive
+P -> Q : invia WriteJob
+Q -> C
+C -> SD : scrive un file per chunk 
+
+@enduml
+
+@startuml superfile_layout
+
+title Struttura di un SuperFile
+
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam rectangle {
+    BorderColor black
+}
+
+rectangle "SUPERFILE" {
+rectangle "HEADER\n\n- Versione del formato\n- Identificativo del sensore\n- Dimensione del record\n- Capacità totale\n- Cursore di fine dati\n- Cursore di inizio dati\n- Soglia di sincronizzazione\n- Dimensione della finestra di azzeramento\n- Indicatori di stato" as HEADER
+    rectangle "AREA DATI\n\n\n\n┌──────────────────────────────────────────────────────┐\n│   Record 0   │   Record 1   │   Record 2   │   ........   │   ........   │   ........   │   ........   │   ........   │Record N-esimo\n└──────────────────────────────────────────────────────┘\n\n\n\n" as DATA
+}
+
+@enduml
+
+@startuml superfile_write
+title Scrittura di un batch di record
+skinparam packageStyle rectangle
+
+start
+:Richiesta di scrittura;
+if (Sovrascrittura consentita?) then (no)
+    if (File già pieno?) then (si)
+        :Ignora la scrittura;
+        stop
+    else (no)
+    endif
+    if (Il batch supererebbe la\ncapacità massima del file?) then (si)
+        :Scrive solo i record\nche rientrano nello spazio residuo;
+        :Segnala il file pieno;
+        :Sincronizza l'header;
+        stop
+    else (no)
+        :Scrive il batch in\nun'unica operazione\n(nessun wraparound);
+    endif
+else (si)
+    if (La scrittura raggiunge\nla fine dell'area dati?) then (no)
+        :Scrive il batch\nin un'unica operazione;
+    else (si)
+        :Scrive la prima parte del batch\nfino alla fine dell'area dati;
+        :Riparte dall'inizio dell'area dati;
+        :Scrive la parte restante del batch;
+    endif
+endif
+:Aggiorna la posizione di fine dei dati\ne il numero di record presenti;
+:Aggiorna il contatore dei record\ndall'ultima sincronizzazione;
+if (È necessario sincronizzare\nl'header?) then (si)
+    :Sincronizza l'header;
+endif
+stop
+@enduml
+
+@startuml superfile_disk_layout
+skinparam backgroundColor transparent
+title Layout su disco di un superfile
+
+skinparam rectangle {
+  BackgroundColor<<header>> #EFEFEF
+  BackgroundColor<<valid>> #CDE7D8
+  BackgroundColor<<zero>> #F5D6C6
+  BackgroundColor<<free>> #FFFFFF
+}
+
+rectangle "Header\n(dimensione fissa)" <<header>> as H
+
+rectangle "Area dati (record a dimensione fissa)" {
+  rectangle "record validi\n(gia' scritti)" <<valid>> as VALID
+  rectangle "finestra di\nazzeramento\n(record a zero)" <<zero>> as ZERO
+  rectangle "spazio libero /\nnon ancora raggiunto" <<free>> as FREE
+}
+
+H -right-> VALID 
+VALID -right-> ZERO
+ZERO -right-> FREE
+
+note bottom of VALID
+  Ogni record valido inizia con un timestamp 
+  non nullo: e' cio' che permette di 
+  distinguere un record realmente scritto 
+  da uno non ancora scritto.
+end note
+
+note bottom of ZERO
+  Finestra mantenuta costantemente pre-azzerata 
+  subito davanti al cursore di scrittura: un 
+  record a zero e' per costruzione un record 
+  non ancora scritto.
+end note
+@enduml
+
+
+@startuml superfile_recovery
+title Recupero del superfile\ndopo un'interruzione imprevista
+skinparam packageStyle rectangle
+
+start
+:Avvio del recupero del file;
+:Legge le informazioni di stato\nmemorizzate nell'header;
+if (L'header è valido?) then (no)
+    :Segnala un errore\ne interrompe il recupero;
+    stop
+else(si)
+endif
+:Avvia la scansione dei record\na partire dalla posizione\nindicata dall'header;
+repeat
+    :Legge il marcatore temporale\ndel record successivo;
+    if (Il marcatore è diverso da zero?) then (no)
+        :Identifica il confine tra\ndati validi e area pre-azzerata;
+        break
+    else (si)
+        :Considera il record come\nrealmente scritto;
+        :Prosegue con il record successivo;
+    endif
+repeat while (Ci sono altri record\nda verificare?) is (si)
+:Aggiorna le informazioni di stato\nin base ai dati effettivamente presenti;
+:Sincronizza l'header aggiornato\nsu disco;
+:Ricostituisce la finestra di azzeramento\na partire dalla nuova posizione;
+:Completa il recupero del superfile;
+stop
+@enduml
+
+@startuml inactivity_activity
+title Rilevamento dell'inattività e sospensione dei sensori
+start
+repeat :Acquisizione dati;
+    if (GPS autorevole?) then (sì)
+        :Controllo movimento\ncon GPS;
+    else (no)
+        :Controllo movimento\ncon IMU;
+    endif
+    :Applica debounce;
+    if (Movimento rilevato?) then (sì)
+        :Azzera timer di inattività;
+    else (no)
+        if (Timeout raggiunto?) then (sì)
+            :Sospendi i producer\nnon necessari;
+            repeat
+                if (GPS autorevole?) then (sì)
+                    :Controllo movimento\ncon GPS;
+                else (no)
+                    :Controllo movimento\ncon IMU;
+                endif
+                :Applica debounce;
+            repeat while (Movimento assente?) is (sì)
+            :Riattiva i producer sospesi;
+        else (no)
+        endif
+    endif
+repeat while (Sessione Bloccata?) is (no)
+stop
+@enduml
+
+
+@startuml Avvio-sessione
+title Avvio sessione (comando START)
+box "Applicazione" #E8F1FF
+actor "EggLog App" as App
+end box
+box "Firmware" #E8F5E9
+participant "Session\n(dispatcher)" as Session
+participant "SD" as SD
+participant "SuperFile" as SF
+participant "AltitudeCalibration" as Cal
+participant "GlobalState" as State
+end box
+App -> Session : START
+Session -> Session : Verifica disponibilità
+Session -> SD : Recupera stato SD
+SD --> Session : Stato SD
+Session -> SD : Crea directory _ACTIVE
+Session -> SF : Crea superfile della sessione
+Session -> Cal : Calibra altitudine
+Cal --> Session : Risultato calibrazione
+Session -> SD : Scrivi metadati sessione
+Session -> State : Imposta stato LOGGING
+Session --> App : Stato: LOGGING
+@enduml
+
+@startuml Arresto-sessione
+title Arresto sessione (comando STOP)
+box "Applicazione" #E8F1FF
+actor "EggLog App" as App
+end box
+box "Firmware" #E8F5E9
+participant "Session\n(dispatcher)" as Session
+participant "Sensor" as Sensor
+participant "SD Consumer Queue" as Queue
+participant "SuperFile" as SF
+participant "GlobalState" as State
+end box
+App -> Session : STOP
+Session -> State : Verifica stato corrente
+Session -> Sensor : Risveglia i producer sospesi
+Session -> Sensor : Forza scrittura dei dati pendenti
+Session -> Queue : Attende svuotamento della coda
+Session -> SF : Chiude i superfile
+Session -> Session : Finalizza directory della sessione
+Session -> State : Imposta stato STAND_BY
+Session --> App : Stato: STAND_BY
+@enduml
+
+@startuml Calibrazione-altitudine
+title Calibrazione altitudine
+start
+:Avvia raccolta campioni pressione;
+repeat :Leggi ultimo campione barometro;
+  if (campione nuovo?) then (si)
+    :Aggiungi campione al buffer;
+  else (no)
+    :Scarta;
+  endif
+  if (campioni sufficienti?) then (si)
+    :Calcola mediana (m);
+    :Calcola deviazione standard (ds);
+    if (ds <= soglia?) then (si)
+      :Calibrazione riuscita (pressione\ndi riferimento = m);
+      stop
+    else (no)
+      :Scarta gruppo campioni;
+    endif
+  endif
+repeat while (timeout non scaduto?) is (si)
+->no;
+:Calibrazione fallita;
+stop
+@enduml
+
+@startuml Calibrazione-IMU
+title Calibrazione IMU
+
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowThickness 1
+skinparam roundcorner 8
+skinparam maxmessagesize 160
+skinparam sequence {
+    ArrowColor #37474F
+    ActorBorderColor #37474F
+    LifeLineBorderColor #90A4AE
+    ParticipantBorderColor #37474F
+    ParticipantFontStyle bold
+}
+hide footbox
+autonumber
+
+box "Applicazione" #E8F1FF
+actor "EggLog App" as App
+end box
+
+box "Firmware" #E8F5E9
+participant "Calibration\nManager" as Cal
+participant "IMU Producer" as IMU
+participant "Calibration\nBuffer" as Buffer
+participant "GlobalState" as State
+participant "SD" as SD
+end box
+
+App -> Cal : START
+activate Cal
+
+Cal -> State : Verifica stato STAND_BY
+Cal -> State : Imposta indicatore\n"calibrazione in corso"
+Cal -> Cal : Passa allo stato\n"pronta per lo step 1"
+Cal -> IMU : Abilita raccolta calibrazione
+activate IMU
+Cal --> App : Stato: pronta per lo step 1
+
+loop per ogni step 1/2/3
+
+    App -> Cal : CONFIRM
+    Cal -> Cal : Passa allo stato\n"step N in corso"
+
+    IMU -> Buffer : Copia campioni
+    Cal -> Buffer : Recupera campioni
+    Cal -> Cal : Elabora lo step N
+
+    loop finché necessario (dati insufficienti)
+        Cal -> Cal : Passa allo stato\n"step N da ripetere"
+        Cal --> App : Stato: step da ripetere
+        App -> Cal : CONFIRM
+        Cal -> Cal : Passa allo stato\n"step N in corso"
+        Cal -> Buffer : Svuota buffer
+        IMU -> Buffer : Copia nuovi campioni
+        Cal -> Buffer : Recupera campioni
+        Cal -> Cal : Rielabora lo step N
+    end
+
+    Cal -> Buffer : Svuota buffer
+    Cal -> Cal : Passa allo stato\n"pronta per lo step N+1"
+    Cal --> App : Stato: pronta per lo step N+1
+
+end
+
+Cal -> Cal : Passa allo stato "successo"
+Cal -> IMU : Disabilita raccolta calibrazione
+deactivate IMU
+Cal -> SD : Salva configurazione
+Cal -> State : Rimuove indicatore\n"calibrazione in corso"
+Cal --> App : Stato: successo
+deactivate Cal
+
+@enduml
+
+@startuml Dati-sniffer
+title Flusso dati - Nodo Sniffer CAN
+participant "Bus CAN moto" as Bus
+participant "Adattatore Bus CAN" as CanBus
+participant "Adattatore Profilo Veicolo" as Profile
+participant "Sniffing Service" as Service
+participant "Adattatore Trasporto BLE" as Broadcaster
+participant "BLE Advertising" as BLE
+
+Bus -> CanBus : frame CAN grezzo
+CanBus -> Service : frame ricevuto
+Service -> Profile : richiede decodifica del frame
+Profile -> Profile : aggiorna stato interno
+Profile --> Service : snapshot di telemetria
+alt snapshot cambiato
+    Service -> Broadcaster : pubblica lo snapshot
+    Broadcaster -> BLE : pacchetto di telemetria (Manufacturer Data)
+end
+@enduml
+
+@startuml Ruolo-BLE-generale
+title Ruoli BLE nel sistema complessivo
+participant "Nodo Sniffer\n(Broadcaster)" as Sniffer
+participant "Nodo Centrale\n(Observer/Scanner)" as Central
+participant "Smartphone\n(Central GATT)" as Phone
+
+loop ogni rate-limit (~100ms)
+  Sniffer -> Sniffer : publish() su advertising
+end
+
+loop scan continuo
+  Central -> Sniffer : scan passivo (nessuna connessione)
+  Sniffer --> Central : payload ADV (Manufacturer Data)
+end
+
+Central -> Phone : notifica GATT (dati aggregati)
+@enduml
+

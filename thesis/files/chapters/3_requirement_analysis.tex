@@ -32,12 +32,15 @@ categorie di utenti:
 
 \section{Lista degli \textit{use case}}
 
-Per facilitare la comprensione dei casi d'uso, questi saranno descritti da uno o più diagrammi
-ciascuno, che rispettano la sintassi \gls{uml}. Ciascun caso d'uso è identificato da un codice
-seguito dalla lettera \textbf{F} o \textbf{A}, che ne indica rispettivamente l'appartenenza al
-\textbf{firmware} del dispositivo o all'\textbf{applicazione mobile}; i casi d'uso relativi ai due componenti sono
-presentati in un ordine unico, in modo da mantenere adiacenti quelli tra loro correlati anche
-quando appartengono a sistemi diversi. La descrizione testuale deve contenere le seguenti
+Ciascun caso d'uso è identificato da un codice
+seguito dalla lettera \textbf{F}, \textbf{A} oppure \textbf{S}, che ne indica rispettivamente
+l'appartenenza al \textbf{firmware} del dispositivo EggLog, all'\textbf{applicazione mobile}
+EggLog App, oppure al nodo \textbf{EggLog CAN Sniffer}: un dispositivo separato, privo di
+connessione fisica a EggLog, dedicato alla lettura del bus CAN del veicolo
+e alla trasmissione dei dati telemetrici verso EggLog tramite BLE. 
+I casi d'uso relativi ai tre componenti sono presentati
+in un ordine unico, in modo da mantenere adiacenti quelli tra loro correlati anche quando
+appartengono a sistemi diversi. La descrizione testuale deve contenere le seguenti
 informazioni:
 \begin{itemize}
     \item \textbf{Attore Primario}: rappresenta il ruolo che un'entità esterna al
@@ -57,7 +60,7 @@ informazioni:
 \label{uc:uc_acquisizione_binaria}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC1.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC1.png}
     \caption{UC1-F -- Acquisizione binaria dei dati sensore}
     \label{fig:uc1_diagram}
 \end{figure}
@@ -94,7 +97,7 @@ informazioni:
 \label{uc:uc_storage_binario_sd}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\columnwidth]{../img/diagrammi/usecase/UC2_incl.png}
+    \includegraphics[width=0.85\columnwidth]{../img/puml/usecase/UC2_incl.png}
     \caption{Inclusioni UC2-F -- Registrazione dei dati sensore su SD}
     \label{fig:uc2_incl_diagram}
 \end{figure}
@@ -150,7 +153,7 @@ informazioni:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC2.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC2.png}
     \caption{UC2-F -- Registrazione dei dati sensore su SD}
     \label{fig:uc2_diagram}
 \end{figure}
@@ -159,7 +162,7 @@ informazioni:
 \label{uc:uc_calcolo_spazio}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC3.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC3.png}
     \caption{UC3-F -- Calcolo dello spazio occupato dai dati registrati}
     \label{fig:uc3_diagram}
 \end{figure}
@@ -187,7 +190,7 @@ informazioni:
 \label{uc:uc_visualizzazione_spazio}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC4.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC4.png}
     \caption{UC4-A -- Visualizzazione dello spazio di archiviazione occupato}
     \label{fig:uc4_diagram}
 \end{figure}
@@ -224,7 +227,7 @@ informazioni:
 \label{uc:uc_gestione_capacita}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC5.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC5.png}
     \caption{UC5-F -- Gestione della capacità di registrazione e blocco automatico}
     \label{fig:uc5_diagram}
 \end{figure}
@@ -255,7 +258,7 @@ informazioni:
 \label{uc:uc_notifica_blocco_gps}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC6.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC6.png}
     \caption{UC6-A -- Notifica di sessione bloccata per spazio GPS esaurito}
     \label{fig:uc6_diagram}
 \end{figure}
@@ -281,7 +284,7 @@ informazioni:
 \label{uc:uc_recovery_sessione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC7.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC7.png}
     \caption{UC7-F -- Recupero della sessione dopo rimozione SD}
     \label{fig:uc7_diagram}
 \end{figure}
@@ -309,7 +312,7 @@ informazioni:
 \label{uc:uc_notifica_sd_mancante}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC8.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC8.png}
     \caption{UC8-F -- Notifica di rimozione della scheda microSD}
     \label{fig:uc8_diagram}
 \end{figure}
@@ -336,7 +339,7 @@ informazioni:
 \label{uc:uc_gestione_sd_rimossa}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC9.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC9.png}
     \caption{UC9-A -- Gestione della rimozione SD durante la sessione}
     \label{fig:uc9_diagram}
 \end{figure}
@@ -371,7 +374,7 @@ informazioni:
 \label{uc:uc_gestione_sd_assente_avvio}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC10.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC10.png}
     \caption{UC10-A -- Gestione dell'assenza della SD all'avvio sessione}
     \label{fig:uc10_diagram}
 \end{figure}
@@ -403,49 +406,75 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC11-F -- Acquisizione dati dal bus CAN}
-\label{uc:uc_lettura_can_ecu}
+\subsection{UC11-S -- Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
+\label{uc:uc_acquisizione_can_sniffer}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC11.png}
-    \caption{UC11-F -- Acquisizione dati dal CAN}
-    \label{fig:uc11_diagram}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC11_S.png}
+    \caption{UC11-S -- Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
+    \label{fig:uc11_s_diagram}
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Attore Primario:} ECU del veicolo mediante bus CAN.
+    \item \textbf{Attore Primario:} ECU del veicolo connesso mediante bus CAN.
 
-    \item \textbf{Precondizioni:}
-    \begin{itemize}
-        \item il modulo di interfaccia CAN è collegato al bus dati del veicolo;
-        \item è in corso una sessione di registrazione attiva.
-    \end{itemize}
+    \item \textbf{Precondizioni:} il nodo EggLog CAN Sniffer è collegato alla presa diagnostica del veicolo e alimentato.
 
-    \item \textbf{Postcondizioni:} i dati ECU acquisiti sono associati ad un timestamp e resi disponibili per la registrazione (cfr.
-    \hyperref[uc:uc_storage_binario_sd]{UC2-F}).
+    \item \textbf{Postcondizioni:} i parametri del veicolo decodificati sono pubblicati in
+    broadcast su BLE.
 
     \item \textbf{Flusso Principale:}
     \begin{enumerate}
-        \item il firmware si mette in ascolto sul bus CAN;
+        \item il nodo EggLog CAN Sniffer si mette in ascolto sul bus CAN;
         \item la ECU trasmette periodicamente i messaggi contenenti i parametri motore;
-        \item il firmware riceve e decodifica ciascun messaggio CAN;
-        \item il firmware associa a ciascun dato il timestamp corrente;
-        \item il firmware serializza i dati in formato binario;;
-        \item il firmware inserisce i dati nel buffer di acquisizione.
+        \item il nodo ne decodifica i valori e li inserisce in un pacchetto di advertising BLE;
+        \item il nodo pubblica il pacchetto in broadcast su BLE.
     \end{enumerate}
 
     \item \textbf{Flusso Alternativo:}
     \begin{itemize}
-        \item se il messaggio CAN ricevuto non è riconosciuto o risulta malformato, il messaggio
-        viene scartato.
+        \item se il frame CAN ricevuto non è riconosciuto o risulta malformato, viene scartato
+        senza alcun effetto sullo stato pubblicato;
     \end{itemize}
+\end{itemize}
+
+\subsection{UC11-F -- Ricezione dei dati di telemetria CAN via BLE broadcast}
+\label{uc:uc_lettura_can_ecu}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC11.png}
+    \caption{UC11-F -- Ricezione dei dati di telemetria CAN via BLE broadcast}
+    \label{fig:uc11_diagram}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Attore Primario:} nodo EggLog CAN Sniffer.
+
+    \item \textbf{Precondizioni:}
+    \begin{itemize}
+        \item il nodo EggLog CAN Sniffer è alimentato, collegato alla presa diagnostica del veicolo
+        e sta trasmettendo in broadcast BLE i pacchetti di telemetria (cfr. \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S});
+        \item il firmware è avviato ed è in corso una sessione di registrazione attiva.
+    \end{itemize}
+
+    \item \textbf{Postcondizioni:} i dati di telemetria motore ricevuti sono resi disponibili alla registrazione 
+    su scheda microSD (cfr. \hyperref[uc:uc_storage_binario_sd]{UC2-F}).
+
+    \item \textbf{Flusso Principale:}
+    \begin{enumerate}
+        \item il firmware esegue una scansione BLE passiva continua;
+        \item il firmware individua, tra i pacchetti di advertising ricevuti, quello corrispondente
+        al nodo EggLog CAN Sniffer;
+        \item il firmware associa al pacchetto la marca temporale di ricezione;
+        \item il firmware rende disponibili i dati CAN per la registrazione su scheda microSD.
+    \end{enumerate}
 \end{itemize}
 
 \subsection{UC12-F -- Gestione dello stato del firmware tramite \gls{led}}
 \label{uc:uc_stato_led}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\columnwidth]{../img/diagrammi/usecase/UC12.png}
+    \includegraphics[width=0.7\columnwidth]{../img/puml/usecase/UC12.png}
     \caption{UC12-F -- Gestione dello stato del firmware tramite LED}
     \label{fig:uc12_diagram}
 \end{figure}
@@ -493,7 +522,7 @@ informazioni:
 \label{uc:uc_led_sd_mancante}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_1.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_1.png}
     \caption{UC12.1-F -- Segnalazione di scheda microSD mancante}
     \label{fig:uc12_1_diagram}
 \end{figure}
@@ -520,7 +549,7 @@ informazioni:
 \label{uc:uc_led_errore}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_2.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_2.png}
     \caption{UC12.2-F -- Segnalazione di errore generico}
     \label{fig:uc12_2_diagram}
 \end{figure}
@@ -545,7 +574,7 @@ informazioni:
 \label{uc:uc_led_pairing_wifi}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_3.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_3.png}
     \caption{UC12.3-F -- Segnalazione di pairing WiFi}
     \label{fig:uc12_3_diagram}
 \end{figure}
@@ -569,7 +598,7 @@ informazioni:
 \label{uc:uc_led_pairing_ble}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_4.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_4.png}
     \caption{UC12.4-F -- Segnalazione di pairing BLE}
     \label{fig:uc12_4_diagram}
 \end{figure}
@@ -594,7 +623,7 @@ informazioni:
 \label{uc:uc_led_recupero_calibrazione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_5.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_5.png}
     \caption{UC12.5-F -- Segnalazione di recupero dati per calibrazione}
     \label{fig:uc12_5_diagram}
 \end{figure}
@@ -620,7 +649,7 @@ informazioni:
 \label{uc:uc_led_calibrazione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_6.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_6.png}
     \caption{UC12.6-F -- Segnalazione di calibrazione in corso}
     \label{fig:uc12_6_diagram}
 \end{figure}
@@ -644,7 +673,7 @@ informazioni:
 \label{uc:uc_led_download}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_7.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_7.png}
     \caption{UC12.7-F -- Segnalazione di download dati}
     \label{fig:uc12_7_diagram}
 \end{figure}
@@ -668,7 +697,7 @@ informazioni:
 \label{uc:uc_led_eliminazione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_8.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_8.png}
     \caption{UC12.8-F -- Segnalazione di eliminazione dati}
     \label{fig:uc12_8_diagram}
 \end{figure}
@@ -692,7 +721,7 @@ informazioni:
 \label{uc:uc_led_sospensione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_9.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_9.png}
     \caption{UC12.9-F -- Segnalazione di sospensione per inattività}
     \label{fig:uc12_9_diagram}
 \end{figure}
@@ -718,7 +747,7 @@ informazioni:
 \label{uc:uc_led_logging}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_10.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_10.png}
     \caption{UC12.10-F -- Segnalazione di logging attivo}
     \label{fig:uc12_10_diagram}
 \end{figure}
@@ -743,7 +772,7 @@ informazioni:
 \label{uc:uc_led_standby}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC12_11.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_11.png}
     \caption{UC12.11-F -- Segnalazione di dispositivo avviato in attesa di sessione}
     \label{fig:uc12_11_diagram}
 \end{figure}
@@ -770,7 +799,7 @@ informazioni:
 \label{uc:uc_sospensione_sensori}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\columnwidth]{../img/diagrammi/usecase/UC13.png}
+    \includegraphics[width=0.75\columnwidth]{../img/puml/usecase/UC13.png}
     \caption{UC13-F -- Sospensione dell'acquisizione sensori in stato di inattività}
     \label{fig:uc13_diagram}
 \end{figure}
@@ -818,7 +847,7 @@ informazioni:
 \label{uc:uc_config_timeout}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\columnwidth]{../img/diagrammi/usecase/UC14.png}
+    \includegraphics[width=0.6\columnwidth]{../img/puml/usecase/UC14.png}
     \caption{UC14-A -- Configurazione del tempo di inattività}
     \label{fig:uc14_diagram}
 \end{figure}
@@ -844,7 +873,7 @@ informazioni:
 \label{uc:uc_sessione_ble}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC15.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC15.png}
     \caption{UC15-F -- Avvio e interruzione sessione tramite comandi BLE}
     \label{fig:uc15_diagram}
 \end{figure}
@@ -880,7 +909,7 @@ informazioni:
 \label{uc:uc_calibrazione_imu}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC16.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC16.png}
     \caption{UC16-F -- Calibrazione dell'IMU}
     \label{fig:uc16_diagram}
 \end{figure}
@@ -918,7 +947,7 @@ informazioni:
 \label{uc:uc_sequenza_calibrazione}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC17.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC17.png}
     \caption{UC17-A -- Sequenza guidata di calibrazione dell'IMU}
     \label{fig:uc17_diagram}
 \end{figure}
@@ -952,7 +981,7 @@ informazioni:
 \label{uc:uc_visualizzazione_dati_calibrati}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\columnwidth]{../img/diagrammi/usecase/UC18.png}
+    \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC18.png}
     \caption{UC18-A -- Visualizzazione dei dati calibrati}
     \label{fig:uc18_diagram}
 \end{figure}
@@ -982,7 +1011,7 @@ informazioni:
 \label{uc:uc_visualizzazione_movimenti}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\columnwidth]{../img/diagrammi/usecase/UC19.png}
+    \includegraphics[width=0.6\columnwidth]{../img/puml/usecase/UC19.png}
     \caption{UC19-A -- Visualizzazione dei movimenti della moto in tempo reale}
     \label{fig:uc19_diagram}
 \end{figure}
@@ -1010,7 +1039,7 @@ informazioni:
 \label{uc:uc_calibrazione_altitudine}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC20.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC20.png}
     \caption{UC20-F -- Calibrazione automatica dell'altitudine a inizio sessione}
     \label{fig:uc20_diagram}
 \end{figure}
@@ -1042,7 +1071,7 @@ informazioni:
 \label{uc:uc_salvataggio_dati_calibrati}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../img/diagrammi/usecase/UC21.png}
+    \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC21.png}
     \caption{UC21-F -- Salvataggio delle calibrazioni collegate alla sessione}
     \label{fig:uc21_diagram}
 \end{figure}
@@ -1139,10 +1168,19 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
     microSD, offrendo la possibilità di riprovare dopo il suo inserimento &
     \hyperref[uc:uc_gestione_sd_assente_avvio]{UC10-A} \\
     \hline
-    R-F-Ob-11\label{req:rf11} & EggLog deve leggere i dati esposti dalla centralina motore (ECU) tramite bus CAN &
+    R-F-Ob-11\label{req:rf21} & Il nodo EggLog CAN Sniffer deve acquisire i dati esposti dalla centralina
+    motore (ECU) tramite bus CAN e trasmetterli in broadcast BLE &
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S} \\
+    \hline
+    R-F-Ob-12\label{req:rf11} & EggLog deve ricevere, tramite scansione BLE passiva, i dati di telemetria
+    motore trasmessi in broadcast dal nodo EggLog CAN Sniffer &
     \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
     \hline
-    R-F-De-12\label{req:rf12} & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite
+    R-F-Ob-13\label{req:rf22} & EggLog deve marcare il dato di telemetria CAN con la marca temporale di recezione 
+    e renderlo disponibile alla registrazione su scheda microSD &
+    \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
+    \hline
+    R-F-De-14\label{req:rf12} & EggLog deve pilotare il LED integrato sulla scheda ESP32-S3 per segnalare, tramite
     pattern di colore e lampeggio distinti e reciprocamente esclusivi, lo stato corrente del
     dispositivo & \hyperref[uc:uc_stato_led]{UC12-F}, \hyperref[uc:uc_led_sd_mancante]{UC12.1-F},
     \hyperref[uc:uc_led_errore]{UC12.2-F}, \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F},
@@ -1151,34 +1189,34 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
     \hyperref[uc:uc_led_eliminazione]{UC12.8-F}, \hyperref[uc:uc_led_sospensione]{UC12.9-F},
     \hyperref[uc:uc_led_logging]{UC12.10-F}, \hyperref[uc:uc_led_standby]{UC12.11-F} \\
     \hline
-    R-F-De-13\label{req:rf13} & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in
+    R-F-De-15\label{req:rf13} & EggLog deve sospendere automaticamente l'acquisizione dei sensori non essenziali in
     stato di inattività prolungata e riattivarla al rilevamento di movimento &
     \hyperref[uc:uc_sospensione_sensori]{UC13-F} \\
     \hline
-    R-F-Op-14\label{req:rf14} & L'utente deve poter configurare da EggLog App il tempo di inattività che determina
+    R-F-Op-16\label{req:rf14} & L'utente deve poter configurare da EggLog App il tempo di inattività che determina
     la sospensione automatica dei sensori (mai, 10, 30 o 60 minuti) &
     \hyperref[uc:uc_config_timeout]{UC14-A} \\
     \hline
-    R-F-Ob-15\label{req:rf15} & EggLog deve avviare e interrompere la sessione di registrazione in seguito a comandi
+    R-F-Ob-17\label{req:rf15} & EggLog deve avviare e interrompere la sessione di registrazione in seguito a comandi
     BLE ricevuti da EggLog App & \hyperref[uc:uc_sessione_ble]{UC15-F} \\
     \hline
-    R-F-Ob-16\label{req:rf16} & EggLog deve calibrare l'IMU guidando l'utente, tramite EggLog App, attraverso una
+    R-F-Ob-18\label{req:rf16} & EggLog deve calibrare l'IMU guidando l'utente, tramite EggLog App, attraverso una
     sequenza di movimenti predefinita, applicando poi tali calibrazioni alle letture
     successive &
     \hyperref[uc:uc_calibrazione_imu]{UC16-F}, \hyperref[uc:uc_sequenza_calibrazione]{UC17-A} \\
     \hline
-    R-F-De-17\label{req:rf17} & L'utente deve poter visualizzare in EggLog App i dati sensore corretti secondo i
+    R-F-De-19\label{req:rf17} & L'utente deve poter visualizzare in EggLog App i dati sensore corretti secondo i
     parametri di calibrazione applicati & \hyperref[uc:uc_visualizzazione_dati_calibrati]{UC18-A} \\
     \hline
-    R-F-De-18\label{req:rf18} & L'utente deve poter visualizzare in tempo reale, tramite un modello tridimensionale
+    R-F-De-20\label{req:rf18} & L'utente deve poter visualizzare in tempo reale, tramite un modello tridimensionale
     in EggLog App, i movimenti della moto rilevati dall'IMU (inclinazione frontale, inclinazione
     laterale e accelerazione frontale) & \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} \\
     \hline
-    R-F-Ob-19\label{req:rf19} & EggLog deve calcolare automaticamente, tramite il barometro, un valore di altitudine
+    R-F-Ob-21\label{req:rf19} & EggLog deve calcolare automaticamente, tramite il barometro, un valore di altitudine
     di riferimento a inizio sessione e applicarlo alle letture successive &
     \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} \\
     \hline
-    R-F-Ob-20\label{req:rf20} & EggLog deve salvare i dati di calibrazione dell'IMU nella cartella principale delle
+    R-F-Ob-22\label{req:rf20} & EggLog deve salvare i dati di calibrazione dell'IMU nella cartella principale delle
     sessioni e i dati di calibrazione dell'altitudine all'interno della cartella della sessione
     corrente & \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F} \\
     \hline
@@ -1244,6 +1282,11 @@ conforme alle aspettative e agli obiettivi preposti.
     reale deve risultare fluido e privo di percepibili ritardi &
     \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} \\
     \hline
+    R-N-Ob-8\label{req:rn8} & Il canale di trasmissione tra il nodo EggLog CAN Sniffer ed EggLog deve
+    tollerare la perdita di singoli pacchetti di telemetria senza richiedere meccanismi di
+    riconoscimento o ritrasmissione &
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S}, \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
+    \hline
     \hiderowcolors
     \caption{Tracciamento dei requisiti non funzionali.}
     \label{tab:requisiti_non_funzionali}
@@ -1280,8 +1323,9 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \hline
     R-V-Ob-2\label{req:rv2} & Il firmware del dispositivo dev'essere scritto in linguaggio C/C++ & Tutti \\
     \hline
-    R-V-Ob-3\label{req:rv3} & L'interfaccia con il bus CAN del veicolo deve essere compatibile con il protocollo
-    CAN utilizzato dalla centralina (ECU) della moto & \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
+    R-V-Ob-3\label{req:rv3} & L'interfaccia del nodo EggLog CAN Sniffer con il bus CAN del veicolo deve
+    essere compatibile con il protocollo CAN utilizzato dalla centralina (ECU) della moto &
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S} \\
     \hline
     R-V-Ob-4\label{req:rv4} & Il LED utilizzato per la segnalazione di stato deve essere quello integrato sulla
     scheda ESP32-S3 & \hyperref[uc:uc_stato_led]{UC12-F} \\
@@ -1290,6 +1334,18 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     sessione e lo scambio dati in tempo reale deve avvenire tramite BLE &
     \hyperref[uc:uc_config_timeout]{UC14-A}, \hyperref[uc:uc_sessione_ble]{UC15-F},
     \hyperref[uc:uc_calibrazione_imu]{UC16-F} \\
+    \hline
+    R-V-Ob-6\label{req:rv6} & Il nodo EggLog CAN Sniffer deve essere un dispositivo fisicamente
+    separato da EggLog, privo di connessione elettrica diretta con esso &
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S} \\
+    \hline
+    R-V-Ob-7\label{req:rv7} & La comunicazione tra il nodo EggLog CAN Sniffer ed EggLog deve avvenire
+    esclusivamente tramite BLE advertising broadcast &
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S}, \hyperref[uc:uc_lettura_can_ecu]{UC11-F} \\
+    \hline
+    R-V-Ob-8\label{req:rv8} & Il microcontrollore CAN del nodo EggLog CAN Sniffer deve operare in modalità di
+    sola ricezione (\textit{Listen-Only}), senza mai trasmettere bit di ACK o frame di errore sul bus del
+    veicolo & \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S} \\
     \hline
     \hiderowcolors
     \caption{Tracciamento dei requisiti di vincolo.}
@@ -1341,7 +1397,9 @@ requisiti da esso derivati, a complemento del tracciamento inverso riportato nel
     \hline
     \hyperref[uc:uc_gestione_sd_assente_avvio]{UC10-A} & \hyperref[req:rf10]{R-F-De-10}, \hyperref[req:rn6]{R-N-De-6} \\
     \hline
-    \hyperref[uc:uc_lettura_can_ecu]{UC11-F} & \hyperref[req:rf11]{R-F-Ob-11}, \hyperref[req:rv3]{R-V-Ob-3} \\
+    \hyperref[uc:uc_acquisizione_can_sniffer]{UC11-S} & \hyperref[req:rf21]{R-F-Ob-11}, \hyperref[req:rn8]{R-N-Ob-8}, \hyperref[req:rv3]{R-V-Ob-3}, \hyperref[req:rv6]{R-V-Ob-6}, \hyperref[req:rv7]{R-V-Ob-7}, \hyperref[req:rv8]{R-V-Ob-8} \\
+    \hline
+    \hyperref[uc:uc_lettura_can_ecu]{UC11-F} & \hyperref[req:rf11]{R-F-Ob-12}, \hyperref[req:rf22]{R-F-Ob-13}, \hyperref[req:rn8]{R-N-Ob-8}, \hyperref[req:rv7]{R-V-Ob-7} \\
     \hline
     \hyperref[uc:uc_stato_led]{UC12-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4}, \hyperref[req:rv4]{R-V-Ob-4} \\
     \hline
@@ -1395,20 +1453,20 @@ requisiti da esso derivati, a complemento del tracciamento inverso riportato nel
 
 \subsection{Riepilogo dei requisiti}
 Nella Tabella \ref{tab:riepilogo_requisiti} si riporta il numero di requisiti per categoria e per urgenza;
-in totale sono stati rilevati 32 requisiti.
+in totale sono stati rilevati 38 requisiti.
 
 \begin{center}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
  & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Opzionali} & \textbf{TOTALE} \\
 \hline
-RF & 12 & 7 & 1 & 20 \\
+RF & 15 & 6 & 1 & 22 \\
 \hline
-RN & 3 & 3 & 1 & 7 \\
+RN & 4 & 3 & 1 & 8 \\
 \hline
-RV & 5 & 0 & 0 & 5 \\
+RV & 8 & 0 & 0 & 8 \\
 \hline
-\textbf{TOTALE} & \textbf{20} & \textbf{10} & \textbf{2} & \textbf{32} \\
+\textbf{TOTALE} & \textbf{26} & \textbf{10} & \textbf{2} & \textbf{38} \\
 \hline
 \end{tabular}
 \captionof{table}{Conteggio dei requisiti tracciati.}

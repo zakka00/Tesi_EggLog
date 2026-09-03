@@ -1,0 +1,21 @@
+{
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (lualatex)",
+            "tools": ["latexmk-lua"]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk-lua",
+            "command": "latexmk",
+            "args": [
+                "-lualatex",
+                "-interaction=nonstopmode",
+                "-synctex=1",
+                "%DOC%"
+            ]
+        }
+    ],
+    "plantuml.exportOutDir": "usecase"
+}
