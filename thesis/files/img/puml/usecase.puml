@@ -210,11 +210,11 @@ actor "EggLog\nCAN Sniffer" as Sniffer
 
 rectangle EggLog {
     usecase "UC11-F\nRicezione dati telemetria\nCAN via BLE broadcast" as UC11
-    usecase "UC11.1-F\nGestione dati CAN\nassenti o obsoleti" as UC111
+    usecase "UC2-F\nRegistrazione dei dati\nsensore su SD" as UC2
 }
 
 Sniffer -- UC11
-UC111 ..> UC11 : <<extend>>
+UC11 ..> UC2 : <<include>>
 @enduml
 
 newpage
