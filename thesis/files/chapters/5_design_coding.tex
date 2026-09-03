@@ -258,8 +258,8 @@ Lo stato globale del dispositivo rappresenta il punto di accesso centralizzato a
 elevato di componenti indipendenti: la gestione della sessione, la segnalazione mediante LED, la gestione dell'inattività, lo stato della microSD, la
 calibrazione dell'IMU, il modulo di comunicazione BLE e tutti i task producer/consumer.
 
-Concettualmente espone un insieme di indicatori booleani indipendenti — supporto di memorizzazione mancante, condizione di errore, calibrazione in corso,
-sospensione per inattività, \textit{pairing} in corso e download/cancellazione in corso — insieme a uno stato principale di sessione, con un numero
+Concettualmente espone un insieme di indicatori booleani indipendenti: supporto di memorizzazione mancante, condizione di errore, calibrazione in corso,
+sospensione per inattività, \textit{pairing} in corso e download/cancellazione in corso, insieme a uno stato principale di sessione, con un numero
 finito di valori: STAND\_BY, LOGGING, SUSPENDED, DOWNLOADING e DELETING. Ciascun indicatore è accessibile esclusivamente tramite un'interfaccia dedicata
 di lettura e scrittura.
 
