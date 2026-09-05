@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{type}\PYG{+w}{ }\PYG{n+nx}{TargetState}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{roll}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nx}{pitch}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nx}{longAccel}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{targetRef}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useRef}\PYG{p}{\PYGZlt{}}\PYG{n+nt}{TargetState}\PYG{p}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{roll}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{pitch}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{longAccel}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{0}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{p}{)}
+\end{MintedVerbatim}

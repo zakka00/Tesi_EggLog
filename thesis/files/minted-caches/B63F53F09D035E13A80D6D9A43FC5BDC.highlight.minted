@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{count}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{EARLY\PYGZus{}EXIT\PYGZus{}MIN\PYGZus{}SAMPLES}\PYG{+w}{ }\PYG{o}{\PYGZam{}}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{windowCount}\PYG{+w}{ }\PYG{o}{=}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{EARLY\PYGZus{}EXIT\PYGZus{}CHECK\PYGZus{}WINDOW}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// media e deviazione standard sulla finestra di ultimi campioni}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{windowStdDev}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{EARLY\PYGZus{}EXIT\PYGZus{}STD\PYGZus{}DEV\PYGZus{}MG}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// segnale stabile: esce prima}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

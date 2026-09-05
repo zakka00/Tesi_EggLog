@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{advertising}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}}\PYG{n}{setConnectableMode}\PYG{p}{(}\PYG{n}{BLE\PYGZus{}GAP\PYGZus{}CONN\PYGZus{}MODE\PYGZus{}NON}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{advertising}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}}\PYG{n}{enableScanResponse}\PYG{p}{(}\PYG{n+nb}{false}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

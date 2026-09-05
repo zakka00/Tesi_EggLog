@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{tick}\PYG{p}{(}\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{receiveTimeoutMs}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{CanFrame}\PYG{+w}{ }\PYG{n}{frame}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{bus\PYGZus{}}\PYG{p}{.}\PYG{n}{receive}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{receiveTimeoutMs}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{return}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{profile\PYGZus{}}\PYG{p}{.}\PYG{n}{handleFrame}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{broadcaster\PYGZus{}}\PYG{p}{.}\PYG{n}{publish}\PYG{p}{(}\PYG{n}{profile\PYGZus{}}\PYG{p}{.}\PYG{n}{currentSnapshot}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

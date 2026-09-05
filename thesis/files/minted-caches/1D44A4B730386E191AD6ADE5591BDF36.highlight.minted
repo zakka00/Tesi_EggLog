@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}\PYG{n+nx}{order}\PYG{p}{.}\PYG{n+nx}{map}\PYG{p}{(}\PYG{n+nx}{idx}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{percent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{storageStatus}\PYG{p}{.}\PYG{n+nx}{percentUsed}\PYG{p}{[}\PYG{n+nx}{idx}\PYG{p}{]}
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{rewriting}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{storageStatus}\PYG{p}{.}\PYG{n+nx}{rewriting}\PYG{p}{[}\PYG{n+nx}{idx}\PYG{p}{]}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{        }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{View}\PYG{+w}{ }\PYG{n+na}{key}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n+nx}{idx}\PYG{p}{\PYGZcb{}}\PYG{p}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}\PYG{p}{\PYGZob{}}\PYG{n+nx}{SENSOR\PYGZus{}LABELS}\PYG{p}{[}\PYG{n+nx}{idx}\PYG{p}{]}\PYG{p}{\PYGZcb{}}\PYG{p}{\PYGZlt{}/}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}\PYG{p}{\PYGZob{}}\PYG{n+nx}{percent}\PYG{p}{.}\PYG{n+nx}{toFixed}\PYG{p}{(}\PYG{l+m+mf}{1}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{o}{\PYGZpc{}}\PYG{p}{\PYGZlt{}/}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}\PYG{n+nx}{rewriting}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}\PYG{n+nx}{Rewriting}\PYG{p}{\PYGZlt{}/}\PYG{n+nt}{Text}\PYG{p}{\PYGZgt{}}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZlt{}/}\PYG{n+nt}{View}\PYG{p}{\PYGZgt{}}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

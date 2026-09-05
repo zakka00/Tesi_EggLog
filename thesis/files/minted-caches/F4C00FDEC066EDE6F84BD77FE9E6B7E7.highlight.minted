@@ -1,0 +1,17 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{Pattern}\PYG{+w}{ }\PYG{n+nf}{resolvePattern}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isSdMissing}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BLINK}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{4.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{+w}{      }\PYG{c+c1}{// 1: SD mancante}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isError}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BLINK}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{+w}{      }\PYG{c+c1}{// 2: errore}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isPairingBle}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BLINK}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{+w}{      }\PYG{c+c1}{// 3: pairing BLE}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isPairingWifi}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BLINK}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{4.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{+w}{      }\PYG{c+c1}{// 4: pairing Wi\PYGZhy{}Fi}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isRetrievingData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{SOLID}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{+w}{    }\PYG{c+c1}{// 5: recupero dati}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isCalibrating}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BREATHING}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{c+c1}{// 6: calibrazione}
+\PYG{+w}{    }\PYG{c+c1}{// ... download/cancellazione, sospensione, logging, standby}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

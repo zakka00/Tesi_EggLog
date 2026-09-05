@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{switch}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{frame}\PYG{p}{.}\PYG{n}{id}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{case}\PYG{+w}{ }\PYG{n+no}{GEAR\PYGZus{}POSITION\PYGZus{}ID}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{snapshot\PYGZus{}}\PYG{p}{.}\PYG{n}{gear}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{decodeGear}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{.}\PYG{n}{data}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{case}\PYG{+w}{ }\PYG{n+no}{TPS\PYGZus{}ID}\PYG{p}{:}\PYG{+w}{   }\PYG{n}{snapshot\PYGZus{}}\PYG{p}{.}\PYG{n}{tpsPercent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{decodeTps}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{.}\PYG{n}{data}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{case}\PYG{+w}{ }\PYG{n+no}{TEMP\PYGZus{}ID}\PYG{p}{:}\PYG{+w}{           }\PYG{c+cm}{/* motore e aria, un byte ciascuno */}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{case}\PYG{+w}{ }\PYG{n+no}{RPM\PYGZus{}SPEED\PYGZus{}ID}\PYG{p}{:}\PYG{+w}{      }\PYG{c+cm}{/* RPM e velocità */}\PYG{+w}{ }\PYG{k}{break}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{default}\PYG{o}{:}\PYG{+w}{ }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// ID non appartenente a questo profilo}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

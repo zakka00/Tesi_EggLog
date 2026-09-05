@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Prima: stato meccanico del pin DET}
+\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{isCardInserted}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{digitalRead}\PYG{p}{(}\PYG{n}{SD}\PYG{o}{:}\PYG{o}{:}\PYG{n}{PIN\PYGZus{}DET}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

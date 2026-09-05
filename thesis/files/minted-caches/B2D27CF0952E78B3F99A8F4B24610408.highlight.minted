@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{enum}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Command}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{uint8\PYGZus{}t}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{START}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STOP}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{RESUME}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{handleCommand}\PYG{p}{(}\PYG{n}{Command}\PYG{+w}{ }\PYG{n}{cmd}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

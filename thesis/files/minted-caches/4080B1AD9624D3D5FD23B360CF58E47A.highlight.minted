@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{IMU}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isCalibrationActive}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{IMU}\PYG{o}{:}\PYG{o}{:}\PYG{n}{CalibSample}\PYG{+w}{ }\PYG{n}{calibSample}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{calibSample}\PYG{p}{.}\PYG{n}{accel}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{currentSample}\PYG{p}{.}\PYG{n}{rawAccelX}\PYG{p}{;}
+\PYG{+w}{    }\PYG{c+c1}{// ... e le altre componenti}
+\PYG{+w}{    }\PYG{n}{xQueueSend}\PYG{p}{(}\PYG{n}{IMU}\PYG{o}{:}\PYG{o}{:}\PYG{n}{calibQueue}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{\PYGZam{}}\PYG{n}{calibSample}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

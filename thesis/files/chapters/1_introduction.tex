@@ -105,9 +105,14 @@ In particolare:
     \item Gli estratti di codice sorgente vengono riportati attraverso appositi blocchi
     formattati, come riportato di seguito:
     \begin{listing}[H]
-    \inputminted{python}{code/example.py}
-    \caption{Fibonacci recursive}
-    \label{listing:py_fibo}
+    \begin{minted}{cpp}
+    struct Header {
+        uint32_t magic;
+        uint8_t  version;
+        ...
+    };
+    \end{minted}
+    \caption{Esempio di estratto di codice}
     \end{listing}
 
 \end{itemize}

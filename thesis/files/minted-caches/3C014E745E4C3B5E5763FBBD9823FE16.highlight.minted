@@ -1,0 +1,12 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{SniffingService}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{k}{public}\PYG{o}{:}
+\PYG{+w}{    }\PYG{n}{SniffingService}\PYG{p}{(}\PYG{n}{ICanBus}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{bus}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IVehicleProfile}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{profile}\PYG{p}{,}
+\PYG{+w}{                     }\PYG{n}{ITelemetryBroadcaster}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{broadcaster}\PYG{p}{)}
+\PYG{+w}{        }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{bus\PYGZus{}}\PYG{p}{(}\PYG{n}{bus}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{profile\PYGZus{}}\PYG{p}{(}\PYG{n}{profile}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{broadcaster\PYGZus{}}\PYG{p}{(}\PYG{n}{broadcaster}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
+\PYG{k}{private}\PYG{o}{:}
+\PYG{+w}{    }\PYG{n}{ICanBus}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{bus\PYGZus{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{IVehicleProfile}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{profile\PYGZus{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{ITelemetryBroadcaster}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{broadcaster\PYGZus{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\end{MintedVerbatim}

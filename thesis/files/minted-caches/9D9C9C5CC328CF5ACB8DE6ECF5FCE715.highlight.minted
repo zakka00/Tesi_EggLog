@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{useEffect}\PYG{p}{(}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nx}{useLiveMetricsStore}\PYG{p}{.}\PYG{n+nx}{subscribe}\PYG{p}{(}\PYG{n+nx}{state}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{targetRef}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{roll}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{state}\PYG{p}{.}\PYG{n+nx}{motionState}\PYG{p}{.}\PYG{n+nx}{roll}
+\PYG{+w}{        }\PYG{n+nx}{targetRef}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{pitch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{state}\PYG{p}{.}\PYG{n+nx}{motionState}\PYG{p}{.}\PYG{n+nx}{pitch}
+\PYG{+w}{        }\PYG{n+nx}{targetRef}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{longAccel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{state}\PYG{p}{.}\PYG{n+nx}{motionState}\PYG{p}{.}\PYG{n+nx}{longAccel}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{p}{]}\PYG{p}{)}
+\end{MintedVerbatim}

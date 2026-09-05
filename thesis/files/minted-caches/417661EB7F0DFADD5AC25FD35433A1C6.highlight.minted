@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{useFrame}\PYG{p}{(}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{roll}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{THREE}\PYG{p}{.}\PYG{n+nx}{MathUtils}\PYG{p}{.}\PYG{n+nx}{lerp}\PYG{p}{(}
+\PYG{+w}{        }\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{roll}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{targetRoll}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{SMOOTHING\PYGZus{}FACTOR}\PYG{p}{)}
+\PYG{+w}{    }\PYG{n+nx}{groupRef}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{rotation}\PYG{p}{.}\PYG{n+nx}{z}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{current}\PYG{p}{.}\PYG{n+nx}{roll}
+\PYG{p}{\PYGZcb{}}\PYG{p}{)}
+\end{MintedVerbatim}

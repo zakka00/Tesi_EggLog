@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{static\PYGZus{}assert}\PYG{p}{(}\PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{CanTelemetryWirePacket}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{=}\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{The packet must remain within the BLE ADV payload budget.}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

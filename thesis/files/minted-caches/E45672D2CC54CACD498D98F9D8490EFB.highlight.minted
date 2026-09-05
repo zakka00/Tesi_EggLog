@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{function}\PYG{+w}{ }\PYG{n+nx}{SdMissingOverlay}\PYG{p}{(}\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nx}{onAction}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{actionLabel}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{actionLoading}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{actionColorStyle}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{loadingText}
+\PYG{p}{\PYGZcb{}}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{p}{...}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{p}{...}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

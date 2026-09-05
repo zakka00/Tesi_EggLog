@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Prima dell\PYGZsq{}avvio: retry}
+\PYG{p}{\PYGZob{}}\PYG{p}{(}\PYG{n+nx}{startSdMissing}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{n+nx}{retrying}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{    }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{SdMissingOverlay}\PYG{+w}{ }\PYG{n+na}{onAction}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n+nx}{retryStartRecording}\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{n+na}{actionLabel}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Retry\PYGZdq{}}
+\PYG{+w}{        }\PYG{n+na}{actionLoading}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n+nx}{retrying}\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{n+na}{loadingText}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Retrying...\PYGZdq{}}\PYG{+w}{ }\PYG{n+na}{...}\PYG{+w}{ }\PYG{p}{/}\PYG{p}{\PYGZgt{}}
+\PYG{p}{)}\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{// Durante la sessione: arresto forzato}
+\PYG{p}{\PYGZob{}}\PYG{n+nx}{storageStatus}\PYG{o}{?}\PYG{p}{.}\PYG{n+nx}{sdMissing}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{    }\PYG{p}{\PYGZlt{}}\PYG{n+nt}{SdMissingOverlay}\PYG{+w}{ }\PYG{n+na}{onAction}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n+nx}{stopRecording}\PYG{p}{(}\PYG{n+nx}{activityName}\PYG{p}{)}\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{n+na}{actionLabel}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Block session\PYGZdq{}}\PYG{+w}{ }\PYG{n+na}{actionLoading}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{k+kc}{true}\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{n+na}{...}\PYG{+w}{ }\PYG{p}{/}\PYG{p}{\PYGZgt{}}
+\PYG{p}{)}\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

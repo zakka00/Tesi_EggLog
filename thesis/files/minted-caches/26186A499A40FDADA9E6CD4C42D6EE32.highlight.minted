@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{std}\PYG{o}{:}\PYG{o}{:}\PYG{n}{sort}\PYG{p}{(}\PYG{n}{sorted}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{sorted}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{N}\PYG{p}{)}\PYG{p}{;}
+\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{median}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{sorted}\PYG{p}{[}\PYG{n}{N}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;}
+\PYG{k}{for}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{auto}\PYG{+w}{ }\PYG{n}{v}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{samples}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{variance}\PYG{+w}{ }\PYG{o}{+}\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{v}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{median}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{v}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{median}\PYG{p}{)}\PYG{p}{;}
+\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{stddev}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{sqrtf}\PYG{p}{(}\PYG{n}{variance}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{N}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{stddev}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{MAX\PYGZus{}STDDEV\PYGZus{}HPA}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{Result}\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nb}{true}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{median}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{false}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// wraparound: split in scrittura pre\PYGZhy{}wrap e post\PYGZhy{}wrap}
+\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{firstPartRecords}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{recordsToWrapBoundary}\PYG{p}{;}
+\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{secondPartRecords}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{writable}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{firstPartRecords}\PYG{p}{;}
+
+\PYG{n}{file}\PYG{p}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{src}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{firstPartRecords}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{     }\PYG{c+c1}{// fino a fine area dati}
+\PYG{n}{file}\PYG{p}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{src}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{firstPartRecords}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{,}
+\PYG{+w}{           }\PYG{n}{secondPartRecords}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{         }\PYG{c+c1}{// dall\PYGZsq{}inizio dell\PYGZsq{}area dati}
+\end{MintedVerbatim}

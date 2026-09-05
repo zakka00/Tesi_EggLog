@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{create}\PYG{p}{(}\PYG{n}{SdFat}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{sdFat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Instance}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{inst}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{const}\PYG{+w}{ }\PYG{k+kt}{char}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{path}\PYG{p}{,}
+\PYG{+w}{            }\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{totalRecords}\PYG{p}{,}
+\PYG{+w}{            }\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{headerAreaSize}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n}{allowOverwrite}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{openAndRecover}\PYG{p}{(}\PYG{n}{SdFat}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{sdFat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Instance}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{inst}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{const}\PYG{+w}{ }\PYG{k+kt}{char}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{path}\PYG{p}{,}\PYG{+w}{ }\PYG{c+cm}{/* ... */}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{writeRecords}\PYG{p}{(}\PYG{n}{Instance}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{inst}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{const}\PYG{+w}{ }\PYG{k+kt}{uint8\PYGZus{}t}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{src}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{uint32\PYGZus{}t}\PYG{+w}{ }\PYG{n}{count}\PYG{p}{)}\PYG{p}{;}
+\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{n+nf}{syncHeader}\PYG{p}{(}\PYG{n}{Instance}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{inst}\PYG{p}{)}\PYG{p}{;}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{close}\PYG{p}{(}\PYG{n}{Instance}\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{inst}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

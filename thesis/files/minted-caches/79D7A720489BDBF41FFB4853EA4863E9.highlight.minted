@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{uint64\PYGZus{}t}\PYG{+w}{ }\PYG{n}{rawBytes}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{uint64\PYGZus{}t}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m+mi}{3600ULL}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{retentionHours}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{;}
+\PYG{k+kt}{uint64\PYGZus{}t}\PYG{+w}{ }\PYG{n}{alignedBytes}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{p}{(}\PYG{n}{rawBytes}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{clusterSizeBytes}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{clusterSizeBytes}\PYG{p}{)}
+\PYG{o}{*}\PYG{+w}{ }\PYG{n}{clusterSizeBytes}\PYG{p}{;}
+\PYG{k}{return}\PYG{+w}{ }\PYG{k+kt}{uint32\PYGZus{}t}\PYG{p}{(}\PYG{n}{alignedBytes}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{recordSize}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

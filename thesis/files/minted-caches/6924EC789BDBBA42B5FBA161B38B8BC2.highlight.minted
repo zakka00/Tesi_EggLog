@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{twai\PYGZus{}general\PYGZus{}config\PYGZus{}t}\PYG{+w}{ }\PYG{n}{g\PYGZus{}config}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{    }\PYG{n}{TWAI\PYGZus{}GENERAL\PYGZus{}CONFIG\PYGZus{}DEFAULT}\PYG{p}{(}\PYG{n}{txGpio\PYGZus{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{rxGpio\PYGZus{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{TWAI\PYGZus{}MODE\PYGZus{}LISTEN\PYGZus{}ONLY}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

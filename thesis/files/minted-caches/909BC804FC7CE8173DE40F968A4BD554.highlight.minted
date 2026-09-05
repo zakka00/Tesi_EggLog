@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{enum}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{CalibCommand}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{uint8\PYGZus{}t}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{START}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{CONFIRM}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ABORT}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{k}{enum}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{CalibState}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{uint8\PYGZus{}t}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{IDLE}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{STEP1\PYGZus{}READY}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP1\PYGZus{}RUNNING}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP1\PYGZus{}RETRY}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{STEP2\PYGZus{}READY}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP2\PYGZus{}RUNNING}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP2\PYGZus{}RETRY}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{STEP3\PYGZus{}READY}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP3\PYGZus{}RUNNING}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{STEP3\PYGZus{}RETRY}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{SUCCESS}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{NO\PYGZus{}DATA}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ERR}
+\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\end{MintedVerbatim}

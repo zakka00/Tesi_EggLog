@@ -148,3 +148,61 @@ Rel(bleadapter, central, "Trasmette in broadcast", "BLE Advertising")
 
 @enduml
 
+@startuml C4_Component_EggLog_App_Record
+title Diagramma dei componenti - Applicazione: schermata Record e configurazione
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+skinparam wrapWidth 200
+
+Person(pilota, "Pilota")
+
+Container_Boundary(app, "EggLog App (React Native)") {
+
+    Component(recordScreen, "Record Screen", "", "Selezione device, avvio/arresto sessione, visualizzazione telemetria live e comando di calibrazione")
+    Component(configScreen, "Config Screen", "", "Elenco parametri configurabili del dispositivo (tra cui il timeout di inattività)")
+
+    Component(sessionVM, "Session ViewModel", "ViewModel", "Deriva lo stato di visualizzazione della sessione e instrada i comandi utente")
+    Component(calibVM, "Calibration ViewModel", "ViewModel", "Espone lo stato della macchina a stati di calibrazione IMU alla vista")
+    Component(liveMetricsVM, "Live Metrics ViewModel", "ViewModel", "Gestisce l'interazione utente con la vista 3D (drag vs scroll)")
+    Component(configVM, "Config ViewModel", "ViewModel", "Legge/scrive i parametri di configurazione tramite BLE")
+
+    Component(liveMetricsStore, "Live Metrics Store", "Zustand store", "Stato condiviso di telemetria; espone hook throttled per il testo e subscribe raw per l'animazione 3D")
+
+    Component(moto3D, "Moto3D", "react-three-fiber", "Rende il modello 3D del veicolo e ne anima assetto e accelerazione longitudinale")
+
+    Component(storageStatus, "StorageStatus", "Oggetto di dominio", "Percentuale di spazio occupato per sensore, stato di sovrascrittura, indicatore di microSD mancante")
+    Component(configEntry, "ConfigEntry", "Oggetto di dominio", "Astrae una singola caratteristica BLE configurabile (titolo, UUID, valore, limiti)")
+
+    Component(bluetoothSvc, "Bluetooth Service", "Servizio esistente", "Gestione di scansione, connessione e comunicazione BLE grezza")
+    Component(notificationSvc, "Notification Service", "Servizio esistente", "Instrada le notifiche BLE in ingresso verso store e viewmodel")
+    Component(sessionSvc, "Session Service", "Servizio esistente", "Logica di avvio/arresto/ripresa sessione")
+}
+
+System_Ext(firmware, "Firmware EggLog", "ESP32 - GATT Server")
+
+Rel(pilota, recordScreen, "Avvia/ferma sessione, osserva telemetria")
+Rel(pilota, configScreen, "Configura i parametri del dispositivo")
+
+Rel(recordScreen, sessionVM, "Usa")
+Rel(recordScreen, calibVM, "Usa")
+Rel(recordScreen, liveMetricsVM, "Usa")
+Rel(recordScreen, moto3D, "Include")
+Rel(configScreen, configVM, "Usa")
+
+Rel(sessionVM, sessionSvc, "Comandi\nsessione")
+Rel(sessionVM, storageStatus, "Legge stato\nstorage")
+Rel(calibVM, bluetoothSvc, "Comandi e \nnotifiche\ncalibrazione")
+Rel(configVM, configEntry, "Modella ogni\nriga come")
+Rel(configVM, bluetoothSvc, "Write\ncaratteristica")
+
+Rel(notificationSvc, liveMetricsStore, "Aggiorna con\ni dati ricevuti\nvia BLE")
+Rel(notificationSvc, storageStatus, "Aggiorna con\nSD_STATUS")
+Rel(liveMetricsVM, liveMetricsStore, "Legge (throttled)")
+Rel(moto3D, liveMetricsStore, "Sottoscrive\n(raw, no re-render React)")
+
+Rel(bluetoothSvc, firmware, "GATT read/write/notify", "BLE")
+
+SHOW_LEGEND()
+@enduml
+
+

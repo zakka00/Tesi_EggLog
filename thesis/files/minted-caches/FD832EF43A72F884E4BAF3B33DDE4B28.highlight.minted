@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{Sensor}\PYG{o}{:}\PYG{o}{:}\PYG{n}{requestForceFlushAndWait}\PYG{p}{(}\PYG{n}{FORCE\PYGZus{}FLUSH\PYGZus{}TIMEOUT\PYGZus{}TICKS}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//1}
+\PYG{n}{waitForQueueDrain}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//2}
+\PYG{n}{SD}\PYG{o}{:}\PYG{o}{:}\PYG{n}{SuperFile}\PYG{o}{:}\PYG{o}{:}\PYG{n}{closeAll}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//3}
+\PYG{n}{SD}\PYG{o}{:}\PYG{o}{:}\PYG{n}{sdFat}\PYG{p}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{oldFolder}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{newFolder}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//4}
+\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{setCurrentState}\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{State}\PYG{o}{:}\PYG{o}{:}\PYG{n}{STAND\PYGZus{}BY}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//5}
+\end{MintedVerbatim}

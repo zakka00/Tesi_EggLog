@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{enum}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{State}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{uint8\PYGZus{}t}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{n}{STAND\PYGZus{}BY}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{LOGGING}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{SUSPENDED}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{DOWNLOADING}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{DELETING}
+\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{n}{State}\PYG{+w}{ }\PYG{n+nf}{getCurrentState}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n+nf}{setCurrentState}\PYG{p}{(}\PYG{n}{State}\PYG{+w}{ }\PYG{n}{s}\PYG{p}{)}\PYG{p}{;}
+\end{MintedVerbatim}

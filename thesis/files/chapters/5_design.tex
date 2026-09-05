@@ -7,10 +7,12 @@ successivo la loro effettiva traduzione in codice.}
 
 \section{Situazione di partenza} \label{sec:situazione-partenza}
 
-Questa sezione descrive l'architettura del firmware così come si presentava prima dell'inizio del tirocinio, allo scopo di fornire un punto
+Questa sezione descrive l'architettura del sistema così come si presentava prima dell'inizio del tirocinio, allo scopo di fornire un punto
 di riferimento rispetto a cui distinguere, nelle sezioni successive, i contributi introdotti durante il lavoro svolto.
 
-\subsection{Architettura}
+\subsection{Firmware}
+
+\subsubsection{Architettura}
 
 Il firmware implementava un meccanismo di acquisizione e persistenza dei dati, basato sulla suddivisione in \textbf{producer}, uno per
 sensore, e un unico \textbf{consumer} dedicato alla scrittura su microSD. I due ruoli comunicavano tramite una coda di richieste di scrittura,
@@ -30,7 +32,7 @@ permettendo la visualizzazione \textit{live} delle grandezze rilevate durante la
     \caption{Architettura producer-consumer preesistente}
 \end{figure}
 
-\subsection{Scelte progettuali}
+\subsubsection{Scelte progettuali}
 
 \begin{itemize}
     \item \textbf{Producer-Consumer}: separazione netta tra il ruolo di acquisizione dati e quello di persistenza, disaccoppiati tramite una coda di richieste di scrittura.
@@ -42,6 +44,21 @@ permettendo la visualizzazione \textit{live} delle grandezze rilevate durante la
     permettendo la visualizzazione live delle grandezze rilevate senza dipendere dalla scrittura effettiva dei dati su file.
 \end{itemize}
 
+\subsection{Applicazione mobile}
+
+L'applicazione EggLog, realizzata in \textbf{React Native}, era già in grado di comunicare
+con il dispositivo tramite BLE, secondo il modello Central-Peripheral tipico del profilo
+\gls{gap}: scansione dei dispositivi in stato di \gls{advertising}, pairing e successiva
+scoperta dei \gls{service} e delle \gls{characteristic} esposti dal firmware. 
+
+Erano inoltre già presenti alcune schermate base (tra cui Home, Devices e Record), che mostravano
+la telemetria ricevuta in tempo reale via BLE, seppur in una forma non ancora rifinita.
+
+A differenza del firmware, per cui gli interventi sono iniziati fin da subito, il lavoro sull'applicazione è iniziato a \textbf{metà tirocinio}:
+nella prima parte, l'applicazione è stata oggetto di un lavoro di pulizia e riorganizzazione da parte dell'altro membro del team di tirocinio,
+volto a rimuovere codice e funzionalità non più necessarie. Solo una volta raggiunta una base più solida si è potuto intervenire aggiungendo
+i componenti e i canali BLE relativi ai contributi descritti nelle sezioni seguenti.
+
 Queste scelte erano già consolidate nella base di codice ricevuta all'inizio del tirocinio e sono state mantenute come fondamenta su cui innestare gli
 interventi successivi, descritti nelle sezioni seguenti.
 
@@ -51,14 +68,28 @@ interventi successivi, descritti nelle sezioni seguenti.
 
 Le sezioni che seguono descrivono in dettaglio le scelte progettuali introdotte nel corso del tirocinio, organizzate secondo le seguenti aree funzionali:
 \begin{itemize}
-    \item persistenza dei dati su microSD;
-    \item gestione dello stato globale del dispositivo;
-    \item segnalazione visiva tramite LED;
-    \item gestione dell'inattività dei sensori;
-    \item gestione della sessione di acquisizione;
-    \item gestione della calibrazione dell'altitudine;
-    \item gestione della calibrazione dell'IMU;
-    \item valutazione tecnica dello sniffer CAN e della sua architettura.
+    \item \textbf{Firmware EggLog}
+    \begin{itemize}
+        \item sistema di persistenza a superfile;
+        \item gestione dello stato globale del dispositivo;
+        \item segnalazione visiva tramite LED;
+        \item gestione dell'inattività dei sensori;
+        \item protocollo di avvio e arresto della sessione;
+        \item calibrazione dell'altitudine;
+        \item calibrazione dell'IMU;
+    \end{itemize}
+
+    \item \textbf{EggLog CAN Sniffer}
+    \begin{itemize}
+        \item valutazione tecnica dello sniffer CAN e della sua architettura.
+    \end{itemize}
+
+    \item \textbf{Applicazione mobile EggLog}
+    \begin{itemize}
+        \item visualizzazione 3D del veicolo;
+        \item segnalazione di microSD mancante durante la sessione;
+        \item configurazione dei parametri del dispositivo.
+    \end{itemize}
 \end{itemize}
 
 Per inquadrare l'architettura del sistema prima di entrarne nel dettaglio, le figure seguenti adottano la notazione del modello C4, che descrive un sistema 
@@ -235,22 +266,34 @@ a partire dalla posizione indicata dall'header, leggendo unicamente il marcatore
 diverso da zero, il record viene considerato realmente scritto e il cursore viene avanzato, con la stessa logica usata durante la scrittura normale;
 la scansione si interrompe al primo marcatore nullo, che identifica in modo affidabile il vero confine tra dati validi e finestra pre-azzerata. Al
 termine della riconciliazione, l'header aggiornato viene risincronizzato su disco e la finestra di azzeramento ricostituita a partire dalla nuova
-posizione del cursore, ripristinando le condizioni necessarie per riprendere normalmente l'acquisizione.
+posizione del cursore, ripristinando le condizioni necessarie per riprendere normalmente l'acquisizione. Tale algoritmo è illustrato in Figura 
+\ref{fig:superfile_recovery}.
 
 A livello di dispositivo, l'intera procedura di recovery rimonta il file system, ricarica la configurazione persistita e, solo se lo stato globale
 indica una sessione di logging in corso, recupera il riferimento alla sessione attiva e richiama la riconciliazione per tutti i superfile della
 sessione; un fallimento in una qualsiasi di queste fasi imposta lo stato di errore globale, mentre il successo lo azzera esplicitamente, permettendo
 all'acquisizione di riprendere da dove si era interrotta, senza perdita né duplicazione dei dati già scritti.
 
+\subsection{Comunicazione dello stato di occupazione} \label{subsec:storage_status}
+
+Oltre alla propria area dati, ogni superfile espone in lettura, tramite il registro dei
+superfile attivi, lo stato necessario a determinare quanto spazio disponibile stia
+effettivamente occupando e se, per i sensori configurati in modalità a sovrascrittura,
+sia già in corso l'eliminazione di dati meno recenti. Questa informazione consente
+all'app di segnalare tempestivamente all'utente l'approssimarsi dell'esaurimento dello
+spazio disponibile, in particolare per il sensore GPS, per il quale il raggiungimento
+della capacità massima comporta l'arresto automatico della sessione.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{../img/puml/diagrammi/superfile_recovery.png}
     \caption{Flusso di recovery di un superfile dopo un'interruzione imprevista}
+    \label{fig:superfile_recovery}
 \end{figure}
 
 \newpage
 
-\section{Stato globale del dispositivo}
+\section{Stato globale del dispositivo} \label{sec:stato-globale}
 
 \subsection{Architettura}
 
@@ -293,7 +336,7 @@ sezioni immediatamente seguenti: la segnalazione tramite LED e la gestione dell'
     \label{fig:c4-segnalazione}
 \end{figure}
 
-\section{Segnalazione di stato tramite LED}
+\section{Segnalazione di stato tramite LED} \label{sec:led}
 
 \subsection{Architettura}
 
@@ -316,12 +359,12 @@ Il sottosistema di segnalazione LED è organizzato concettualmente in tre respon
             \hline
             \textbf{Priorità} & \textbf{Stato} & \textbf{Colore} & \textbf{Animazione} \\
             \hline
-            1 & MicroSD mancante & Rosso & Lampeggio rapido \\
+            1 & microSD mancante & Rosso & Lampeggio rapido \\
             2 & Errore & Rosso & Lampeggio lento \\
             3 & Pairing BLE & Blu & Lampeggio \\
             4 & Pairing Wi-Fi & Blu & Lampeggio veloce \\
-            5 & Calibrazione attiva & Giallo & Dissolvenza \\
-            6 & Recupero dati durante la calibrazione & Giallo & Luce fissa \\
+            5 & Recupero dati durante la calibrazione & Giallo & Luce fissa \\
+            6 & Calibrazione attiva & Giallo & Dissolvenza \\
             7 & Download / cancellazione & Viola & Lampeggio \\
             8 & Sospensione & Verde & Dissolvenza lenta \\
             9 & Logging & Verde & Luce fissa \\
@@ -341,7 +384,7 @@ Il sottosistema di segnalazione LED è organizzato concettualmente in tre respon
 
 \newpage
 
-\section{Gestione dell'inattività dei sensori}
+\section{Gestione dell'inattività dei sensori} \label{sec:inattivita}
 
 \subsection{Architettura}
 
@@ -402,21 +445,23 @@ delle tre sezioni seguenti: il protocollo di avvio e arresto della sessione, la 
     \label{fig:c4-sessione}
 \end{figure}
 
-\section{Protocollo di avvio e arresto della sessione}
+\section{Protocollo di avvio e arresto della sessione} \label{sec:avvio-arresto}
 
 \subsection{Architettura}
 
 Il modulo di gestione della sessione si colloca come livello di orchestrazione sopra le componenti preesistenti: riceve i comandi dall'app tramite
 BLE, coordina la creazione e la chiusura dei superfile (approfondito in \hyperref[sec:superfile]{superfile}), l'esecuzione della calibrazione dell'altitudine 
-(approfondita in \hyperref[subsec:calibrazione_altitudine]{calibrazione altitudine}) e gli aggiornamenti dello stato globale del dispositivo, senza intervenire 
+(approfondita in \hyperref[sec:calibrazione-altitudine]{calibrazione altitudine}) e gli aggiornamenti dello stato globale del dispositivo, senza intervenire 
 direttamente sulla logica interna di acquisizione dei singoli sensori.
 
 \subsection{Scelte progettuali}
 
 \begin{itemize}
-    \item \textbf{Command Pattern}: i comandi provenienti dall'app (START, STOP, RESUME) sono rappresentati come valori distinti di un insieme
-    chiuso, instradati da un unico punto di gestione, disaccoppiando totalmente l'esecuzione del comando dalla sua sorgente.\\
-    \textit{Vantaggio}: la logica di sessione risulta verificabile e riutilizzabile anche da trigger diversi dal BLE, senza modifiche.
+    \item \textbf{Command Pattern}: i comandi provenienti dall’app (\texttt{START}, \texttt{STOP}, \texttt{RESUME}) sono rappresentati come valori 
+    distinti di un insieme chiuso e instradati da un unico punto di gestione, disaccoppiando l’esecuzione del comando dalla sua sorgente.\\
+    \textit{Vantaggio}: la logica di gestione della sessione risulta verificabile e riutilizzabile anche con trigger diversi dal BLE, senza modifiche. 
+    In particolare, \texttt{RESUME} non determina una transizione di stato, ma consente all’applicazione di richiedere una risincronizzazione immediata 
+    con lo stato corrente del dispositivo, risultando utile dopo una riconnessione BLE avvenuta mentre una sessione era già in corso.
     \item \textbf{State Pattern}: le transizioni di stato del dispositivo (STAND\_BY, LOGGING, SUSPENDED, DOWNLOADING, DELETING) sono gestite
     centralmente dallo stato globale, e ogni decisione dipende esclusivamente dallo stato corrente.\\
     \textit{Vantaggio}: elimina condizionali diffusi nel codice che replicherebbero la stessa logica di stato in più punti, centralizzando le
@@ -476,7 +521,17 @@ eseguire la stessa procedura di arresto, distinguendo per l'app un arresto volut
 
 \newpage
 
-\section{Calibrazione dell'altitudine} \label{subsec:calibrazione_altitudine}
+\section{Calibrazione dell'altitudine} \label{sec:calibrazione-altitudine}
+
+Per il calcolo dell'altitudine è stato scelto il barometro come sorgente di
+riferimento, anziché il GPS, già presente sul dispositivo per la posizione e
+la velocità. Nelle prove effettuate, l'altitudine riportata dal GPS ha
+mostrato un errore fino a circa 25 metri, un margine incompatibile con la
+necessità di rilevare variazioni di quota anche modeste durante il tragitto;
+il barometro, per contro, ha mostrato un errore contenuto entro circa 2
+metri nelle stesse condizioni di prova. Il GPS mantiene quindi il solo ruolo
+di sorgente di posizione e velocità, mentre il barometro diventa l'unica
+sorgente utilizzata per l'altitudine.
 
 \subsection{Architettura}
 
@@ -503,7 +558,8 @@ A differenza della calibrazione IMU, valida per tutte le sessioni successive fin
 
 \newpage
 
-\section{Calibrazione dell'IMU}
+\section{Calibrazione dell'IMU} \label{sec:calibrazione-imu}
+
 Data l'importanza di questo modulo ai fini dell'accuratezza dei dati registrati, la progettazione della calibrazione dell'IMU è stata condotta con 
 un livello di dettaglio maggiore rispetto agli altri componenti del sistema.
 
@@ -804,7 +860,7 @@ originali. I rischi specifici individuati e le relative mitigazioni sono riassun
         avviamento) possono superare la tensione di breakdown dei pin del transceiver & TVS NUP2105L in serie: $V_{wm}=24$V,
         $V_{br}=26.2$V, $P_{ppm}=350$W/linea, $I_{ppm}=8$A \\
         \hline
-        Interferenza con il bus del veicolo & Un nodo software difettoso potrebbe inviare ACK o frame di errore, disturbando la
+        Interferenza con il bus del veicolo & Un nodo software difettoso potrebbe inviare \gls{ack} o frame di errore, disturbando la
         comunicazione tra le centraline & Controller TWAI configurato in modalità \texttt{listen-only}: nessun ACK né frame di
         errore attivo, indipendentemente da bug software \\
         \hline
@@ -814,13 +870,14 @@ originali. I rischi specifici individuati e le relative mitigazioni sono riassun
         \hline
     \end{tabular}
     \caption{Rischi elettrici e relative mitigazioni}
+    \label{tab:rischi-mitigazioni}
 \end{table}
 
 La combinazione delle tre mitigazioni rende il rischio residuo coerente con l'obiettivo del prototipo, cioè verificare la fattibilità della 
 soluzione minimale prima di eventualmente investire nelle Opzioni 2 o 3, che restano disponibili come evoluzione futura senza modifiche 
 architetturali al resto del sistema.
 
-\section{Architettura dello sniffer CAN}
+\section{Architettura dello sniffer CAN} \label{sec:sniffer-arch}
 
 \subsection{Architettura}
 
@@ -884,10 +941,120 @@ e aria, e un contatore progressivo per rilevare pacchetti persi o duplicati.
     \caption{I tre ruoli BLE nel sistema complessivo}
 \end{figure}
 
+\newpage
 
-\chapter{Implementazione}
+In modo analogo a quanto fatto per il firmware, la Figura \ref{fig:c4-app-record} mette a fuoco i moduli dell'applicazione coinvolti nelle sezioni seguenti: 
+la visualizzazione 3D del veicolo, la segnalazione di microSD mancante e la 
+configurazione dei parametri del dispositivo.
 
-\textit{In questo capitolo viene descritto il lavoro di implementazione svolto, mostrando come le scelte progettuali illustrate nel capitolo precedente
-si sono tradotte in codice effettivo.}
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \includegraphics[width=1.2\textwidth]{../img/puml/c4/C4_Component_EggLog_App_Record.png}%
+    }
+    \caption{Diagramma dei componenti dell'applicazione EggLog: schermata Record e configurazione}
+    \label{fig:c4-app-record}
+\end{figure}
 
 \newpage
+
+\section{Visualizzazione 3D del veicolo} \label{sec:app-moto3d}
+
+Il modello 3D del veicolo è un componente introdotto durante il tirocinio, assente nella versione precedente dell'applicazione. Una prima
+versione lo inseriva semplicemente nell'albero di componenti React della schermata di registrazione, allo stesso livello degli elementi
+testuali di telemetria (velocità, quota, angoli di inclinazione): ogni notifica BLE in arrivo aggiornava lo stato React condiviso e innescava
+quindi un nuovo render dell'intera schermata, incluso il componente 3D. Poiché il render 3D è computazionalmente più oneroso di un semplice
+aggiornamento di testo, il risultato era un evidente rallentamento nella fluidità del movimento del modello, tanto più percepibile quanto più
+frequenti erano le notifiche in arrivo. La scelta progettuale descritta in questa sezione è la soluzione adottata fin dalla revisione
+successiva del componente: separare il rendering 3D dal ciclo di render React della schermata, facendogli leggere i dati di telemetria
+attraverso un canale proprio, indipendente dall'aggiornamento degli altri elementi della pagina.
+
+\subsection{Architettura}
+
+La visualizzazione 3D è incapsulata in un componente autonomo, separato dalla logica della schermata \textit{Record}. Il componente riceve esclusivamente i 
+callback necessari per le interazioni e accede direttamente allo store condiviso delle metriche live, evitando di propagare la telemetria attraverso la 
+gerarchia dei componenti React.
+
+\subsection{Scelte progettuali}
+
+\begin{itemize}
+    \item \textbf{Game Loop Pattern (Disaccoppiamento aquisizione/rendering)}: il componente 3D accede direttamente allo store e mantiene i 
+    valori ricevuti in un riferimento mutabile, letto a ogni frame del ciclo di rendering 3D. In questo modo, la frequenza di aggiornamento della visualizzazione 
+    non dipende dalla cadenza delle notifiche BLE. I valori vengono inoltre interpolati frame per frame anziché applicati istantaneamente.\\
+    \textit{Vantaggio}: la fluidità dell'animazione non dipende dall'irregolarità con cui arrivano le notifiche BLE. Gli elementi testuali della stessa schermata, 
+    per i quali non è necessaria una frequenza di aggiornamento elevata, continuano invece a leggere lo stesso store tramite hook con frequenza limitata, evitando
+     render superflui.
+\end{itemize}
+
+\newpage
+
+\section{Segnalazione di microSD mancante durante la sessione} \label{sec:app-sdmissing}
+
+\subsection{Architettura}
+
+Lo stato di occupazione della microSD, incluso l'indicatore booleano di assenza della scheda, è ricavato dalle notifiche della Characteristic
+dedicata del Service \texttt{STORAGE} e reso disponibile alla schermata Record come oggetto di dominio. Lo stesso oggetto porta con sé, per
+ciascun sensore, la percentuale di spazio occupato e l'indicatore di sovrascrittura in corso: un'informazione mostrata all'utente in ogni
+sessione attiva, indipendentemente dal fatto che la scheda sia presente o meno, per permettergli di accorgersi con anticipo dell'approssimarsi
+dell'esaurimento dello spazio disponibile. Sono stati individuati due punti distinti in cui la sola condizione di assenza della scheda deve
+essere comunicata con un'interruzione esplicita all'utente, riflettendo le due fasi già discusse lato firmware
+(\hyperref[subsec:storage_status]{Comunicazione dello stato di occupazione}): prima dell'avvio di una sessione e durante una sessione già in corso.
+
+\subsection{Scelte progettuali}
+
+\begin{itemize}
+    \item \textbf{Presentational Component Pattern}: la segnalazione è realizzata come un unico componente parametrico (colore
+    dell'azione, etichetta, stato di caricamento), riutilizzato nei due punti distinti del flusso anziché duplicato.\\
+    \textit{Vantaggio}: garantisce all'utente un linguaggio visivo coerente per la stessa condizione di errore, indipendentemente dal momento in
+    cui si presenta, riducendo al contempo la duplicazione di codice tra i due casi d'uso.
+    \item \textbf{Strategy Pattern}: nel primo caso, un tentativo di avvio sessione rifiutato dal firmware per assenza della
+    microSD offre un'azione di ripetizione (\emph{retry}); nel secondo caso, la comparsa dell'indicatore durante una sessione già in corso offre
+    esclusivamente un'azione di arresto forzato, poiché non ha senso continuare una registrazione priva di un supporto su cui persistere i dati.\\
+    \textit{Vantaggio}: l'azione proposta all'utente riflette correttamente ciò che è effettivamente recuperabile nel contesto specifico, evitando
+    di suggerire un tentativo di ripetizione quando ormai non porterebbe ad alcun beneficio.
+    \item \textbf{Blocking Modal Pattern}: in nessuno dei due casi l'overlay può essere chiuso senza intraprendere l'azione proposta.\\
+    \textit{Vantaggio}: impedisce che l'utente continui a interagire con una sessione che, di fatto, non può più salvare correttamente i dati
+    acquisiti, richiedendo una presa d'atto esplicita del problema.
+    \item \textbf{Ripristino automatico alla scomparsa della condizione}: nessuno dei due overlay mantiene uno stato proprio; entrambi sono
+    condizionati direttamente dall'indicatore booleano di assenza della microSD, aggiornato in tempo reale dalle notifiche BLE.\\
+    \textit{Vantaggio}: se la microSD viene reinserita durante una sessione, l'utente non deve compiere alcuna azione per far scomparire l'overlay:
+    non appena il firmware segnala il ripristino, l'app smette semplicemente di mostrarlo e la sessione, già ripresa lato firmware, torna visibile
+    senza interruzioni percepite nell'interfaccia.
+    \item \textbf{Ripartizione per sensore, non solo indicatore aggregato}: la percentuale di occupazione è mostrata separatamente per ciascun
+    sensore, anziché come singolo valore complessivo del dispositivo.\\
+    \textit{Vantaggio}: sensori con capacità e frequenza di scrittura molto diverse tra loro (ad esempio l'IMU rispetto al barometro) riempiono il
+    proprio spazio a velocità differenti; un valore aggregato nasconderebbe quale specifico sensore si sta avvicinando al limite, mentre la
+    ripartizione per sensore permette all'utente di correlare l'informazione con l'eventuale imminente interruzione automatica della sessione per
+    esaurimento spazio GPS, già descritta lato firmware.
+\end{itemize}
+
+\newpage
+
+\section{Configurazione dei parametri del dispositivo} \label{sec:app-config}
+
+\subsection{Architettura}
+
+La schermata di configurazione presenta un elenco di parametri modificabili dall'utente, ciascuno rappresentato da un oggetto di dominio che
+astrae una singola Characteristic BLE configurabile (titolo descrittivo, Service e Characteristic di riferimento, valore corrente, eventuali
+limiti). Il tipo di controllo grafico con cui ciascun parametro viene mostrato non è fisso, ma \textbf{selezionato in base al tipo di
+Characteristic} che l'oggetto rappresenta.
+
+\subsection{Scelte progettuali}
+
+\begin{itemize}
+    \item \textbf{Adapter/Facade Pattern}: la vista non conosce mai direttamente il significato di uno UUID,
+    ma opera esclusivamente sull'oggetto di dominio che lo rappresenta.\\
+    \textit{Vantaggio}: aggiungere un nuovo parametro configurabile in futuro richiede di intervenire solo nel livello di dominio e,
+    se necessario, nella selezione del controllo grafico, senza toccare la logica generale di rendering della lista.
+    \item \textbf{Codifica esplicita del valore scritto}: il valore selezionato dall'utente viene serializzato secondo il formato atteso dal
+    firmware (intero a 16 bit, little-endian) immediatamente prima della scrittura sulla Characteristic corrispondente.\\
+    \textit{Vantaggio}: rende esplicito, nel punto di scrittura, il contratto di formato condiviso con il firmware, evitando ambiguità sul livello
+    di codifica dei dati scambiati.
+\end{itemize}
+
+Questa schermata è, in particolare, il punto in cui l'utente imposta il timeout di inattività dei sensori descritto in
+\hyperref[sec:inattivita]{Gestione dell'inattività dei sensori} lato firmware, chiudendo il ciclo tra la scelta configurata dall'utente
+sull'applicazione e il comportamento realmente adottato dal dispositivo.
+
+\newpage
+

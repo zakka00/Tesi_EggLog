@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{snprintf}\PYG{p}{(}\PYG{n}{folderName}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{folderName}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZpc{}s\PYGZus{}\PYGZpc{}s\PYGZpc{}s}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{         }\PYG{n}{chipIdStr}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{sessionStartPrefix}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZus{}ACTIVE}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//1}
+\PYG{n}{SD}\PYG{o}{:}\PYG{o}{:}\PYG{n}{SuperFile}\PYG{o}{:}\PYG{o}{:}\PYG{n}{createAllForSession}\PYG{p}{(}\PYG{n}{SD}\PYG{o}{:}\PYG{o}{:}\PYG{n}{sdFat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{folderName}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//2}
+\PYG{k}{auto}\PYG{+w}{ }\PYG{n}{cal}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Session}\PYG{o}{:}\PYG{o}{:}\PYG{n}{AltitudeCalibration}\PYG{o}{:}\PYG{o}{:}\PYG{n}{run}\PYG{p}{(}\PYG{n}{SessionBle}\PYG{o}{:}\PYG{o}{:}\PYG{n}{ALTITUDE\PYGZus{}CAL\PYGZus{}TIMEOUT\PYGZus{}MS}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//3}
+\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{setCurrentState}\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{State}\PYG{o}{:}\PYG{o}{:}\PYG{n}{LOGGING}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//4}
+\PYG{n}{Inactivity}\PYG{o}{:}\PYG{o}{:}\PYG{n}{forceWakeProducers}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{//5}
+\end{MintedVerbatim}

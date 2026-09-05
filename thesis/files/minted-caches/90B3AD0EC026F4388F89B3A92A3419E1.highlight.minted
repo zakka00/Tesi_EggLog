@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{isInactivityTimeout}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{    }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{getCharacteristicUUID}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{===}\PYG{+w}{ }\PYG{n+nx}{BLE\PYGZus{}CHARACTERISTICS}\PYG{p}{.}\PYG{n+nx}{INACTIVITY\PYGZus{}TIMEOUT}
+\end{MintedVerbatim}

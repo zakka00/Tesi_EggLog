@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{while}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{getCurrentState}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{!}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{State}\PYG{o}{:}\PYG{o}{:}\PYG{n}{LOGGING}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{xTaskNotifyWait}\PYG{p}{(}\PYG{l+m+mh}{0x0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ULONG\PYGZus{}MAX}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{\PYGZam{}}\PYG{n}{notif}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{portMAX\PYGZus{}DELAY}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// dorme finche\PYGZsq{} non arriva un segnale}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

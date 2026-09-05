@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Task che gestisce il LED, eseguito periodicamente}
+\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{GlobalState}\PYG{o}{:}\PYG{o}{:}\PYG{n}{isSdMissing}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{255}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{PatternType}\PYG{o}{:}\PYG{o}{:}\PYG{n}{BLINK}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{4.0f}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}
