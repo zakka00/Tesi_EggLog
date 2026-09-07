@@ -27,32 +27,36 @@ dispositivo: il boot avviene automaticamente non appena il sistema
 entra in contatto con una sorgente di alimentazione, senza alcun intervento
 manuale aggiuntivo.
 
-\paragraph{Allestimento del prototipo}
-Per ciascun test è stato utilizzato il prototipo saldato (non la versione su
-breadboard, che ovviamente non avrebbe retto alle sollecitazioni di un utilizzo su
-strada). Il prototipo è stato fissato con dello scotch al serbatoio di una
-Yamaha MT-07. Sotto il codino della moto è stato collegato alla porta
-diagnostica l'EggLog CAN Sniffer, alimentato tramite un powerbank;
-analogamente, anche EggLog è stato collegato a un powerbank, riposto nella
-tasca del pilota.
+\begin{enumerate}
+    \item \textbf{Allestimento del prototipo.} Per ciascun test è stato
+    utilizzato il prototipo saldato (non la versione su breadboard, che
+    ovviamente non avrebbe retto alle sollecitazioni di un utilizzo su
+    strada). Il prototipo è stato fissato con dello scotch al serbatoio di
+    una Yamaha MT-07. Sotto il codino della moto è stato collegato alla
+    porta diagnostica l'EggLog CAN Sniffer, alimentato tramite un
+    powerbank; analogamente, anche EggLog è stato collegato a un
+    powerbank, riposto nella tasca del pilota.
 
-\paragraph{Preparazione della sessione}
-Prima di ogni sessione di test è stata eseguita una pulizia completa della
-microSD, in modo da riportare il dispositivo in una condizione equivalente a
-quella di \textit{appena acquistato}. È stato inoltre fissato al manubrio un
-dispositivo mobile con installata l'applicazione EggLog App, collegata a
-EggLog, ed è stata eseguita la calibrazione dell'IMU per configurare
-correttamente tutti gli assi. A questo punto è stata avviata una sessione di
-guida normale su strada, della durata complessiva di 15/20 minuti.
+    \item \textbf{Preparazione della sessione.} Prima di ogni sessione di
+    test è stata eseguita una pulizia completa della microSD, in modo da
+    riportare il dispositivo in una condizione equivalente a quella di
+    \textit{appena acquistato}. È stato inoltre fissato al manubrio un
+    dispositivo mobile con installata l'applicazione EggLog App, collegata
+    a EggLog, ed è stata eseguita la calibrazione dell'IMU per configurare
+    correttamente tutti gli assi. A questo punto è stata avviata una
+    sessione di guida normale su strada, della durata complessiva di
+    15/20 minuti.
 
-\paragraph{Raccolta e conversione dei dati}
-Al termine di ciascuna sessione, il sistema è stato smontato, la microSD
-estratta e i file binari recuperati. Questi ultimi sono stati convertiti in
-formato CSV tramite uno script Python sviluppato ad hoc, capace di leggere
-tutti i file \texttt{.bin} generati e produrre i corrispondenti file
-\texttt{.csv} per la successiva analisi.
+    \item \textbf{Raccolta e conversione dei dati.} Al termine di ciascuna
+    sessione, il sistema è stato smontato, la microSD estratta e i file
+    binari recuperati. Questi ultimi sono stati convertiti in formato CSV
+    tramite uno script Python sviluppato ad hoc, capace di leggere tutti i
+    file \texttt{.bin} generati e produrre i corrispondenti file
+    \texttt{.csv} per la successiva analisi.
+\end{enumerate}
 
-\paragraph{Criteri di verosimiglianza}
+\vspace{0.5cm}
+
 L'analisi dei dati raccolti è stata condotta incrociando il percorso
 realmente effettuato (e i relativi timestamp) con l'insieme dei dati
 registrati, al fine di individuare eventuali bug, buchi nei dati, e per
@@ -76,30 +80,29 @@ Alcuni esempi dei criteri di verosimiglianza adottati sono:
     a impennarsi leggermente per effetto dell'allungamento delle forcelle.
 \end{itemize}
 
-
-\subsection{Test su campo}
 \label{subsec:test_campo}
+Sono stati condotti tre test su campo, secondo la metodologia appena
+descritta. I primi due hanno portato all'individuazione di alcune
+criticità, poi risolte; il terzo si è invece concluso senza criticità:
+l'analisi incrociata dei dati raccolti con il percorso effettuato non ha
+evidenziato bug, buchi nei dati o incoerenze rispetto alla dinamica di guida
+attesa, e il tutor aziendale ha confermato, sulla base di questi risultati,
+il raggiungimento dell'obiettivo finale.
 
-Sono stati condotti tre test su campo, secondo la metodologia descritta nel
-paragrafo precedente. I primi due hanno portato all'individuazione
-di alcune criticità, poi risolte; il terzo si è invece concluso senza criticità,
-confermando il raggiungimento degli obiettivi prefissati.
 
-\subsubsection{Test su campo 1 - Calibrazione e posizionamento del sensore}
+\subsection{Test su campo 1 - Calibrazione e posizionamento del sensore}
 \label{subsubsec:test_campo_1}
 
 Il primo test ha evidenziato due criticità distinte, accennate anche in
 \hyperref[subsec:prob_risc_calib_imu]{Problematiche riscontrate durante la
 calibrazione dell'IMU}.
 
-\paragraph{Problema di calibrazione}
-Il primo step della calibrazione era caratterizzato da una soglia di varianza troppo
-restrittiva, che non teneva conto delle vibrazioni trasmesse dal motore
-acceso. Di conseguenza, con la moto accesa, il tremolio impediva il
+Il primo step della calibrazione era caratterizzato da una soglia di varianza
+troppo restrittiva, che non teneva conto delle vibrazioni trasmesse dal
+motore acceso. Di conseguenza, con la moto accesa, il tremolio impediva il
 completamento con successo del primo passaggio di calibrazione. Il problema
 è stato temporaneamente risolto eseguendo la calibrazione a moto spenta.
 
-\paragraph{Effetto del posizionamento del sensore}
 Il giro di prova è stato completato con successo e la moto 3D
 dell'applicazione ha replicato fedelmente i movimenti reali del veicolo. È
 emerso tuttavia un secondo aspetto: essendo il sensore posizionato proprio
@@ -111,16 +114,15 @@ veicolo, risenta di un effetto di braccio di leva: un lieve sollevamento del
 frontale, nel punto in cui è montato il prototipo, si traduce in
 un'inclinazione percepita superiore a quella reale.
 
-\paragraph{Verifica incrociata con lo sniffer CAN}
 In questa fase, il confronto con i dati provenienti dallo sniffer del bus CAN
 si è rivelato particolarmente utile: trattandosi di dati più affidabili
 rispetto a quelli restituiti dai sensori del prototipo, hanno permesso di
 effettuare l'incrocio con maggiore semplicità e sicurezza.
 
-\subsubsection{Test su campo 2 - Arrotondamento dei dati di accelerazione}
+
+\subsection{Test su campo 2 - Arrotondamento dei dati di accelerazione}
 \label{subsubsec:test_campo_2}
 
-\paragraph{Problema riscontrato}
 Nel secondo test, la fase di calibrazione (già corretta a seguito del test
 precedente) è andata a buon fine senza criticità. Un'analisi più
 approfondita dei dati raccolti ha però permesso di individuare un problema
@@ -130,11 +132,10 @@ conversione nel firmware, introdotto nel momento in cui i dati venivano
 inseriti nel superfile (\hyperref[sec:impl-superfile]{Sistema di persistenza
 a superfile}).
 
-\paragraph{Correzione e verifica}
 Il problema è stato corretto e i dati rimanenti sono stati analizzati
 comunque, confermando la correttezza del comportamento del sistema.
 
-\subsubsection{Test su campo 3 - Validazione finale}
+\subsection{Test su campo 3 - Validazione finale}
 \label{subsubsec:test_campo_3}
 
 Il terzo test si è svolto senza che emergessero criticità. L'analisi
@@ -144,7 +145,8 @@ tutor aziendale ha confermato, sulla base di questi risultati, il
 raggiungimento dell'obiettivo finale.
 
 
-\subsection{Test su banco}
+\subsection{Test su banco 1 - Sospensione e ripresa del logging con fix GPS}
+\label{subsubsec:test_banco_1}
 \label{subsec:test_banco}
 
 Oltre ai test su campo, sono stati condotti due test su banco, con
@@ -152,9 +154,6 @@ l'obiettivo di verificare in modo controllato la gestione dell'inattività
 dei sensori (\hyperref[sec:inattivita]{Gestione dell'inattività dei
 sensori}) e il comportamento del firmware in assenza di movimento, sia con
 che senza fix GPS.
-
-\subsubsection{Test su banco 1 - Sospensione e ripresa del logging con fix GPS}
-\label{subsubsec:test_banco_1}
 
 Per verificare la gestione dell'inattività dei sensori, la procedura seguita
 è stata la seguente:
@@ -174,7 +173,8 @@ Per verificare la gestione dell'inattività dei sensori, la procedura seguita
     della scrittura dei dati.
 \end{enumerate}
 
-\subsubsection{Test su banco 2 - \textit{Fallback} sull'IMU senza fix GPS}
+
+\subsection{Test su banco 2 - \textit{Fallback} sull'IMU senza fix GPS}
 \label{subsubsec:test_banco_2}
 
 Lo stesso procedimento è stato ripetuto senza fix GPS, direttamente sulla
@@ -259,9 +259,8 @@ direttamente confrontabili.
 \subsection{Tempo di scrittura su microSD}
 \label{subsec:tempo_scrittura_sd}
 
-\subsubsection{Il problema della cluster size (superato)}
+\paragraph{Il problema della cluster size (superato)}
 \label{subsubsec:problema_cluster_size}
-
 Nell'approccio precedente, basato su un file per \textit{chunk} 
 (\hyperref[sec:situazione-partenza]{Situazione di partenza}), il
 dimensionamento della cluster size rappresentava un problema di non semplice
@@ -279,9 +278,8 @@ assegnati. Non è quindi più necessario gestire l'overhang \textit{chunk} per \
 né si introduce frammentazione a runtime.
 
 
-\subsubsection{Confronto misurato: un file per chunk vs superfile}
+\paragraph{Confronto misurato: un file per chunk vs superfile}
 \label{subsubsec:confronto_scrittura}
-
 Per quantificare il beneficio introdotto dal superfile, è stato misurato il
 tempo (in $\mu\mathrm{s}$) dell'intero blocco di scrittura su un campione di 8 
 ore di logging:
@@ -327,41 +325,35 @@ stabile: un comportamento coerente con l'assenza, in quest'ultimo, di
 allocazione di nuovi cluster a runtime.
 
 
-\subsection{Cicli CPU e occupazione RAM}
+\subsection{Occupazione di CPU}
+\label{subsubsec:cpu-occupazione}
 \label{subsec:cpu_ram}
 
 Oltre al tempo di scrittura su microSD, sono stati misurati anche
 l'occupazione di CPU nei diversi stati del firmware e l'occupazione di RAM
 effettivamente utilizzata dai buffer dei sensori, per entrambe le versioni.
 
-\subsubsection{Occupazione di CPU}
-\label{subsubsec:cpu-occupazione}
-
-\paragraph{Versione di partenza}
 Poiché il logging veniva avviato automaticamente non appena il dispositivo
 veniva collegato a una fonte di alimentazione (\hyperref[sec:situazione-partenza]{Situazione
 di partenza}), non esisteva uno stato di attesa distinto dallo stato di
 logging: l'occupazione di CPU restava quindi costantemente attorno al
 25\%.
 
-\paragraph{Versione attuale}
 Con l'introduzione del protocollo di avvio e arresto della sessione
 (\hyperref[sec:avvio-arresto]{Protocollo di avvio e arresto della
 sessione}), il dispositivo, appena collegato all'alimentazione e senza
 alcuna sessione avviata, presenta un'occupazione di CPU di circa il 3\%.
-
- All'avvio
-effettivo di una sessione, il consumo sale a circa il 23\%, un valore
-inferiore anche a quello della versione di partenza. L'introduzione della
-task dedicata alla segnalazione tramite LED (\hyperref[sec:led]{Segnalazione
-di stato tramite LED}), assente nella versione originale, aggiunge un
-piccolo \textit{overhead} rispetto alle sole task di producer e consumer già
-presenti; tale \textit{overhead} risulta però più che compensato dalla configurazione
-attuale dei sensori, in cui il magnetometro è disabilitato: una task
-producer in meno comporta un risparmio di cicli di CPU superiore al costo
-della nuova task LED. Il firmware attuale tende inoltre a risparmiare più
-cicli di CPU possibile rispetto alla versione di partenza grazie all'\textit{inactivity}
-dei sensori implementata.
+All'avvio effettivo di una sessione, il consumo sale a circa il 23\%, un
+valore inferiore anche a quello della versione di partenza. L'introduzione
+della task dedicata alla segnalazione tramite LED
+(\hyperref[sec:led]{Segnalazione di stato tramite LED}), assente nella
+versione originale, aggiunge un piccolo \textit{overhead} rispetto alle sole
+task di producer e consumer già presenti; tale \textit{overhead} risulta però
+più che compensato dalla configurazione attuale dei sensori, in cui il
+magnetometro è disabilitato: una task producer in meno comporta un risparmio
+di cicli di CPU superiore al costo della nuova task LED. Il firmware attuale
+tende inoltre a risparmiare più cicli di CPU possibile rispetto alla
+versione di partenza grazie all'\textit{inactivity} dei sensori implementata.
 
 La Tabella \ref{tab:cpu-occupazione} riassume i valori osservati nei diversi
 stati.
@@ -381,7 +373,7 @@ stati.
 \end{table}
 
 
-\subsubsection{Occupazione della RAM}
+\subsection{Occupazione della RAM}
 \label{subsubsec:ram-occupazione}
 
 \paragraph{Calcolo della RAM occupata}

@@ -4,15 +4,11 @@
 si sono tradotte in codice effettivo.}
 \section{Sistema di persistenza a superfile} \label{sec:impl-superfile}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice l'architettura del superfile descritta in
 \hyperref[sec:superfile]{Sistema di persistenza a superfile}: la separazione tra
 formato su disco e stato di runtime, le operazioni di creazione, apertura con
 recovery, scrittura, sincronizzazione e chiusura, la finestra di azzeramento
 anticipata a supporto della recovery e la comunicazione dello stato di occupazione.
-
-\subsection{Strutture dati e interfacce}
 
 Il formato su disco descritto in progettazione elencava nove campi logici
 dell'header. Nella struttura effettivamente persistita, tuttavia, ne compaiono
@@ -139,9 +135,7 @@ void close(Instance& inst);
 \label{listing:superfile-interface}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Creazione e calcolo della capacità}
+\subsection{Creazione e calcolo della capacità}
 La capacità totale, descritta in
 \hyperref[subsec:capacita_superfile]{Capacità del file}, è calcolata
 arrotondando per eccesso alla dimensione del \gls{cluster} del volume. In questo
@@ -192,7 +186,7 @@ GPS          & 10 Hz  & 20 h & no & 48 s \\
 \label{tab:constants-per-sensore}
 \end{table}
 
-\paragraph{Scrittura e wraparound}
+\subsection{Scrittura e wraparound}
 Quando il blocco da scrivere attraversa il limite superiore dell'area dati,
 la scrittura viene spezzata in due parti, come descritto in progettazione:
 
@@ -215,7 +209,7 @@ capacità massima le scritture successive vengono silenziosamente ignorate e
 l'header viene marcato pieno, propedeuticamente alla terminazione automatica
 della sessione già descritta in progettazione.
 
-\paragraph{Sincronizzazione e finestra di azzeramento}
+\subsection{Sincronizzazione e finestra di azzeramento}
 Ogni sincronizzazione dell'header ricostituisce la finestra di azzeramento a
 partire dal nuovo cursore. La dimensione della finestra è pari al doppio della
 soglia di sincronizzazione: poiché la finestra viene consumata progressivamente
@@ -223,7 +217,7 @@ tra una sincronizzazione e la successiva, raddoppiarla garantisce che, anche
 immediatamente prima di un \textit{sync}, resti sempre almeno un intero intervallo di
 sincronizzazione di record pre-azzerati davanti al cursore.
 
-\paragraph{Recovery su più livelli}
+\subsection{Recovery su più livelli}
 La recovery descritta in \hyperref[subsec:Recovery]{Recovery dopo interruzioni
 impreviste} è realizzata su tre livelli distinti: a livello di dispositivo
 (\texttt{SD::recover()}) rimonta il file system, ricarica la configurazione e,
@@ -245,7 +239,7 @@ for (uint32_t i = 0; i < inst.zeroWindowRecords; i++) {
 \label{listing:reconcile}
 \end{listing}
 
-\paragraph{Comunicazione dello stato di occupazione}
+\subsection{Comunicazione dello stato di occupazione}
 Come descritto in \hyperref[subsec:storage_status]{Comunicazione dello stato di
 occupazione}, il calcolo è isolato in un componente separato dal modulo di persistenza,
 invocato dal consumer subito dopo ogni scrittura riuscita e a ogni controllo di
@@ -305,16 +299,12 @@ in uso nel consumer.
 
 \section{Stato globale del dispositivo}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:stato-globale]{Stato globale del dispositivo}: un punto di
 accesso unico allo stato del dispositivo, in cui nessun componente mantiene
 una propria copia locale delle informazioni condivise (\emph{Single Source of
 Truth}), e in cui ogni indicatore è protetto da accessi concorrenti senza
 bisogno di un lock esplicito.
-
-\subsection{Strutture dati e interfacce}
 
 Lo stato principale della sessione è rappresentato da un unico valore enumerato,
 che può assumere uno dei cinque stati mutuamente esclusivi definiti in fase di
@@ -359,9 +349,7 @@ Gli indicatori booleani sono invece appropriati per condizioni ortogonali allo
 stato principale: una condizione di errore o l’assenza della scheda microSD,
 ad esempio, possono verificarsi indipendentemente dallo stato corrente.
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Accesso senza lock}
+\subsection{Accesso senza lock}
 Ogni variabile di stato è dichiarata come \texttt{std::atomic}, cioè come un
 tipo che la libreria standard c++ garantisce come leggibile e scrivibile da più task
 contemporaneamente:
@@ -383,7 +371,7 @@ non atomica: ogni indicatore è una variabile a sé, indipendente dalle altre,
 quindi due componenti possono leggere o scrivere indicatori diversi nello
 stesso istante senza mai doversi attendere a vicenda.
 
-\paragraph{Un caso concreto: due task sullo stesso indicatore}
+\subsection{Un caso concreto: due task sullo stesso indicatore}
 L'indicatore \texttt{sdMissing} viene scritto dal task consumer ogni volta che 
 rileva un cambiamento nella presenza della scheda, e viene letto dal task che 
 gestisce il LED, per decidere se mostrare
@@ -421,13 +409,9 @@ cosa mostrare, la stessa variabile che il task consumer aggiorna.
 
 \section{Segnalazione di stato tramite LED}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice l'architettura a tre livelli descritta in
 \hyperref[sec:led]{Segnalazione di stato tramite LED}: livello hardware,
 livello decisionale e livello di rendering.
-
-\subsection{Strutture dati e interfacce}
 
 Il pattern visivo è rappresentato come dato immutabile, indipendente sia dalla
 logica di decisione sia dal rendering:
@@ -451,9 +435,7 @@ interdipendenti: \mintinline{cpp}{LED::showColor(r, g, b)} sul livello
 hardware, \mintinline{cpp}{LED::resolvePattern()} sul livello decisionale, e
 un task periodico che richiama entrambi sul livello di rendering.
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Livello decisionale}
+\subsection{Livello decisionale}
 La funzione \texttt{resolvePattern} implementa l'ordine di priorità della
 Tabella \ref{tab:led-priorita} come una sequenza di controlli a cascata, in
 cui il primo che risulta vero determina il pattern restituito:
@@ -484,7 +466,7 @@ La struttura a cascata rende la Tabella \ref{tab:led-priorita} direttamente
 leggibile nel codice: l'ordine dei controlli è l'ordine di priorità,
 senza bisogno di una struttura dati o di un meccanismo di confronto separato.
 
-\paragraph{Livello di rendering}
+\subsection{Livello di rendering}
 Il task di rendering richiama \texttt{resolvePattern()} periodicamente e
 traduce il risultato in un'animazione effettiva. Un cambio di pattern fa ripartire 
 da zero la fase dell'animazione, cosicché ogni
@@ -509,7 +491,7 @@ ricade nella prima o nella seconda metà del periodo; per \texttt{BREATHING}
 la stessa fase viene invece usata come argomento di una funzione sinusoidale,
 che modula la luminosità del colore in modo continuo anziché a scatti.
 
-\paragraph{Livello hardware}
+\subsection{Livello hardware}
 Il livello hardware si riduce all'interfacciamento con la libreria del
 LED sulla scheda, con due sole funzioni esposte al resto del firmware:
 
@@ -530,14 +512,10 @@ devono sapere quale libreria o quale LED fisico sia effettivamente in uso.
 
 \section{Gestione dell'inattività dei sensori}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:inattivita]{Gestione dell'inattività dei sensori}: la sorgente
 autorevole commutabile tra GPS e IMU, il debounce basato su campioni
 consecutivi, e l'esclusione del GPS dalla sospensione.
-
-\subsection{Strutture dati e interfacce}
 
 Il modulo espone poche funzioni, ciascuna invocata da un punto preciso del
 firmware: il producer GPS riporta ogni campione ricevuto, il producer IMU
@@ -556,9 +534,7 @@ uint32_t getTimeoutMs();
 \label{listing:inactivity-interface}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Sorgente autorevole}
+\subsection{Sorgente autorevole}
 La funzione di decisione si riduce al confronto tra l'istante dell'ultimo fix
 GPS e una soglia di freschezza: se il fix è recente, il GPS governa la
 decisione di sospensione; altrimenti il compito passa all'IMU.
@@ -580,7 +556,7 @@ sistema si appoggia per sapere quale sorgente considerare valida in un dato
 momento, coerentemente con la scelta progettuale di centralizzare la
 selezione pur mantenendo i due percorsi di rilevamento indipendenti.
 
-\paragraph{Debounce sul segnale GPS}
+\subsection{Debounce sul segnale GPS}
 Il rilevamento del movimento da GPS richiede un numero minimo di campioni
 consecutivi sopra soglia prima di essere accettato, azzerando il conteggio a
 ogni campione sotto soglia:
@@ -599,7 +575,7 @@ if (speedMps >= GPS_SPEED_THRESHOLD_MPS) {
 \label{listing:gps-debounce}
 \end{listing}
 
-\paragraph{Soglie e parametri di temporizzazione}
+\subsection{Soglie e parametri di temporizzazione}
 Il meccanismo si appoggia a quattro parametri, tutti tarati empiricamente: 
 \begin{itemize}
     \item \texttt{GPS\_SPEED\_THRESHOLD\_MPS} (velocità GPS, $0.8\,\text{m/s}$, circa
@@ -615,7 +591,7 @@ Il meccanismo si appoggia a quattro parametri, tutti tarati empiricamente:
 È stata fatta una prima taratura da banco, seguita da un affinamento sul campo, in condizioni di utilizzo 
 reali sul motoveicolo. \\
 
-\paragraph{Attivazione mirata del fallback IMU}
+\subsection{Attivazione mirata del fallback IMU}
 Il percorso di rilevamento basato su IMU non viene campionato in
 continuazione, ma solo mentre il dispositivo è già sospeso e il GPS non
 risulta autorevole: è il producer IMU stesso, nel proprio ciclo di attesa, a
@@ -637,7 +613,7 @@ sorgente autorevole è comunque il GPS o il dispositivo è già attivo, senza
 per questo modificare la logica di selezione della sorgente, che resta
 interamente delegata a \texttt{isGpsAuthoritative()}.
 
-\paragraph{Sospensione esclude il GPS}
+\subsection{Sospensione esclude il GPS}
 Sia \texttt{suspend()} sia \texttt{resume()} notificano solo i producer
 diversi dal GPS:
 
@@ -658,7 +634,7 @@ Il producer GPS, dal canto suo, esce immediatamente dalla propria funzione di
 attesa senza mai fermarsi, restando l'unico sensore sempre acquisito
 indipendentemente dallo stato di sospensione.
 
-\paragraph{Sospensione disabilitata}
+\subsection{Sospensione disabilitata}
 Quando il timeout è configurato a zero, ogni campione GPS aggiorna
 immediatamente l'istante di ultimo movimento e forza il dispositivo a
 LOGGING, disabilitando di fatto la sospensione:
@@ -680,15 +656,11 @@ if (timeoutMs == 0) {
 
 \section{Protocollo di avvio e arresto della sessione}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:avvio-arresto]{Protocollo di avvio e arresto della sessione}: i
 comandi START, STOP e RESUME come valori di un insieme chiuso, e le sequenze
 di avvio e arresto orchestrate sopra i moduli di superfile, stato
 globale e calibrazione dell'altitudine.
-
-\subsection{Strutture dati e interfacce}
 
 I comandi provenienti dall'app sono un enum a tre valori, instradati da un
 unico punto di gestione:
@@ -703,9 +675,7 @@ void handleCommand(Command cmd);
 \label{listing:session-command}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Un prerequisito: producer in grado di dormire}
+\subsection{Un prerequisito: producer in grado di dormire}
 Come descritto in \hyperref[sec:situazione-partenza]{Situazione di partenza},
 il firmware ricevuto all'inizio del tirocinio avviava l'acquisizione dati
 automaticamente all'accensione, senza attendere alcun comando. Introdurre un
@@ -732,14 +702,14 @@ continuato a produrre dati indipendentemente da qualunque comando ricevuto.
 Il protocollo descritto nel resto di questa sezione si appoggia interamente
 su questa capacità dei producer di restare in attesa.
 
-\paragraph{Comandi come valori instradati centralmente}
+\subsection{Comandi come valori instradati centralmente}
 \texttt{handleCommand} riceve il comando già decodificato dal canale BLE e lo
 instrada con un semplice switch sul valore ricevuto, senza che la logica di
 sessione debba conoscere nulla del trasporto con cui il comando è arrivato:
 la stessa funzione potrebbe essere invocata da un trigger diverso da BLE
 senza alcuna modifica.
 
-\paragraph{Avvio sessione}
+\subsection{Avvio sessione}
 Alla ricezione di START, se il dispositivo non è occupato in download o
 cancellazione e non è già in sessione, vengono eseguiti in sequenza: un
 tentativo di recovery della scheda; la generazione del nome della cartella di
@@ -768,7 +738,7 @@ Ogni fase è protetta da un accesso esclusivo al canale SPI condiviso con
 timeout configurabile: il fallimento di una qualsiasi fase imposta lo stato
 di errore e interrompe l'avvio, senza proseguire alle fasi successive.
 
-\paragraph{Arresto sessione}
+\subsection{Arresto sessione}
 Alla ricezione di STOP (o della richiesta di arresto automatico per
 esaurimento spazio GPS), la sequenza di chiusura
 segue il seguente ordine: se il dispositivo era sospeso, i
@@ -792,13 +762,13 @@ GlobalState::setCurrentState(GlobalState::State::STAND_BY); //5
 \label{listing:session-stop}
 \end{listing}
 
-\paragraph{Notifica periodica dello stato di sessione}
+\subsection{Notifica periodica dello stato di sessione}
 Un timer software FreeRTOS (\texttt{statusTimer}), creato una sola volta all'inizializzazione 
 del modulo, viene avviato alla transizione a LOGGING e fermato al ritorno a STAND\_BY. A ogni 
 scadenza richiama \texttt{notifyStatus()}, che compone una struttura compatta (stato della sessione, 
 secondi trascorsi dall'inizio sessione e numero di campioni) e la pubblica come notifica BLE dedicata.
 
-\paragraph{Comando RESUME: risincronizzazione dopo la riconnessione BLE}
+\subsection{Comando RESUME: risincronizzazione dopo la riconnessione BLE}
 Una sessione prosegue sul dispositivo indipendentemente dallo stato della connessione 
 BLE: se l'app si disconnette e si riconnette mentre una sessione è già in corso, non 
 riceve alcuna informazione di stato fino al successivo scadere del timer periodico 
@@ -807,7 +777,7 @@ appena descritto. Alla ricezione di RESUME il firmware richiama direttamente
 il ciclo del timer e senza alcuna transizione dell'enum di sessione, che resta sotto 
 il controllo esclusivo di START e STOP.
 
-\paragraph{Un caso particolare: l'arresto per spazio esaurito}
+\subsection{Un caso particolare: l'arresto per spazio esaurito}
 Come descritto in progettazione, l'arresto automatico per esaurimento dello
 spazio GPS esegue la stessa sequenza di arresto appena descritta, con
 un'unica differenza a monte: prima di avviarla, il firmware imposta un
@@ -818,14 +788,10 @@ di sessione, un arresto voluto dall'utente da uno automatico.
 
 \section{Calibrazione dell'altitudine}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice l'algoritmo di calibrazione descritto in
 \hyperref[sec:calibrazione-altitudine]{Calibrazione dell'altitudine}:
 raccolta campioni con filtro dei duplicati, calcolo di mediana e deviazione
 standard, accettazione o scarto del gruppo, e timeout massimo complessivo.
-
-\subsection{Strutture dati e interfacce}
 
 Il risultato della calibrazione è un dato immutabile che distingue
 esplicitamente un esito riuscito da un fallimento per timeout:
@@ -849,9 +815,7 @@ lettura tramite \texttt{setReferencePressure}/\texttt{getReferencePressure},
 protetto da una sezione critica anziché da un mutex, essendo consultato anche
 dal producer del barometro a ogni campione.
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Raccolta campioni e filtro duplicati}
+\subsection{Raccolta campioni e filtro duplicati}
 L'algoritmo interroga ripetutamente l'ultimo campione disponibile dal
 producer del barometro, scartando quelli il cui timestamp coincide con
 l'ultimo già considerato:
@@ -869,7 +833,7 @@ Questo evita che una lettura più lenta del ciclo di polling della
 calibrazione porti a contare più volte lo stesso campione fisico, falsando
 sia la mediana sia la deviazione standard.
 
-\paragraph{Mediana, deviazione standard e accettazione del gruppo}
+\subsection{Mediana, deviazione standard e accettazione del gruppo}
 Raggiunto il numero di campioni richiesto, il gruppo viene ordinato per
 estrarne la mediana, e la deviazione standard viene calcolata rispetto a
 quest'ultima anziché rispetto alla media, coerentemente con la scelta della
@@ -900,7 +864,7 @@ calibrazione: essa è necessaria per ottenere un’altitudine relativa priva del
 sistematico dovuto alla quota iniziale, ma non costituisce una condizione vincolante 
 per l’avvio o la prosecuzione della sessione.  
 
-\paragraph{Formula di conversione e scelta del dato da conservare}
+\subsection{Formula di conversione e scelta del dato da conservare}
 
 L'altitudine relativa a un dato istante è calcolata dalla formula
 barometrica standard:
@@ -928,15 +892,11 @@ assoluta.
 
 \section{Calibrazione dell'IMU}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:calibrazione-imu]{Calibrazione dell'IMU}: la macchina a stati
 esplicita, il Command Pattern per i comandi dall'app, il fan-out non invasivo
 sul flusso dati IMU, il retry isolato per singolo step, e l'algoritmo dei tre
 step di misura.
-
-\subsection{Strutture dati e interfacce}
 
 Gli stati e i comandi sono rappresentati come due enum distinti, coerenti con
 il Command Pattern e lo State Pattern descritti in progettazione:
@@ -971,9 +931,7 @@ struct CalibSample {
 \label{listing:calib-sample}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Fan-out non invasivo sul flusso dati}
+\subsection{Fan-out non invasivo sul flusso dati}
 Il producer dell'IMU continua a funzionare come se la calibrazione non
 esistesse: l'unica aggiunta è, quando la calibrazione è attiva, la
 duplicazione di ogni campione verso una coda dedicata, senza alcuna modifica
@@ -992,7 +950,7 @@ if (IMU::isCalibrationActive()) {
 \label{listing:calib-fanout}
 \end{listing}
 
-\paragraph{Macchina a stati e instradamento dei comandi}
+\subsection{Macchina a stati e instradamento dei comandi}
 Un unico task consuma i comandi dalla coda e li interpreta in funzione dello
 stato corrente, secondo un semplice switch a due livelli (stato, poi
 comando), realizzando così sia lo State Pattern sia il Command Pattern
@@ -1017,7 +975,7 @@ mentre lo stato è \texttt{NO\_DATA}, di sapere quale dei tre step ripetere,
 poiché quello stato è raggiungibile da ciascuno dei tre step del percorso di
 calibrazione.
 
-\paragraph{Soglie di accettazione degli step}
+\subsection{Soglie di accettazione degli step}
 Ciascuno dei controlli descritti nei paragrafi seguenti confronta una
 grandezza misurata con una soglia fissa, riportata in
 Tabella \ref{tab:calib-thresholds}. I valori sono stati tarati empiricamente,
@@ -1057,7 +1015,7 @@ sul motoveicolo nelle condizioni reali di utilizzo.
 \label{tab:calib-thresholds}
 \end{table}
 
-\paragraph{Uscita anticipata basata sulla stabilità del segnale}
+\subsection{Uscita anticipata basata sulla stabilità del segnale}
 Ogni step condivide la stessa routine di raccolta campioni, che integra un
 periodo di assestamento iniziale (i campioni ricevuti in questa fase vengono
 scartati) e un meccanismo di uscita anticipata: superato un numero minimo di
@@ -1076,7 +1034,7 @@ if (count >= EARLY_EXIT_MIN_SAMPLES && windowCount == EARLY_EXIT_CHECK_WINDOW) {
 \label{listing:calib-early-exit}
 \end{listing}
 
-\paragraph{Step 1 - Posizione dritta}
+\subsection{Step 1 - Posizione dritta}
 Con il dispositivo fermo, la media dei campioni raccolti approssima il vettore
 di gravità così come misurato dal sensore. Il modulo di questo vettore deve
 cadere in un intervallo plausibile attorno a 1 g, e la sua varianza deve
@@ -1089,7 +1047,7 @@ bias dell'accelerometro da sottrarre nelle acquisizioni successive; la media
 dei campioni del giroscopio, che a dispositivo fermo dovrebbe essere nulla,
 ne costituisce analogamente il bias.
 
-\paragraph{Step 2 - Inclinazione a destra}
+\subsection{Step 2 - Inclinazione a destra}
 Il dispositivo viene inclinato lateralmente. Lo scostamento tra il vettore
 medio misurato in questo step e quello registrato nello Step 1 viene
 proiettato sul piano perpendicolare all'asse verticale già determinato,
@@ -1099,7 +1057,7 @@ verticale. Se il modulo di questa componente risulta troppo piccolo,
 l'inclinazione è giudicata insufficiente e lo step viene rifiutato;
 altrimenti, il vettore normalizzato diventa l'asse laterale.
 
-\paragraph{Step 3 - Asse longitudinale e salvataggio}
+\subsection{Step 3 - Asse longitudinale e salvataggio}
 Il terzo asse non richiede una nuova misura: è calcolato geometricamente come
 prodotto vettoriale tra l'asse laterale e quello verticale già determinati,
 il che garantisce per costruzione un sistema di riferimento ortogonale. Un
@@ -1112,7 +1070,7 @@ degenere, che comporta il rifiuto dello step. In caso di successo, i tre
 assi compongono la matrice di rotazione salvata in configurazione insieme ai
 bias calcolati nello Step 1.
 
-\paragraph{Gestione degli esiti negativi}
+\subsection{Gestione degli esiti negativi}
 I tre step condividono lo stesso schema di esito: nessun campione ricevuto
 entro il timeout porta allo stato \texttt{NO\_DATA} (probabile problema
 hardware, non di postura), un numero di campioni insufficiente o una
@@ -1135,15 +1093,11 @@ motore acceso.
 
 \section{Architettura dello sniffer CAN}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice l'architettura esagonale descritta in
 \hyperref[sec:sniffer-arch]{Architettura dello sniffer CAN}: le tre porte del
 dominio, il caso d'uso che le orchestra senza conoscerne gli adattatori
 concreti, e le implementazioni realizzate per il prototipo (bus CAN in
 ascolto passivo, profilo Yamaha MT-07, trasporto via advertising BLE).
-
-\subsection{Strutture dati e interfacce}
 
 Le tre porte sono interfacce astratte pure, ciascuna con una responsabilità
 unica:
@@ -1178,8 +1132,7 @@ tra profilo e broadcaster (\texttt{TelemetrySnapshot}) sono entrambi
 strutture dati semplici, prive di logica: il primo rispecchia un frame CAN
 grezzo, il secondo lo stato di telemetria già decodificato e leggibile.
 
-\subsection{Dettagli implementativi}
-\paragraph{Il caso d'uso: orchestrazione senza conoscenza degli adattatori}
+\subsection{Il caso d'uso: orchestrazione senza conoscenza degli adattatori}
 \texttt{SniffingService} riceve le tre porte nel costruttore come riferimenti
 alle interfacce astratte, non alle classi concrete che le implementano:
 
@@ -1244,7 +1197,7 @@ restituisce vero) il risultato aggiornato viene pubblicato. I frame che non
 appartengono a nessun segnale noto per quel veicolo vengono quindi ignorati,
 senza generare alcuna pubblicazione.
 
-\paragraph{Adattatore del bus CAN: ascolto passivo}
+\subsection{Adattatore del bus CAN: ascolto passivo}
 L'adattatore concreto della porta \texttt{ICanBus} configura il controller
 TWAI nativo dell'ESP-WROOM-32 in modalità di solo ascolto, realizzando
 direttamente la mitigazione discussa in
@@ -1263,7 +1216,7 @@ In questa modalità il controller non trasmette mai alcun ACK né frame di
 errore sul bus, indipendentemente da qualunque comportamento abbia software a
 monte.
 
-\paragraph{Selezione del profilo veicolo}
+\subsection{Selezione del profilo veicolo}
 La Factory Pattern descritta in progettazione è realizzata come una funzione 
 che mappa un identificativo di modello alla relativa implementazione
 concreta:
@@ -1287,7 +1240,7 @@ Aggiungere il supporto a un nuovo modello richiederebbe solo un nuovo
 adattatore concreto e la relativa voce in questo switch, senza toccare
 \texttt{SniffingService} né le altre porte.
 
-\paragraph{Decodifica specifica del veicolo}
+\subsection{Decodifica specifica del veicolo}
 L’unico adattatore concreto della porta \texttt{IVehicleProfile} attualmente
 realizzato instrada ciascun frame in funzione del relativo identificativo.
 La mappatura degli identificativi è stata ricostruita mediante uno
@@ -1314,7 +1267,7 @@ formula di conversione specifica del segnale: dettagli intrinsecamente
 legati a questo singolo modello di veicolo, che restano isolati dentro
 l'adattatore.
 
-\paragraph{Trasporto dati: advertising BLE broadcast-only}
+\subsection{Trasporto dati: advertising BLE broadcast-only}
 L'adattatore della porta \texttt{ITelemetryBroadcaster} configura
 l'advertising BLE come non connettibile, coerentemente con il modello
 \emph{publish-only} descritto in progettazione:
@@ -1348,14 +1301,10 @@ static_assert(sizeof(CanTelemetryWirePacket) == 10,
 
 \section{Visualizzazione 3D del veicolo}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice il Game Loop Pattern descritto in
 \hyperref[sec:app-moto3d]{Visualizzazione 3D del veicolo}: l'accesso diretto
 allo store di telemetria, disaccoppiato dalla cadenza delle notifiche BLE, e
 l'interpolazione dei valori frame per frame.
-
-\subsection{Strutture dati e interfacce}
 
 I tre valori di assetto letti a ogni frame sono raccolti in un'unica
 struttura, mantenuta in un riferimento mutabile anziché in stato React:
@@ -1370,9 +1319,7 @@ const targetRef = useRef<TargetState>({ roll: 0, pitch: 0, longAccel: 0 })
 \label{listing:moto3d-targetstate}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Aggiornamento del riferimento, non dello stato React}
+\subsection{Aggiornamento del riferimento, non dello stato React}
 Il componente si sottoscrive direttamente allo store condiviso, scrivendo i
 valori ricevuti nel riferimento mutabile invece che tramite \texttt{setState}:
 
@@ -1394,7 +1341,7 @@ Questo è il punto centrale del disaccoppiamento: un aggiornamento dello store
 non causa mai un nuovo render del componente React che ospita la scena 3D,
 ma si limita ad aggiornare un valore che il ciclo di rendering 3D leggerà al 
 prossimo frame.
-\paragraph{Lettura e interpolazione nel ciclo di rendering 3D}
+\subsection{Lettura e interpolazione nel ciclo di rendering 3D}
 Il valore letto dallo store non viene applicato direttamente al modello 3D,
 ma avvicinato gradualmente ad esso, un piccolo passo per volta, a ogni
 fotogramma disegnato dal motore 3D:
@@ -1421,7 +1368,7 @@ quello target un poco alla volta, ad ogni fotogramma, anche tra due notifiche
 il modello continua a muoversi in modo fluido verso l'ultimo valore ricevuto,
 invece di restare fermo in attesa del prossimo salto.
 
-\paragraph{Elementi testuali a frequenza ridotta}
+\subsection{Elementi testuali a frequenza ridotta}
 Le card numeriche utilizzano hook dedicati con aggiornamento limitato
 (\texttt{useThrottledSpeed}, \texttt{useThrottledHeight},
 \texttt{useThrottledMotion}), riducendo i render React rispetto alla
@@ -1441,14 +1388,10 @@ percepibile dall’utente.
 
 \section{Segnalazione di microSD mancante durante la sessione}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:app-sdmissing]{Segnalazione di microSD mancante durante la
 sessione}: il componente presentazionale riutilizzato nei due contesti,
 l'azione differenziata per contesto e il comportamento non richiudibile.
-
-\subsection{Strutture dati e interfacce}
 
 Il componente è parametrico rispetto a etichetta, colore e stato di
 caricamento dell'azione proposta, senza contenere alcuna logica su quando
@@ -1464,9 +1407,7 @@ function SdMissingOverlay({
 \label{listing:sdmissing-props}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Ripartizione dell'occupazione per sensore}
+\subsection{Ripartizione dell'occupazione per sensore}
 A differenza dei due overlay, che dipendono dal solo indicatore booleano di assenza scheda, questo componente legge dallo stesso oggetto di
 dominio la percentuale di occupazione e l'indicatore di sovrascrittura di ciascun sensore, mostrandoli in una griglia:
 
@@ -1500,7 +1441,7 @@ della sessione corrente sono già stati sostituiti da dati più recenti.
     \caption{Ripartizione dell'occupazione per sensore, con indicatore di sovrascrittura}
 \end{figure}
 
-\paragraph{Stesso componente, azione differente per contesto}
+\subsection{Stesso componente, azione differente per contesto}
 Il componente compare in due punti della schermata Record, ciascuno con i
 propri parametri: prima dell'avvio, offre un tentativo di ripetizione;
 durante una sessione già in corso, offre solo l'arresto forzato:
@@ -1549,7 +1490,7 @@ componenti distinti.
     \label{fig:sdmissing-usages}
 \end{figure}
 
-\paragraph{Impossibilità di chiusura senza azione}
+\subsection{Impossibilità di chiusura senza azione}
 Il componente è realizzato con un \texttt{Modal} a schermo intero, privo di
 qualunque controllo di chiusura:
 
@@ -1571,7 +1512,7 @@ L'unica interazione possibile con la schermata sottostante, finché la
 condizione persiste, è quella offerta dal singolo pulsante del componente,
 coerentemente con il Blocking Modal Pattern descritto in progettazione.
 
-\paragraph{Scomparsa automatica al reinserimento della microSD}
+\subsection{Scomparsa automatica al reinserimento della microSD}
 Né il componente \texttt{SdMissingOverlay} né la schermata che lo ospita mantengono uno stato proprio su "SD mancante": la sua visibilità è
 interamente derivata, a ogni render, dal valore corrente di \texttt{storageStatus.sdMissing}. Quando la scheda viene reinserita, è il firmware
 stesso a rilevarlo ed eseguire il \hyperref[subsec:Recovery]{ripristino della sessione} già descritto lato firmware, ripubblicando poi lo stato di storage aggiornato.
@@ -1592,15 +1533,11 @@ Nell'app questo si traduce in un semplice cambio di valore della variabile boole
 
 \section{Configurazione dei parametri del dispositivo}
 
-\subsection{Richiamo alla scelta progettuale}
-
 Questa sezione traduce in codice quanto descritto in
 \hyperref[sec:app-config]{Configurazione dei parametri del dispositivo}:
 l'Adapter/Facade Pattern che nasconde alla vista il significato di ogni
 UUID e la codifica esplicita del valore scritto, applicati al selettore del
 timeout di inattività dei sensori.
-
-\subsection{Strutture dati e interfacce}
 
 La vista non riceve mai un UUID grezzo da confrontare: riceve un oggetto di
 dominio già pronto, e lo confronta solo con una costante nominata per
@@ -1615,9 +1552,7 @@ const isInactivityTimeout =
 \label{listing:config-selector}
 \end{listing}
 
-\subsection{Dettagli implementativi}
-
-\paragraph{Un controllo dedicato per un insieme discreto di valori}
+\subsection{Un controllo dedicato per un insieme discreto di valori}
 Il timeout di inattività non è un valore continuo su cui abbia senso uno
 slider, ma un insieme chiuso di opzioni con etichetta (mai, 10, 30 o 60
 minuti), coerentemente con quanto già descritto \hyperref[sec:inattivita]{lato firmware}: la vista
@@ -1647,7 +1582,7 @@ ma come \texttt{Never}, rendendo esplicito all'utente che quel valore
 disabilita del tutto la sospensione dei sensori, non che ne azzera il tempo
 di attesa.
 
-\paragraph{Codifica esplicita immediatamente prima della scrittura}
+\subsection{Codifica esplicita immediatamente prima della scrittura}
 Il valore numerico scelto dall'utente nel menu a tendina viene serializzato
 secondo il formato concordato con il firmware solo nel punto in cui la
 scrittura avviene effettivamente, non prima:
