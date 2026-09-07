@@ -35,7 +35,7 @@ permettendo la visualizzazione \textit{live} delle grandezze rilevate durante la
 \subsubsection{Scelte progettuali}
 
 \begin{itemize}
-    \item \textbf{Producer-Consumer}: separazione netta tra il ruolo di acquisizione dati e quello di persistenza, disaccoppiati tramite una coda di richieste di scrittura.
+    \item \textbf{\gls{producerconsumer}}: separazione netta tra il ruolo di acquisizione dati e quello di persistenza, disaccoppiati tramite una coda di richieste di scrittura.
     \item \textbf{Double buffering (ping-pong buffer)}: permette lettura e scrittura concorrenti sullo stesso flusso di dati senza reciproco blocco.
     \item \textbf{Container singleton per la configurazione}: la configurazione è esposta tramite due punti di accesso globali unici, che incapsulano l'accesso concorrente
     allo stato condiviso. I parametri di configurazione persistenti sono memorizzati in memoria non volatile, garantendone la conservazione anche dopo
@@ -352,7 +352,7 @@ Il sottosistema di segnalazione LED è organizzato concettualmente in tre respon
 
 \begin{itemize}
     \item \textbf{Risoluzione a priorità esplicita}: il livello di decisione valuta lo stato del dispositivo
-    secondo un ordine di priorità fisso ed esplicito (Tabella~\ref{tab:led-priorita}):
+    secondo un ordine di priorità fisso ed esplicito (Tabella \ref{tab:led-priorita}):
     \begin{table}[H]
         \centering
         \begin{tabular}{c l l l}
@@ -365,10 +365,11 @@ Il sottosistema di segnalazione LED è organizzato concettualmente in tre respon
             4 & Pairing Wi-Fi & Blu & Lampeggio veloce \\
             5 & Recupero dati durante la calibrazione & Giallo & Luce fissa \\
             6 & Calibrazione attiva & Giallo & Dissolvenza \\
-            7 & Download / cancellazione & Viola & Lampeggio \\
-            8 & Sospensione & Verde & Dissolvenza lenta \\
-            9 & Logging & Verde & Luce fissa \\
-            10 & Standby & Bianco & Luce fissa \\
+            7 & Download & Viola & Fisso \\
+            8 & Cancellazione & Viola & Lampeggio \\
+            9 & Sospensione & Verde & Dissolvenza lenta \\
+            10 & Logging & Verde & Luce fissa \\
+            11 & Standby & Bianco & Luce fissa \\
             \hline
         \end{tabular}
         \caption{Priorità e segnalazioni visive del sottosistema LED}
@@ -391,8 +392,8 @@ Il sottosistema di segnalazione LED è organizzato concettualmente in tre respon
 Il meccanismo di gestione dell'inattività implementa la sospensione automatica dei sensori non essenziali dopo un periodo di
 inattività configurabile, e la loro riattivazione al rilevamento di movimento. La sorgente di riferimento primaria per il rilevamento del movimento
 è il GPS, mentre l'accelerometro dell'IMU viene utilizzato come sorgente di \textbf{fallback}, attiva solo quando
-il GPS non è considerato affidabile in quel momento. Tipicamente in assenza di un \gls{fixgnss} valido o recente come accadrebbe in ambienti con scarsa 
-visibilità satellitare, come gallerie o zone urbane dense.
+il GPS non è considerato affidabile; tipicamente in assenza di un \gls{fixgnss} valido o recente, come potrebbe 
+accadrebbe in ambienti con scarsa visibilità satellitare (gallerie o zone urbane dense).
 \subsection{Scelte progettuali}
 
 \begin{itemize}
@@ -838,7 +839,7 @@ Lo schema evidenzia i tre punti chiave della soluzione adottata:
     consente di mantenere le tensioni di modo comune delle linee CAN entro l'intervallo operativo del transceiver.
 \end{enumerate}
 
-Il prototipo è pensato per una \textbf{Yamaha MT-07}, la cui porta diagnostica è del tipo \textit{Sumitomo} a 4 pin: GND, 12v, \texttt{CAN\_H} e \texttt{CAN\_L}.
+Il prototipo è pensato per una \textbf{Yamaha MT-07}, la cui porta diagnostica è del tipo \textit{Sumitomo} a 4 pin: GND, 12 V, \texttt{CAN\_H} e \texttt{CAN\_L}.
 È stato quindi necessario prevedere l'aggiunta di un adattatore dedicato a tale connettore. 
 
 Per estendere la compatibilità ad altri motoveicoli, uno sviluppo futuro prevede l'implementazione degli 
@@ -894,7 +895,7 @@ Il dominio espone tre porte principali, ciascuna corrispondente a una responsabi
     \item una porta che astrae il canale di trasporto verso il nodo centrale, implementata da un adattatore basato su advertising BLE.
 \end{itemize}
 
-L'orchestrazione è affidata a un unico caso d'uso, che non conosce alcun dettaglio implementativo degli adattatori concreti, come illustrato in Figura~\ref{fig:c4-sniffer}.
+L'orchestrazione è affidata a un unico caso d'uso, che non conosce alcun dettaglio implementativo degli adattatori concreti, come illustrato in Figura \ref{fig:c4-sniffer}.
 
 \begin{figure}[H]
     \centering
@@ -982,7 +983,7 @@ gerarchia dei componenti React.
     valori ricevuti in un riferimento mutabile, letto a ogni frame del ciclo di rendering 3D. In questo modo, la frequenza di aggiornamento della visualizzazione 
     non dipende dalla cadenza delle notifiche BLE. I valori vengono inoltre interpolati frame per frame anziché applicati istantaneamente.\\
     \textit{Vantaggio}: la fluidità dell'animazione non dipende dall'irregolarità con cui arrivano le notifiche BLE. Gli elementi testuali della stessa schermata, 
-    per i quali non è necessaria una frequenza di aggiornamento elevata, continuano invece a leggere lo stesso store tramite hook con frequenza limitata, evitando
+    per i quali non è necessaria una frequenza di aggiornamento elevata, continuano invece a leggere lo stesso store tramite \gls{hook} con frequenza limitata, evitando
      render superflui.
 \end{itemize}
 

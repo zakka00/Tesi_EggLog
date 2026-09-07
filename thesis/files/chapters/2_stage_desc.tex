@@ -17,9 +17,9 @@ componenti software già presenti, sia su firmware che nell'applicazione mobile,
 volte a rendere il sistema più affidabile, efficiente e facilmente estendibile.
 
 Le attività svolte hanno coinvolto diversi aspetti del sistema, tra cui la gestione dello \textit{storage}
-su memoria miscroSD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{ble}), la gestione del
+su memoria microSD, l'ottimizzazione dei servizi di comunicazione BLE (\gls{ble}), la gestione del
 trasferimento dei dati acquisiti real-time e l'analisi del traffico CAN proveniente dalla centralina elettronica
-(\gls{ecu} detta ECU) della moto mediante tecniche di \gls{cansniffing}.
+(\gls{ecu}) della moto mediante tecniche di \gls{cansniffing}.
 
 \subsection{Competenze da acquisire}
 
@@ -58,18 +58,18 @@ Gli obiettivi obbligatori comprendevano principalmente attività volte al miglio
 e delle prestazioni del firmware esistente.
 
 \begin{itemize}
-    \item \textbf{OO-1}: \textit{Refactoring} e ottimizzazione del sistema di lettura e scrittura su scheda SD;
+    \item \textbf{OO-1}: \textit{Refactoring} e ottimizzazione del sistema di lettura e scrittura su scheda microSD;
 
-    \item \textbf{OO-2}: Completamento del sistema di rotazione dei file mediante l'utilizzo di ring-buffer;
+    \item \textbf{OO-2}: Completamento del sistema di rotazione dei file mediante l'utilizzo di \gls{ringbuffer};
 
     \item \textbf{OO-3}: Implementare la scrittura e salvataggio dei dati raccolti direttamente in formato binario;
 
-    \item \textbf{OO-4}: Implementazione di un sistema di \textit{recovery} che permette di riprendere la scrittura su SD
-    in caso di guasti o rimozione della stessa del suo \textit{slot}.
+    \item \textbf{OO-4}: Implementazione di un sistema di \textit{recovery} che permette di riprendere la scrittura su microSD
+    in caso di guasti o rimozione della stessa dal suo \textit{slot}.
 
     \item \textbf{OO-5}: Miglioramento dei servizi BLE e introduzione di nuovi comandi firmware;
     
-    \item \textbf{OO-6}: Aggiunta di metriche di confronto per poter stimare il miglioramente rispetto 
+    \item \textbf{OO-6}: Aggiunta di metriche di confronto per poter stimare il miglioramento rispetto 
     alla versione precedente del firmware;
 
     \item \textbf{OO-7}: Implementare un protocollo di calibrazione dei sensori;
@@ -87,11 +87,12 @@ Gli obiettivi desiderabili erano principalmente orientati all'introduzione di fu
 e al miglioramento delle modalità di trasferimento dei dati.
 
 \begin{itemize}
-    \item \textbf{OD-1}: Migliorare la visualizzazione dei dati in tempo reale sul dispositivo mobile;
 
-    \item \textbf{OD-2}: Permettere la visualizzazione della moto in tempo reale con un modellino 3D;
+    \item \textbf{OD-1}: Permettere la visualizzazione dei movimenti della moto in tempo reale con un modellino 3D;
 
-    \item \textbf{OD-3}: Integrazione dell'analisi e gestione dei dati proveninti dalla ECU;
+    \item \textbf{OD-2}: Integrazione dell'analisi e gestione dei dati provenienti dalla ECU;
+    
+    \item \textbf{OD-3}: Implementare un sistema di rilevamento di assenza della scheda microSD.
 
 \end{itemize}
 
@@ -99,15 +100,15 @@ e al miglioramento delle modalità di trasferimento dei dati.
 \subsubsection{Obiettivi facoltativi}
 
 \begin{itemize}
-    \item \textbf{OF-1}: Implementazione di un sistema avanzato di indicizzazione delle sessioni
-    memorizzate sulla scheda SD.
+    \item \textbf{OF-1}: Implementazione di un sistema di indicizzazione delle sessioni
+    memorizzate sulla scheda microSD.
 
-    \item \textbf{OF-2}: Implementazione di un sistema di \textbf{intactivity} per permettere la disattivazione dei sensori
+    \item \textbf{OF-2}: Implementazione di un sistema di \textit{inactivity} per permettere la disattivazione dei sensori
     quando non viene rilevato alcun movimento per un tempo configurabile dall'utente.
 \end{itemize}
 
 
-\section{Pianificazione}
+\section{Pianificazione} \label{sec:pianificazione}
 
 Le attività di stage sono state pianificate con il tutor aziendale considerando un monte complessivo
 di 320 ore, distribuite su otto settimane lavorative da quaranta ore ciascuna. Tali settimane sono state 
@@ -115,7 +116,7 @@ suddivise come segue:
 
 \begin{enumerate}
 
-    \item \textbf{Prima settimana -- \textit{Onboarding} e analisi del progetto}
+    \item \textbf{Prima settimana - \textit{Onboarding} e analisi del progetto}
     \begin{itemize}
         \item Introduzione al sistema \textbf{EggLog Motion Core} e all'architettura generale della piattaforma;
         \item Configurazione dell'ambiente di sviluppo e degli strumenti di compilazione e debugging;
@@ -123,7 +124,7 @@ suddivise come segue:
         \item Studio delle modalità di acquisizione, memorizzazione e trasferimento dei dati.
     \end{itemize}
 
-    \item \textbf{Seconda settimana -- Studio delle tecnologie e analisi del firmware}
+    \item \textbf{Seconda settimana - Studio delle tecnologie e analisi del firmware}
     \begin{itemize}
         \item Approfondimento della gestione della memoria microSD e del relativo \textit{file system};
         \item Analisi dello stack BLE e dei servizi implementati;
@@ -131,7 +132,7 @@ suddivise come segue:
         \item Individuazione delle principali criticità presenti nel firmware.
     \end{itemize}
 
-    \item \textbf{Terza settimana -- Analisi e progettazione delle modifiche}
+    \item \textbf{Terza settimana - Analisi e progettazione delle modifiche}
     \begin{itemize}
         \item Analisi dell'architettura software esistente e definizione degli interventi di \textit{refactoring};
         \item Progettazione delle modifiche relative alla gestione dello storage;
@@ -139,7 +140,7 @@ suddivise come segue:
         \item Analisi preliminare del bus CAN della moto e delle informazioni trasmesse dalla ECU.
     \end{itemize}
 
-    \item \textbf{Quarta settimana -- Sviluppo e ottimizzazione dello storage}
+    \item \textbf{Quarta settimana - Sviluppo e ottimizzazione dello storage}
     \begin{itemize}
         \item \textit{Refactoring} dei moduli responsabili della gestione della memoria SD;
         \item Ottimizzazione delle operazioni di lettura e scrittura dei dati;
@@ -147,25 +148,26 @@ suddivise come segue:
         \item Implementazione e verifica dei meccanismi di \textit{recovery}.
     \end{itemize}
 
-    \item \textbf{Quinta settimana -- Gestione dei dati e comunicazioni}
+    \item \textbf{Quinta settimana - Gestione dei dati e comunicazioni}
     \begin{itemize}
         \item Implementazione delle funzioni di calibrazione dei sensori;
         \item Miglioramento della qualità dei dati inviati via BLE, inteso 
         come invio di dati già calibrati;
         \item Miglioramento dei servizi BLE;
         \item Implementazione di un sistema di inattività, basato su GPS con \textit{fallback}
-        su accelleromentro.
+        su accelerometro.
     \end{itemize}
 
-    \item \textbf{Sesta settimana -- Analisi dei pacchetti CAN e integrazione firmware}
+    \item \textbf{Sesta settimana - Analisi tecnica CAN sniffer e integrazione firmware}
     \begin{itemize}
+        \item Stesura di un'analisi tecnica sulla fattibilità di uno sniffer CAN;
         \item Acquisizione dei messaggi presenti sul bus CAN tramite attività di \textit{sniffing};
         \item Analisi degli identificativi dei pacchetti CAN provenienti dalla ECU;
         \item Studio della possibile integrazione delle informazioni trasmesse nel bus CAN all'interno 
         del sistema telemetrico;
     \end{itemize}
 
-    \item \textbf{Settima settimana -- Testing e validazione}
+    \item \textbf{Settima settimana - Testing e validazione}
     \begin{itemize}
         \item Esecuzione di test funzionali sul firmware modificato;
         \item Raccolta di metriche sulle prestazioni del sistema;
@@ -173,7 +175,7 @@ suddivise come segue:
         \item Analisi e risoluzione delle problematiche emerse durante i test.
     \end{itemize}
 
-    \item \textbf{Ottava settimana -- Documentazione finale}
+    \item \textbf{Ottava settimana - Documentazione finale}
     \begin{itemize}
         \item Aggiornamento della documentazione tecnica del firmware;
         \item Descrizione delle modifiche architetturali introdotte;
@@ -186,7 +188,7 @@ suddivise come segue:
 
 \section{Organizzazione del lavoro}
 
-Le attività di sviluppo sono state organizzate seguendo una metodologia \gls{agile}, ispirata al framework
+Le attività di sviluppo sono state organizzate seguendo una \gls{agile}, ispirata al framework
 \gls{scrum}. Il lavoro è stato suddiviso in sprint della durata indicativa di due settimane, durante i quali
 venivano pianificate le attività da svolgere, definiti gli obiettivi da raggiungere e monitorato lo stato
 di avanzamento delle attività insieme al tutor aziendale.
@@ -196,11 +198,11 @@ finalizzati al mantenimento dell'allineamento tra i membri del team. Questi inco
 condividere i progressi effettuati, discutere eventuali problematiche emerse durante le fasi di sviluppo
 e progettazione e individuare possibili soluzioni attraverso il confronto tecnico.
 \\
-
-Il gruppo di lavoro era composto da due tirocinanti, ciascuno responsabile dello sviluppo di una specifica
-componente del sistema. Il sottoscritto ha operato principalmente sulla componente firmware embedded,
-occupandosi dell'evoluzione del software a bordo del dispositivo, mentre la collega ha lavorato sulle
-componenti applicative del sistema.
+Il gruppo di lavoro era composto da due tirocinanti, con attività prevalenti su componenti differenti 
+del sistema. Il sottoscritto ha operato principalmente sulla componente firmware embedded, occupandosi 
+dell’evoluzione del software a bordo del dispositivo, e ha inoltre contribuito all’applicazione con 
+interventi puntuali. La collega ha lavorato principalmente sulle componenti applicative, contribuendo a 
+sua volta al firmware con interventi mirati.
 \\
 Nonostante la suddivisione delle responsabilità, le attività sono state svolte in maniera collaborativa,
 favorendo il confronto continuo tra i membri del team e garantendo una corretta integrazione tra firmware,
@@ -221,10 +223,10 @@ I possibili rischi individuati sono:
 \begin{itemize}
 
     \item \textbf{Introduzione di regressioni nel codice esistente}\\
-    \textbf{Probabilità: Probabile} -- il firmware esistente non dispone di test automatici,
+    \textbf{Probabilità: Probabile} - il firmware esistente non dispone di test automatici,
     per cui le modifiche apportate al codice possono alterare comportamenti già funzionanti
     senza che ciò venga rilevato immediatamente.\\
-    \textbf{Conseguenze: Grave} -- una regressione non rilevata può compromettere
+    \textbf{Conseguenze: Grave} - una regressione non rilevata può compromettere
     l'affidabilità dell'acquisizione o della scrittura dei dati, richiedendo una nuova
     sessione di test per essere individuata.\\
     \textbf{Rimedi}: prima di intervenire su ciascun modulo è stata condotta un'analisi puntuale
@@ -233,11 +235,11 @@ I possibili rischi individuati sono:
     codice con il tutor aziendale.
 
     \item \textbf{Mancato miglioramento delle prestazioni}\\
-    \textbf{Probabilità: Probabile} -- le modifiche introdotte per ottimizzare acquisizione,
+    \textbf{Probabilità: Probabile} - le modifiche introdotte per ottimizzare acquisizione,
     buffering e trasferimento dei dati comportano un \textit{overhead} computazionale e di occupazione
     \gls{ram} che potrebbe annullare, in tutto o in parte, il guadagno prestazionale atteso,
     specialmente se il compromesso tra velocità e memoria non viene bilanciato correttamente.\\
-    \textbf{Conseguenze: Medio} -- un mancato miglioramento prestazionale vanificherebbe
+    \textbf{Conseguenze: Medio} - un mancato miglioramento prestazionale vanificherebbe
     l'obiettivo stesso delle ottimizzazioni introdotte durante il tirocinio, richiedendo
     ulteriori interventi correttivi.\\
     \textbf{Rimedi}: per prevenire il rischio, la scelta delle strutture dati e degli algoritmi
@@ -245,15 +247,15 @@ I possibili rischi individuati sono:
     memoria, con verifiche incrementali ad ogni modulo sviluppato anziché un'unica misurazione
     finale. Per individuare tempestivamente eventuali regressioni prestazionali sono stati inoltre
     implementati dei test di \textit{benchmark} che misurano: il tempo impiegato per ogni
-    operazione di scrittura, la quantità di dati scritti e il livello di \gls{ram} occupato dal
-    sistema di buffering (cfr.~\ref{sec:benchmark} RICORDATI DI AGGIUNGERE IL RIFERIMENTO). Tali \textit{benchmark} sono stati
-    implementati anche nella versione precedente del firmware a scopo di confronto.
+    operazione di scrittura e il livello occupazionale di \gls{ram} e \gls{cpu}. 
+    Tali \textit{benchmark} sono stati implementati anche nella versione precedente del firmware 
+    a scopo di confronto.
 
     \item \textbf{Interpretazione errata dei messaggi provenienti dal bus CAN}\\
-    \textbf{Probabilità: Altamente probabile} -- i messaggi trasmessi sul bus CAN dalla ECU della
+    \textbf{Probabilità: Altamente probabile} - i messaggi trasmessi sul bus CAN dalla ECU della
     moto non seguono una codifica standardizzata e pubblica, per cui è necessario ricostruirne il
     significato tramite osservazione ed ipotesi, con concreto rischio di misinterpretazione.\\
-    \textbf{Conseguenze: Grave} -- un'errata interpretazione porta all'acquisizione di dati non
+    \textbf{Conseguenze: Grave} - un'errata interpretazione porta all'acquisizione di dati non
     corretti o non significativi, invalidando le misurazioni raccolte e richiedendo di ripetere
     l'analisi.\\
     \textbf{Rimedi}: prima di avviare l'attività di \textit{sniffing} è stata condotta un'analisi
@@ -261,10 +263,10 @@ I possibili rischi individuati sono:
     incrementale confrontando i valori decodificati con misurazioni di riferimento note.
 
     \item \textbf{Incompatibilità tra le componenti sviluppate in parallelo}\\
-    \textbf{Probabilità: Probabile} -- il firmware e l'applicazione mobile sono stati sviluppati
+    \textbf{Probabilità: Probabile} - il firmware e l'applicazione mobile sono stati sviluppati
     contemporaneamente da persone diverse, con il rischio che le rispettive interfacce evolvano in
     modo incoerente tra loro.\\
-    \textbf{Conseguenze: Medio} -- un eventuale disallineamento richiederebbe comunque lavoro
+    \textbf{Conseguenze: Medio} - un eventuale disallineamento richiederebbe comunque lavoro
     aggiuntivo di adattamento e potrebbe ritardare il completamento degli obiettivi predisposti.\\
     \textbf{Rimedi}: per le funzionalità introdotte nel corso del tirocinio, le modifiche lato
     firmware e la relativa integrazione lato applicativo sono state implementate in modo

@@ -1,12 +1,198 @@
-\chapter{Conclusioni}
-\label{chap:conclusioni}
+\chapter{Conclusioni} \label{chap:conclusioni}
+
+\textit{In questo capitolo si presenta il consuntivo finale del lavoro svolto,
+valutando il grado di raggiungimento degli obiettivi e di soddisfazione dei
+requisiti di progetto, e si propone, oltre alle conoscenze acquisite, una 
+riflessione personale sul percorso intrapreso.}
 
 \section{Consuntivo finale}
+\label{sec:consuntivo-finale}
+
+La Tabella \ref{tab:consuntivo-ore} riporta la ripartizione delle 320 ore di stage tra le fasi in cui il
+lavoro è stato organizzato, descritte nella \hyperref[sec:pianificazione]{Sezione Pianificazione del Capitolo}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{9cm} c}
+        \hline
+        \textbf{Attività principali} & \textbf{Ore} \\
+        \hline
+        Onboarding e analisi del progetto & 16 \\
+        \hline
+        Studio delle tecnologie e analisi del firmware & 56\\
+        \hline
+        Analisi e progettazione delle modifiche & 64\\
+        \hline
+        Sviluppo e ottimizzazione dello storage & 24\\
+        \hline
+        Gestione dei dati e comunicazioni & 40\\
+        \hline
+        Analisi tecnica CAN sniffer e integrazione firmware & 56\\
+        \hline
+        Testing e validazione & 48\\
+        \hline
+        Documentazione finale & 16\\
+        \hline
+        \multicolumn{1}{r}{\textbf{Totale}} & \textbf{320} \\
+        \hline
+    \end{tabular}
+    \caption{Ripartizione delle ore di stage per fase}
+    \label{tab:consuntivo-ore}
+\end{table}
 
 \section{Raggiungimento degli obiettivi}
+\label{sec:raggiungimento-obiettivi}
+
+Questa sezione mette a confronto gli obiettivi definiti dall'azienda in fase di pianificazione (Sezione 
+\hyperref[chap:descrizione-stage]{Obiettivi}) con quanto effettivamente realizzato.
+
+\subsection{Obiettivi obbligatori}
+
+\begin{center}
+\begin{longtable}{|p{1.6cm}|p{11cm}|p{2.2cm}|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Obiettivo}} & \multicolumn{1}{c|}{\textbf{Raggiunto}} \\
+\hline
+\endfirsthead
+\rowcolor{white}
+\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} - Continua dalla pagina precedente}}\\
+\hline
+\multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Obiettivo}} & \multicolumn{1}{c|}{\textbf{Raggiunto}} \\
+\hline
+\endhead
+\hline
+\rowcolor{white}
+\multicolumn{3}{|r|}{{Continua nella prossima pagina...}}\\
+\hline
+\endfoot
+\endlastfoot
+
+\textbf{OO-1} & \textit{Refactoring} e ottimizzazione del sistema di lettura e scrittura su scheda SD & Sì \\
+\hline
+\textbf{OO-2} & Completamento del sistema di rotazione dei file mediante l'utilizzo di ring-buffer & Sì \\
+\hline
+\textbf{OO-3} & Implementare la scrittura e salvataggio dei dati raccolti direttamente in formato binario & Sì \\
+\hline
+\textbf{OO-4} & Implementazione di un sistema di \textit{recovery} che permette di riprendere la scrittura su SD in caso di guasti o rimozione della stessa dal suo \textit{slot} & Sì \\
+\hline
+\textbf{OO-5} & Miglioramento dei servizi BLE e introduzione di nuovi comandi firmware & Sì \\
+\hline
+\textbf{OO-6} & Aggiunta di metriche di confronto per poter stimare il miglioramento rispetto alla versione precedente del firmware & Sì \\
+\hline
+\textbf{OO-7} & Implementare un protocollo di calibrazione dei sensori & Sì \\
+\hline
+\textbf{OO-8} & Aggiungere una logica di sessionamento, attivando i sensori solamente all'avvio della sessione e disattivandoli quando termina la sessione & Sì \\
+\hline
+\textbf{OO-9} & Produzione della documentazione tecnica relativa al firmware sviluppato & Sì \\
+\hline
+
+\caption{Raggiungimento degli obiettivi obbligatori}
+\label{tab:obiettivi-obbligatori}
+\end{longtable}
+\end{center}
+
+\subsection{Obiettivi desiderabili}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{1.6cm}|p{11cm}|p{2.2cm}|}
+        \hline
+        \textbf{Codice} & \textbf{Obiettivo} & \textbf{Raggiunto} \\
+        \hline
+        \textbf{OD-1} & Permettere la visualizzazione dei movimenti della moto in tempo reale con un modellino 3D & Sì \\
+        \hline
+        \textbf{OD-2} & Integrazione dell'analisi e gestione dei dati provenienti dalla ECU & Sì \\
+        \hline
+        \textbf{OD-3} & Implementare un sistema di rilevamento di assenza della scheda microSD & Sì \\
+        \hline
+    \end{tabular}
+    \caption{Raggiungimento degli obiettivi desiderabili}
+    \label{tab:obiettivi-desiderabili}
+\end{table}
+
+\subsection{Obiettivi facoltativi}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{1.6cm}|p{11cm}|p{2.2cm}|}
+        \hline
+        \textbf{Codice} & \textbf{Obiettivo} & \textbf{Raggiunto} \\
+        \hline
+        \textbf{OF-1} & Implementazione di un sistema di indicizzazione delle sessioni memorizzate sulla scheda SD & Sì \\
+        \hline
+        \textbf{OF-2} & Implementazione di un sistema di \textit{inactivity} per permettere la disattivazione dei sensori quando non viene rilevato alcun movimento per un tempo configurabile dall'utente & Sì \\
+        \hline
+    \end{tabular}
+    \caption{Raggiungimento degli obiettivi facoltativi}
+    \label{tab:obiettivi-facoltativi}
+\end{table}
+
+\subsection{Requisiti raggiunti}
+
+Sulla base delle scelte progettuali e implementative descritte nei capitoli precedenti, risultano
+raggiunti complessivamente \textbf{37} requisiti sui \textbf{38} tracciati in \hyperref[sec:tracciamento_requisiti]{Sezione Tracciamento dei requisiti}. 
+La Tabella \ref{tab:requisiti-raggiunti} riporta, per ciascuna categoria e urgenza, il numero di requisiti
+raggiunti sul totale tracciato.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Opzionali} & \textbf{TOTALE} \\
+\hline
+RF & 14/14 & 7/7 & 1/1 & 22/22 \\
+\hline
+RN & 3/4 & 3/3 & 1/1 & 7/8 \\
+\hline
+RV & 8/8 & 0/0 & 0/0 & 8/8 \\
+\hline
+\textbf{TOTALE} & \textbf{25/26} & \textbf{10/10} & \textbf{2/2} & \textbf{37/38} \\
+\hline
+\end{tabular}
+\captionof{table}{Requisiti raggiunti, per categoria e urgenza}
+\label{tab:requisiti-raggiunti}
+\end{center}
+
+L'unico requisito non pienamente raggiunto è \textbf{\hyperref[req:rn1]{R-N-Ob-1}}, che riguarda 
+la riduzione del consumo di RAM rispetto alla versione precedente del firmware. La motivazione 
+dietro al parziale raggiungimento è stata approfondita maggiormente nella sezione sulla 
+\hyperref[subsubsec:ram-occupazione]{Occupazione della RAM}.
 
 \section{Conoscenze acquisite}
+\label{sec:conoscenze-acquisite}
+Nel corso del tirocinio sono state acquisite e consolidate competenze tecniche e metodologiche. 
+In particolare, è stata maturata esperienza nello sviluppo e nel refactoring di firmware embedded 
+in C++ su ESP32, con gestione della concorrenza tramite FreeRTOS e variabili atomiche, nella 
+progettazione di formati binari a basso overhead con meccanismi di recovery e nella realizzazione 
+di servizi BLE, sia in modalità connessa sia broadcast. Sono inoltre state sviluppate competenze 
+nell’analisi di protocolli CAN proprietari tramite tecniche di sniffing, nella valutazione di 
+alternative hardware secondo criteri di costo e rischio e nello sviluppo mobile con React 
+Native/TypeScript, con attenzione all’ottimizzazione del rendering. Le scelte implementative sul 
+firmware sono state inoltre valutate tramite benchmark comparativi, misurando quantitativamente 
+l’impatto su CPU e RAM. \\
+
+Dal punto di vista metodologico, il tirocinio ha permesso di consolidare la capacità di lavorare 
+su componenti differenti di uno stesso sistema, coordinandone le interfacce, di operare secondo 
+una metodologia Agile e di condurre analisi preventive dei rischi. È stata inoltre sviluppata una 
+maggiore capacità di motivare le scelte progettuali e di affrontare attività di debug in ambito 
+embedded, ricercando le cause dei problemi anche a livello fisico ed elettrico.
 
 \section{Valutazione personale}
+\label{sec:valutazione-personale}
+
+L'esperienza di tirocinio svolta presso Eggon è stata, nel complesso, \textbf{estremamente positiva}. 
+
+Un aspetto che ho apprezzato particolarmente è stato lo sviluppo congiunto di firmware e
+applicazione insieme alla mia collega tirocinante: questo lavoro parallelo, ma costantemente
+allineato, ci ha tenuti uniti per l'intera durata del tirocinio ed è stato per me un'occasione
+importante di crescita nella capacità di comunicare in modo chiaro ed efficace il proprio
+lavoro, soprattutto durante gli \textit{stand-up meeting} giornalieri. \\
+
+Mi sono inoltre trovato molto bene con il team di Eggon, che ringrazio per il supporto costante, 
+per aver stimolato in me la ricerca di soluzioni sempre migliori e per la disponibilità all'ascolto 
+anche nei momenti di difficoltà, specialmente durante le fasi di implementazione più complesse e 
+ricche di bug.
+
+Nel complesso, ritengo questa esperienza di tirocinio molto formativa, sia dal punto di vista
+tecnico sia da quello relazionale.
 
 \newpage

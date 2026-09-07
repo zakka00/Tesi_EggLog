@@ -46,12 +46,12 @@ dalla sua sorgente (le costanti del firmware). La Tabella
 \hline
 \textbf{Campo logico} & \textbf{Persistito} & \textbf{Se non persistito, ricavato da} \\
 \hline
-Versione del formato & Sì & --- \\
+Versione del formato & Sì & - \\
 Identificativo del sensore & No & nome del file (\texttt{buildPath}) \\
 Dimensione del record & No & \texttt{getSensorParams(sensorId)} \\
 Capacità totale & No & \texttt{computeTotalRecords(...)} \\
-Cursore di fine dati & Sì & --- \\
-Cursore di inizio dati & Sì & --- \\
+Cursore di fine dati & Sì & - \\
+Cursore di inizio dati & Sì & - \\
 Soglia di sincronizzazione & No & \texttt{HEADER\_SYNC\_BYTES\_TARGET/recordSize} \\
 Dim. finestra di azzeramento & No & \texttt{syncEveryRecords * 2} \\
 Indicatori di stato & Parziale & \texttt{wrapped} persistito; \texttt{isFull} ricalcolato \\
@@ -144,7 +144,7 @@ void close(Instance& inst);
 \paragraph{Creazione e calcolo della capacità}
 La capacità totale, descritta in
 \hyperref[subsec:capacita_superfile]{Capacità del file}, è calcolata
-arrotondando per eccesso alla dimensione del cluster del volume. In questo
+arrotondando per eccesso alla dimensione del \gls{cluster} del volume. In questo
 modo, la dimensione del superfile viene allineata, per quanto possibile, alla
 granularità di allocazione della scheda microSD, evitando di lasciare
 porzioni di spazio inutilizzate all’interno dell’ultimo cluster allocato e
@@ -473,7 +473,7 @@ Pattern resolvePattern() {
         return {255, 255, 0, PatternType::SOLID, 1.0f};    // 5: recupero dati
     if (GlobalState::isCalibrating())
         return {255, 255, 0, PatternType::BREATHING, 1.0f};// 6: calibrazione
-    // ... download/cancellazione, sospensione, logging, standby
+    // ... download, cancellazione, sospensione, logging, standby
 }
 \end{minted}
 \caption{Risoluzione del pattern per priorità esplicita (troncato per brevità)}
@@ -1020,7 +1020,7 @@ calibrazione.
 \paragraph{Soglie di accettazione degli step}
 Ciascuno dei controlli descritti nei paragrafi seguenti confronta una
 grandezza misurata con una soglia fissa, riportata in
-Tabella~\ref{tab:calib-thresholds}. I valori sono stati tarati empiricamente,
+Tabella \ref{tab:calib-thresholds}. I valori sono stati tarati empiricamente,
 con una combinazione di prove da banco e prove sul campo, montando il dispositivo 
 sul motoveicolo nelle condizioni reali di utilizzo. 
 
@@ -1036,7 +1036,7 @@ sul motoveicolo nelle condizioni reali di utilizzo.
 \textbf{Soglia} & \textbf{Valore} & \textbf{Utilizzo} \\
 \hline
 \texttt{STEP1\_GRAVITY\_MIN/MAX\_MG}
-& 700--1300 mG
+& 700-1300 mG
 & Intervallo accettabile per il modulo di gravità misurato nello Step 1 \\
 \texttt{STEP1\_STILL\_VARIANCE
 \_THRESHOLD\_MG2}
@@ -1120,7 +1120,7 @@ geometria/misura non valida porta allo stato di retry specifico dello step
 corrente, mentre un comando di interruzione esplicita riporta immediatamente
 lo stato a \texttt{IDLE} indipendentemente dallo step in corso.
 
-\subsection{Problematiche riscontrate e soluzioni}
+\subsection{Problematiche riscontrate e soluzioni} \label{subsec:prob_risc_calib_imu}
 
 La soglia di varianza dello Step 1
 (\texttt{STEP1\_STILL\_VARIANCE\_THRESHOLD\_MG2}) era stata inizialmente
@@ -1248,7 +1248,7 @@ senza generare alcuna pubblicazione.
 L'adattatore concreto della porta \texttt{ICanBus} configura il controller
 TWAI nativo dell'ESP-WROOM-32 in modalità di solo ascolto, realizzando
 direttamente la mitigazione discussa in
-Tabella~\ref{tab:rischi-mitigazioni}:
+Tabella \ref{tab:rischi-mitigazioni}:
 
 \begin{listing}[H]
 \begin{minted}{cpp}

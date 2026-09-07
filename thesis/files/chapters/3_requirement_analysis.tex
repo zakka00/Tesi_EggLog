@@ -13,7 +13,7 @@ I dati acquisiti vengono temporaneamente memorizzati in buffer in RAM secondo un
 e successivamente scritti in formato testuale (\gls{csv}) su scheda microSD, organizzati in file 
 distinti all'interno di cartelle dedicate a ciascun sensore. 
 \\
-Il dispositivo espone inoltre un web server locale, raggiungibile via WiFi, che consente all'utente di configurare i parametri di funzionamento, 
+Il dispositivo espone inoltre un web server locale, raggiungibile via Wi-Fi, che consente all'utente di configurare i parametri di funzionamento, 
 scaricare i dati archiviati in un intervallo temporale specifico e rimuoverli dalla scheda microSD.
 
 \section{Analisi degli utenti}
@@ -57,12 +57,12 @@ informazioni:
     \item \textbf{Estensioni}: riferimenti ai casi d'uso di estensione.
 \end{itemize}
 
-\subsection{UC1-F -- Acquisizione binaria dei dati sensore}
+\subsection{UC1-F - Acquisizione binaria dei dati sensore}
 \label{uc:uc_acquisizione_binaria}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC1.png}
-    \caption{UC1-F -- Acquisizione binaria dei dati sensore}
+    \caption{UC1-F - Acquisizione binaria dei dati sensore}
     \label{fig:uc1_diagram}
 \end{figure}
 
@@ -94,12 +94,12 @@ informazioni:
     \item \textbf{Inclusioni:} \hyperref[uc:uc_storage_binario_sd]{UC2-F}.
 \end{itemize}
 
-\subsection{UC2-F -- Registrazione dei dati binari dei sensori su SD}
+\subsection{UC2-F - Registrazione dei dati binari dei sensori su SD}
 \label{uc:uc_storage_binario_sd}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\columnwidth]{../img/puml/usecase/UC2_incl.png}
-    \caption{Inclusioni UC2-F -- Registrazione dei dati sensore su SD}
+    \caption{Inclusioni UC2-F - Registrazione dei dati sensore su SD}
     \label{fig:uc2_incl_diagram}
 \end{figure}
 
@@ -155,16 +155,16 @@ informazioni:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC2.png}
-    \caption{UC2-F -- Registrazione dei dati sensore su SD}
+    \caption{UC2-F - Registrazione dei dati sensore su SD}
     \label{fig:uc2_diagram}
 \end{figure}
 
-\subsection{UC3-F -- Calcolo dello spazio occupato dai dati registrati}
+\subsection{UC3-F - Calcolo dello spazio occupato dai dati registrati}
 \label{uc:uc_calcolo_spazio}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC3.png}
-    \caption{UC3-F -- Calcolo dello spazio occupato dai dati registrati}
+    \caption{UC3-F - Calcolo dello spazio occupato dai dati registrati}
     \label{fig:uc3_diagram}
 \end{figure}
 
@@ -187,12 +187,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC4-A -- Visualizzazione dello spazio di archiviazione occupato}
+\subsection{UC4-A - Visualizzazione dello spazio di archiviazione occupato}
 \label{uc:uc_visualizzazione_spazio}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC4.png}
-    \caption{UC4-A -- Visualizzazione dello spazio di archiviazione occupato}
+    \caption{UC4-A - Visualizzazione dello spazio di archiviazione occupato}
     \label{fig:uc4_diagram}
 \end{figure}
 
@@ -224,12 +224,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC5-F -- Gestione della capacità di registrazione e blocco automatico}
+\subsection{UC5-F - Gestione della capacità di registrazione e blocco automatico}
 \label{uc:uc_gestione_capacita}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC5.png}
-    \caption{UC5-F -- Gestione della capacità di registrazione e blocco automatico}
+    \caption{UC5-F - Gestione della capacità di registrazione e blocco automatico}
     \label{fig:uc5_diagram}
 \end{figure}
 
@@ -255,12 +255,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC6-A -- Notifica di sessione bloccata per spazio GPS esaurito}
+\subsection{UC6-A - Notifica di sessione bloccata per spazio GPS esaurito}
 \label{uc:uc_notifica_blocco_gps}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC6.png}
-    \caption{UC6-A -- Notifica di sessione bloccata per spazio GPS esaurito}
+    \caption{UC6-A - Notifica di sessione bloccata per spazio GPS esaurito}
     \label{fig:uc6_diagram}
 \end{figure}
 
@@ -281,12 +281,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC7-F -- Recupero della sessione dopo rimozione SD}
+\subsection{UC7-F - Recupero della sessione dopo rimozione SD}
 \label{uc:uc_recovery_sessione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC7.png}
-    \caption{UC7-F -- Recupero della sessione dopo rimozione SD}
+    \caption{UC7-F - Recupero della sessione dopo rimozione SD}
     \label{fig:uc7_diagram}
 \end{figure}
 
@@ -309,12 +309,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC8-F -- Notifica di rimozione della scheda microSD}
+\subsection{UC8-F - Notifica di rimozione della scheda microSD}
 \label{uc:uc_notifica_sd_mancante}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC8.png}
-    \caption{UC8-F -- Notifica di rimozione della scheda microSD}
+    \caption{UC8-F - Notifica di rimozione della scheda microSD}
     \label{fig:uc8_diagram}
 \end{figure}
 
@@ -336,12 +336,12 @@ informazioni:
     \item \textbf{Inclusioni:} \hyperref[uc:uc_led_sd_mancante]{UC12.1-F}.
 \end{itemize}
 
-\subsection{UC9-A -- Gestione della rimozione SD durante la sessione}
+\subsection{UC9-A - Gestione della rimozione SD durante la sessione}
 \label{uc:uc_gestione_sd_rimossa}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC9.png}
-    \caption{UC9-A -- Gestione della rimozione SD durante la sessione}
+    \caption{UC9-A - Gestione della rimozione SD durante la sessione}
     \label{fig:uc9_diagram}
 \end{figure}
 
@@ -371,12 +371,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC10-A -- Gestione dell'assenza della SD all'avvio sessione}
+\subsection{UC10-A - Gestione dell'assenza della SD all'avvio sessione}
 \label{uc:uc_gestione_sd_assente_avvio}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC10.png}
-    \caption{UC10-A -- Gestione dell'assenza della SD all'avvio sessione}
+    \caption{UC10-A - Gestione dell'assenza della SD all'avvio sessione}
     \label{fig:uc10_diagram}
 \end{figure}
 
@@ -407,12 +407,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC11-S -- Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
+\subsection{UC11-S - Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
 \label{uc:uc_acquisizione_can_sniffer}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC11_S.png}
-    \caption{UC11-S -- Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
+    \caption{UC11-S - Acquisizione dei dati dal bus CAN e trasmissione in broadcast BLE}
     \label{fig:uc11_s_diagram}
 \end{figure}
 
@@ -439,12 +439,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC11-F -- Ricezione dei dati di telemetria CAN via BLE broadcast}
+\subsection{UC11-F - Ricezione dei dati di telemetria CAN via BLE broadcast}
 \label{uc:uc_lettura_can_ecu}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC11.png}
-    \caption{UC11-F -- Ricezione dei dati di telemetria CAN via BLE broadcast}
+    \caption{UC11-F - Ricezione dei dati di telemetria CAN via BLE broadcast}
     \label{fig:uc11_diagram}
 \end{figure}
 
@@ -471,12 +471,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC12-F -- Gestione dello stato del firmware tramite \gls{led}}
+\subsection{UC12-F - Gestione dello stato del firmware tramite \gls{led}}
 \label{uc:uc_stato_led}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\columnwidth]{../img/puml/usecase/UC12.png}
-    \caption{UC12-F -- Gestione dello stato del firmware tramite LED}
+    \caption{UC12-F - Gestione dello stato del firmware tramite LED}
     \label{fig:uc12_diagram}
 \end{figure}
 
@@ -519,12 +519,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsubsection{UC12.1-F -- Segnalazione di scheda microSD mancante}
+\subsubsection{UC12.1-F - Segnalazione di scheda microSD mancante}
 \label{uc:uc_led_sd_mancante}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_1.png}
-    \caption{UC12.1-F -- Segnalazione di scheda microSD mancante}
+    \caption{UC12.1-F - Segnalazione di scheda microSD mancante}
     \label{fig:uc12_1_diagram}
 \end{figure}
 
@@ -533,7 +533,7 @@ informazioni:
 
     \item \textbf{Precondizioni:} la scheda microSD risulta assente (cfr.
     \hyperref[uc:uc_notifica_sd_mancante]{UC8-F}) e si sta tentando di avviare una sessione oppure si è 
-    in piana sessione di registrazione.
+    in piena sessione di registrazione.
 
     \item \textbf{Postcondizioni:} il LED mostra il pattern rosso con lampeggio veloce,
     con priorità massima su ogni altro stato.
@@ -546,12 +546,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.2-F -- Segnalazione di errore generico}
+\subsubsection{UC12.2-F - Segnalazione di errore generico}
 \label{uc:uc_led_errore}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_2.png}
-    \caption{UC12.2-F -- Segnalazione di errore generico}
+    \caption{UC12.2-F - Segnalazione di errore generico}
     \label{fig:uc12_2_diagram}
 \end{figure}
 
@@ -571,36 +571,36 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.3-F -- Segnalazione di pairing WiFi}
+\subsubsection{UC12.3-F - Segnalazione di pairing Wi-Fi}
 \label{uc:uc_led_pairing_wifi}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_3.png}
-    \caption{UC12.3-F -- Segnalazione di pairing WiFi}
+    \caption{UC12.3-F - Segnalazione di pairing Wi-Fi}
     \label{fig:uc12_3_diagram}
 \end{figure}
 
 \begin{itemize}
     \item \textbf{Attore Primario:} utente.
 
-    \item \textbf{Precondizioni:} è in corso una procedura di associazione \textit{pairing} con una rete WiFi.
+    \item \textbf{Precondizioni:} è in corso una procedura di associazione \textit{pairing} con una rete Wi-Fi.
 
     \item \textbf{Postcondizioni:} il LED mostra il pattern blu con lampeggio veloce.
 
     \item \textbf{Flusso Principale:}
     \begin{enumerate}
-        \item il modulo di gestione del LED rileva l'avvio della procedura di pairing WiFi;
+        \item il modulo di gestione del LED rileva l'avvio della procedura di pairing Wi-Fi;
         \item il modulo applica il pattern blu con lampeggio veloce;
         \item il pattern rimane attivo per l'intera durata del pairing.
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.4-F -- Segnalazione di pairing BLE}
+\subsubsection{UC12.4-F - Segnalazione di pairing BLE}
 \label{uc:uc_led_pairing_ble}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_4.png}
-    \caption{UC12.4-F -- Segnalazione di pairing BLE}
+    \caption{UC12.4-F - Segnalazione di pairing BLE}
     \label{fig:uc12_4_diagram}
 \end{figure}
 
@@ -620,12 +620,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.5-F -- Segnalazione di recupero dati per calibrazione}
+\subsubsection{UC12.5-F - Segnalazione di recupero dati per calibrazione}
 \label{uc:uc_led_recupero_calibrazione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_5.png}
-    \caption{UC12.5-F -- Segnalazione di recupero dati per calibrazione}
+    \caption{UC12.5-F - Segnalazione di recupero dati per calibrazione}
     \label{fig:uc12_5_diagram}
 \end{figure}
 
@@ -646,12 +646,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.6-F -- Segnalazione di calibrazione in corso}
+\subsubsection{UC12.6-F - Segnalazione di calibrazione in corso}
 \label{uc:uc_led_calibrazione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_6.png}
-    \caption{UC12.6-F -- Segnalazione di calibrazione in corso}
+    \caption{UC12.6-F - Segnalazione di calibrazione in corso}
     \label{fig:uc12_6_diagram}
 \end{figure}
 
@@ -670,12 +670,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.7-F -- Segnalazione di download dati}
+\subsubsection{UC12.7-F - Segnalazione di download dati}
 \label{uc:uc_led_download}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_7.png}
-    \caption{UC12.7-F -- Segnalazione di download dati}
+    \caption{UC12.7-F - Segnalazione di download dati}
     \label{fig:uc12_7_diagram}
 \end{figure}
 
@@ -694,12 +694,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.8-F -- Segnalazione di eliminazione dati}
+\subsubsection{UC12.8-F - Segnalazione di eliminazione dati}
 \label{uc:uc_led_eliminazione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_8.png}
-    \caption{UC12.8-F -- Segnalazione di eliminazione dati}
+    \caption{UC12.8-F - Segnalazione di eliminazione dati}
     \label{fig:uc12_8_diagram}
 \end{figure}
 
@@ -718,12 +718,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.9-F -- Segnalazione di sospensione per inattività}
+\subsubsection{UC12.9-F - Segnalazione di sospensione per inattività}
 \label{uc:uc_led_sospensione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_9.png}
-    \caption{UC12.9-F -- Segnalazione di sospensione per inattività}
+    \caption{UC12.9-F - Segnalazione di sospensione per inattività}
     \label{fig:uc12_9_diagram}
 \end{figure}
 
@@ -744,12 +744,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.10-F -- Segnalazione di logging attivo}
+\subsubsection{UC12.10-F - Segnalazione di logging attivo}
 \label{uc:uc_led_logging}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_10.png}
-    \caption{UC12.10-F -- Segnalazione di logging attivo}
+    \caption{UC12.10-F - Segnalazione di logging attivo}
     \label{fig:uc12_10_diagram}
 \end{figure}
 
@@ -769,12 +769,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsubsection{UC12.11-F -- Segnalazione di dispositivo avviato in attesa di sessione}
+\subsubsection{UC12.11-F - Segnalazione di dispositivo avviato in attesa di sessione}
 \label{uc:uc_led_standby}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC12_11.png}
-    \caption{UC12.11-F -- Segnalazione di dispositivo avviato in attesa di sessione}
+    \caption{UC12.11-F - Segnalazione di dispositivo avviato in attesa di sessione}
     \label{fig:uc12_11_diagram}
 \end{figure}
 
@@ -796,19 +796,19 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC13-F -- Sospensione dell'acquisizione sensori in stato di inattività}
+\subsection{UC13-F - Sospensione dell'acquisizione sensori in stato di inattività}
 \label{uc:uc_sospensione_sensori}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\columnwidth]{../img/puml/usecase/UC13.png}
-    \caption{UC13-F -- Sospensione dell'acquisizione sensori in stato di inattività}
+    \caption{UC13-F - Sospensione dell'acquisizione sensori in stato di inattività}
     \label{fig:uc13_diagram}
 \end{figure}
 
 \begin{itemize}
     \item \textbf{Attore Primario:} modulo GPS 
     
-    \item \textbf{Attore Secondario} IMU (accelerometro).
+    \item \textbf{Attore Secondario:} IMU (accelerometro).
 
     \item \textbf{Precondizioni:} è in corso una sessione di registrazione attiva.
 
@@ -844,12 +844,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC14-A -- Configurazione del tempo di inattività}
+\subsection{UC14-A - Configurazione del tempo di inattività}
 \label{uc:uc_config_timeout}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\columnwidth]{../img/puml/usecase/UC14.png}
-    \caption{UC14-A -- Configurazione del tempo di inattività}
+    \caption{UC14-A - Configurazione del tempo di inattività}
     \label{fig:uc14_diagram}
 \end{figure}
 
@@ -870,12 +870,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC15-F -- Avvio e interruzione sessione tramite comandi BLE}
+\subsection{UC15-F - Avvio e interruzione sessione tramite comandi BLE}
 \label{uc:uc_sessione_ble}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC15.png}
-    \caption{UC15-F -- Avvio e interruzione sessione tramite comandi BLE}
+    \caption{UC15-F - Avvio e interruzione sessione tramite comandi BLE}
     \label{fig:uc15_diagram}
 \end{figure}
 
@@ -906,12 +906,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC16-F -- Calibrazione dell'IMU}
+\subsection{UC16-F - Calibrazione dell'IMU}
 \label{uc:uc_calibrazione_imu}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC16.png}
-    \caption{UC16-F -- Calibrazione dell'IMU}
+    \caption{UC16-F - Calibrazione dell'IMU}
     \label{fig:uc16_diagram}
 \end{figure}
 
@@ -944,12 +944,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC17-A -- Sequenza guidata di calibrazione dell'IMU}
+\subsection{UC17-A - Sequenza guidata di calibrazione dell'IMU}
 \label{uc:uc_sequenza_calibrazione}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC17.png}
-    \caption{UC17-A -- Sequenza guidata di calibrazione dell'IMU}
+    \caption{UC17-A - Sequenza guidata di calibrazione dell'IMU}
     \label{fig:uc17_diagram}
 \end{figure}
 
@@ -978,12 +978,12 @@ informazioni:
     \end{itemize}
 \end{itemize}
 
-\subsection{UC18-A -- Visualizzazione dei dati calibrati}
+\subsection{UC18-A - Visualizzazione dei dati calibrati}
 \label{uc:uc_visualizzazione_dati_calibrati}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../img/puml/usecase/UC18.png}
-    \caption{UC18-A -- Visualizzazione dei dati calibrati}
+    \caption{UC18-A - Visualizzazione dei dati calibrati}
     \label{fig:uc18_diagram}
 \end{figure}
 
@@ -1008,12 +1008,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC19-A -- Visualizzazione dei movimenti della moto in tempo reale}
+\subsection{UC19-A - Visualizzazione dei movimenti della moto in tempo reale}
 \label{uc:uc_visualizzazione_movimenti}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\columnwidth]{../img/puml/usecase/UC19.png}
-    \caption{UC19-A -- Visualizzazione dei movimenti della moto in tempo reale}
+    \caption{UC19-A - Visualizzazione dei movimenti della moto in tempo reale}
     \label{fig:uc19_diagram}
 \end{figure}
 
@@ -1036,12 +1036,12 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\subsection{UC20-F -- Calibrazione automatica dell'altitudine a inizio sessione}
+\subsection{UC20-F - Calibrazione automatica dell'altitudine a inizio sessione}
 \label{uc:uc_calibrazione_altitudine}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC20.png}
-    \caption{UC20-F -- Calibrazione automatica dell'altitudine a inizio sessione}
+    \caption{UC20-F - Calibrazione automatica dell'altitudine a inizio sessione}
     \label{fig:uc20_diagram}
 \end{figure}
 
@@ -1067,13 +1067,13 @@ informazioni:
     \item \textbf{Inclusioni:} \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F}.
 \end{itemize}
 
-\subsection{UC21-F -- Salvataggio delle calibrazioni collegate alla sessione}
+\subsection{UC21-F - Salvataggio delle calibrazioni collegate alla sessione}
 \label{uc:uc_salvataggio_calibrazioni}
 \label{uc:uc_salvataggio_dati_calibrati}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../img/puml/usecase/UC21.png}
-    \caption{UC21-F -- Salvataggio delle calibrazioni collegate alla sessione}
+    \caption{UC21-F - Salvataggio delle calibrazioni collegate alla sessione}
     \label{fig:uc21_diagram}
 \end{figure}
 
@@ -1096,7 +1096,7 @@ informazioni:
     \end{enumerate}
 \end{itemize}
 
-\section{Tracciamento dei requisiti}
+\section{Tracciamento dei requisiti} \label{sec:tracciamento_requisiti}
 In questa sezione si riporta la lista di requisiti rilevata in seguito all'analisi dell'utenza e degli use
 case; i requisiti sono identificati da un codice definito con la seguente nomenclatura:
 \begin{center}
@@ -1121,7 +1121,7 @@ funzionalità e i servizi che il sistema deve offrire per essere conforme alle a
     \hline
     \endfirsthead
     \rowcolor{white}
-    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} - Continuo della tabella}}\\
     \hline
     \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
     \hline
@@ -1240,7 +1240,7 @@ conforme alle aspettative e agli obiettivi preposti.
     \hline
     \endfirsthead
     \rowcolor{white}
-    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} - Continuo della tabella}}\\
     \hline
     \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
     \hline
@@ -1307,7 +1307,7 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \hline
     \endfirsthead
     \rowcolor{white}
-    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} - Continuo della tabella}}\\
     \hline
     \multicolumn{1}{|c|}{\textbf{Codice}} & \multicolumn{1}{c|}{\textbf{Descrizione}} & \multicolumn{1}{c|}{\textbf{Fonti}}\\
     \hline
@@ -1354,7 +1354,7 @@ conforme alle aspettative e alle esigenze degli stakeholder.
     \end{longtable}
 \end{center}
 
-\subsection{Tracciamento Fonti -- Requisiti}
+\subsection{Tracciamento Fonti - Requisiti}
 Nella Tabella \ref{tab:tracciamento_fonti_requisiti} si riporta, per ciascun caso d'uso, l'elenco dei
 requisiti da esso derivati, a complemento del tracciamento inverso riportato nelle tabelle precedenti.
 
@@ -1366,7 +1366,7 @@ requisiti da esso derivati, a complemento del tracciamento inverso riportato nel
     \hline
     \endfirsthead
     \rowcolor{white}
-    \multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} -- Continuo della tabella}}\\
+    \multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} - Continuo della tabella}}\\
     \hline
     \multicolumn{1}{|c|}{\textbf{Fonte}} & \multicolumn{1}{c|}{\textbf{Requisiti}}\\
     \hline
@@ -1402,52 +1402,52 @@ requisiti da esso derivati, a complemento del tracciamento inverso riportato nel
     \hline
     \hyperref[uc:uc_lettura_can_ecu]{UC11-F} & \hyperref[req:rf11]{R-F-Ob-12}, \hyperref[req:rf22]{R-F-Ob-13}, \hyperref[req:rn8]{R-N-Ob-8}, \hyperref[req:rv7]{R-V-Ob-7} \\
     \hline
-    \hyperref[uc:uc_stato_led]{UC12-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4}, \hyperref[req:rv4]{R-V-Ob-4} \\
+    \hyperref[uc:uc_stato_led]{UC12-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4}, \hyperref[req:rv4]{R-V-Ob-4} \\
     \hline
-    \hyperref[uc:uc_led_sd_mancante]{UC12.1-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_sd_mancante]{UC12.1-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_errore]{UC12.2-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_errore]{UC12.2-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_pairing_wifi]{UC12.3-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_pairing_ble]{UC12.4-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_pairing_ble]{UC12.4-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_recupero_calibrazione]{UC12.5-F} & \hyperref[req:rf14]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_calibrazione]{UC12.6-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_calibrazione]{UC12.6-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_download]{UC12.7-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_download]{UC12.7-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_eliminazione]{UC12.8-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_eliminazione]{UC12.8-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_sospensione]{UC12.9-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_sospensione]{UC12.9-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_logging]{UC12.10-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_logging]{UC12.10-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_led_standby]{UC12.11-F} & \hyperref[req:rf12]{R-F-De-12}, \hyperref[req:rn4]{R-N-De-4} \\
+    \hyperref[uc:uc_led_standby]{UC12.11-F} & \hyperref[req:rf12]{R-F-De-14}, \hyperref[req:rn4]{R-N-De-4} \\
     \hline
-    \hyperref[uc:uc_sospensione_sensori]{UC13-F} & \hyperref[req:rf13]{R-F-De-13}, \hyperref[req:rn2]{R-N-Ob-2} \\
+    \hyperref[uc:uc_sospensione_sensori]{UC13-F} & \hyperref[req:rf13]{R-F-De-15}, \hyperref[req:rn2]{R-N-Ob-2} \\
     \hline
-    \hyperref[uc:uc_config_timeout]{UC14-A} & \hyperref[req:rf14]{R-F-Op-14}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hyperref[uc:uc_config_timeout]{UC14-A} & \hyperref[req:rf14]{R-F-Op-16}, \hyperref[req:rv5]{R-V-Ob-5} \\
     \hline
-    \hyperref[uc:uc_sessione_ble]{UC15-F} & \hyperref[req:rf15]{R-F-Ob-15}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hyperref[uc:uc_sessione_ble]{UC15-F} & \hyperref[req:rf15]{R-F-Ob-17}, \hyperref[req:rv5]{R-V-Ob-5} \\
     \hline
-    \hyperref[uc:uc_calibrazione_imu]{UC16-F} & \hyperref[req:rf16]{R-F-Ob-16}, \hyperref[req:rn5]{R-N-De-5}, \hyperref[req:rv5]{R-V-Ob-5} \\
+    \hyperref[uc:uc_calibrazione_imu]{UC16-F} & \hyperref[req:rf16]{R-F-Ob-18}, \hyperref[req:rn5]{R-N-De-5}, \hyperref[req:rv5]{R-V-Ob-5} \\
     \hline
-    \hyperref[uc:uc_sequenza_calibrazione]{UC17-A} & \hyperref[req:rf16]{R-F-Ob-16} \\
+    \hyperref[uc:uc_sequenza_calibrazione]{UC17-A} & \hyperref[req:rf16]{R-F-Ob-18} \\
     \hline
-    \hyperref[uc:uc_visualizzazione_dati_calibrati]{UC18-A} & \hyperref[req:rf17]{R-F-De-17} \\
+    \hyperref[uc:uc_visualizzazione_dati_calibrati]{UC18-A} & \hyperref[req:rf17]{R-F-De-19} \\
     \hline
-    \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} & \hyperref[req:rf18]{R-F-De-18}, \hyperref[req:rn7]{R-N-Op-7} \\
+    \hyperref[uc:uc_visualizzazione_movimenti]{UC19-A} & \hyperref[req:rf18]{R-F-De-20}, \hyperref[req:rn7]{R-N-Op-7} \\
     \hline
-    \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} & \hyperref[req:rf19]{R-F-Ob-19}, \hyperref[req:rn5]{R-N-De-5} \\
+    \hyperref[uc:uc_calibrazione_altitudine]{UC20-F} & \hyperref[req:rf19]{R-F-Ob-21}, \hyperref[req:rn5]{R-N-De-5} \\
     \hline
-    \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F} & \hyperref[req:rf20]{R-F-Ob-20} \\
+    \hyperref[uc:uc_salvataggio_calibrazioni]{UC21-F} & \hyperref[req:rf20]{R-F-Ob-22} \\
     \hline
     Tutti & \hyperref[req:rv1]{R-V-Ob-1}, \hyperref[req:rv2]{R-V-Ob-2} \\
     \hline
     \hiderowcolors
-    \caption{Tracciamento Fonti -- Requisiti.}
+    \caption{Tracciamento Fonti - Requisiti.}
     \label{tab:tracciamento_fonti_requisiti}
     \end{longtable}
 \end{center}
@@ -1461,7 +1461,7 @@ in totale sono stati rilevati 38 requisiti.
 \hline
  & \textbf{Obbligatori} & \textbf{Desiderabili} & \textbf{Opzionali} & \textbf{TOTALE} \\
 \hline
-RF & 15 & 6 & 1 & 22 \\
+RF & 14 & 7 & 1 & 22 \\
 \hline
 RN & 4 & 3 & 1 & 8 \\
 \hline

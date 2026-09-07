@@ -1,0 +1,105 @@
+@startuml legenda_diagrammi_sequenza
+skinparam dpi 200
+title Legenda - Diagrammi di sequenza
+hide footbox
+skinparam sequenceArrowThickness 1
+skinparam roundcorner 8
+skinparam maxmessagesize 160
+skinparam sequence {
+    ArrowColor #37474F
+    ActorBorderColor #37474F
+    LifeLineBorderColor #90A4AE
+    ParticipantBorderColor #37474F
+    ParticipantFontStyle bold
+}
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #B0A060
+
+box "Nome del gruppo" #E8F1FF
+actor "Attore" as A
+end box
+
+box "Firmware" #E8F5E9
+participant "Partecipante" as B
+participant "Altro\npartecipante" as C
+end box
+
+note over A, C
+  Il raggruppamento in un riquadro colorato ("box") indica i componenti
+  appartenenti allo stesso sistema (es. Applicazione, Firmware).
+  L'"attore" rappresenta un utilizzatore esterno; il "partecipante"
+  rappresenta un componente interno al sistema.
+end note
+
+A -> B : Messaggio sincrono
+note right: Freccia continua: richiesta\no invocazione da un elemento\nverso un altro.
+
+B -> B : Operazione interna
+note right: Messaggio riflessivo: azione\nche l'elemento compie su\nse stesso.
+
+activate B
+B -> C : Richiesta
+B --> C : Messaggio di risposta
+deactivate B
+note right: Freccia tratteggiata: risposta\no valore restituito. La barra\nverticale indica l'intervallo in\ncui l'elemento sta elaborando\nla richiesta ricevuta.
+
+loop condizione di ripetizione
+  B -> C : Messaggio ripetuto
+end
+
+alt condizione verificata
+  B -> C : Messaggio A
+else condizione non verificata
+  B -> C : Messaggio B
+end
+note right
+  Riquadro "loop": la sequenza di messaggi al suo interno viene
+  ripetuta finche' la condizione indicata e' verificata.
+  Riquadro "alt": la sequenza di messaggi eseguita dipende
+  invece dalla condizione indicate.
+end note
+
+@enduml
+
+@startuml legenda_diagrammi_flusso
+skinparam dpi 200
+title Legenda - Diagrammi di flusso
+skinparam packageStyle rectangle
+skinparam activity {
+  BackgroundColor #FFFFFF
+  BorderColor #37474F
+  DiamondBackgroundColor #FFFFFF
+  DiamondBorderColor #37474F
+  ArrowColor #37474F
+}
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #B0A060
+
+start
+note right: Nodo iniziale: indica il\npunto di inizio del flusso.
+
+:Azione;
+note right: Rappresenta una singola\noperazione svolta dal sistema.
+
+if (Condizione?) then (si)
+  :Ramo "si";
+else (no)
+  :Ramo "no";
+endif
+note right: Nodo di decisione: il flusso\nprosegue lungo il ramo\ncorrispondente all'esito\ndella condizione valutata.
+
+repeat
+  :Azione ripetuta\nad ogni iterazione;
+  if (Uscita anticipata\nrichiesta?) then (si)
+    break
+  else (no)
+  endif
+repeat while (Condizione di uscita\nverificata?) is (no)
+->si;
+note right: Ciclo while: il blocco\nviene ripetuto finche' la\ncondizione di uscita non e'\nverificata.
+
+stop
+note right: Nodo finale: indica la\nconclusione del flusso.
+
+@enduml
+
