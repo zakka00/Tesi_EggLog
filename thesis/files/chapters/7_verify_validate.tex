@@ -256,7 +256,7 @@ direttamente confrontabili.
 \subsection{Tempo di scrittura su microSD}
 \label{subsec:tempo_scrittura_sd}
 
-\paragraph{Il problema della cluster size (superato)}
+\subsubsection{Il problema della cluster size (superato)}
 \label{subsubsec:problema_cluster_size}
 Nell'approccio precedente, basato su un file per \textit{chunk} 
 (\hyperref[sec:situazione-partenza]{Situazione di partenza}), il
@@ -275,7 +275,7 @@ assegnati. Non è quindi più necessario gestire l'overhang \textit{chunk} per \
 né si introduce frammentazione a runtime.
 
 
-\paragraph{Confronto misurato: un file per chunk vs superfile}
+\subsubsection{Confronto misurato: un file per chunk vs superfile}
 \label{subsubsec:confronto_scrittura}
 Per quantificare il beneficio introdotto dal superfile, è stato misurato il
 tempo (in $\mu\mathrm{s}$) dell'intero blocco di scrittura su un campione di 8 
@@ -373,13 +373,13 @@ stati.
 \subsection{Occupazione della RAM}
 \label{subsubsec:ram-occupazione}
 
-\paragraph{Calcolo della RAM occupata}
+\subsubsection{Calcolo della RAM occupata}
 Entrambe le versioni assegnano a ogni producer due buffer alternati
 (\textit{ping-pong}, si veda \hyperref[sec:situazione-partenza]{Situazione
 di partenza}), quindi la RAM effettivamente occupata da ciascun
 sensore è pari al doppio della dimensione del singolo buffer.
 
-\paragraph{Confronto per sensore}
+\subsubsection{Confronto per sensore}
 La Tabella \ref{tab:ram-buffer-sensori} riporta il confronto tra le due
 versioni, entrambe i buffer inclusi. Gli aumenti più
 significativi riguardano i sensori GPS e IMU: la relativa giustificazione è
@@ -407,7 +407,7 @@ il paragrafo successivo).
     \label{tab:ram-buffer-sensori}
 \end{table}
 
-\paragraph{Variazione percentuale tra le due versioni}
+\subsubsection{Variazione percentuale tra le due versioni}
 Espresse in termini percentuali rispetto alla versione di partenza, le
 variazioni per ciascun sensore sono riportate in
 Tabella \ref{tab:ram-buffer-variazione-percentuale}.
@@ -430,7 +430,7 @@ Tabella \ref{tab:ram-buffer-variazione-percentuale}.
     \label{tab:ram-buffer-variazione-percentuale}
 \end{table}
 
-\paragraph{Il ruolo del formato di serializzazione}
+\subsubsection{Il ruolo del formato di serializzazione}
 Il confronto in termini di \textit{kilobyte} occupati, per quanto corretto, non
 racconta però l'intera storia: nella versione di partenza ogni campione
 veniva serializzato in formato testuale CSV direttamente all'interno del
@@ -488,7 +488,7 @@ rappresentazione testuale, verbosa e a lunghezza variabile, a una
 rappresentazione binaria compatta a lunghezza fissa, indipendente
 dall'eventuale ridimensionamento dei buffer stessi.
 
-\paragraph{Un compromesso tra RAM e frequenza di scrittura}
+\subsubsection{Un compromesso tra RAM e frequenza di scrittura}
 L'aumento dei buffer di GPS e IMU deriva dalla scelta di privilegiare un minor
 numero di operazioni di I/O sulla microSD, a fronte di un maggiore utilizzo
 della RAM. Le operazioni di I/O sono infatti sensibilmente più lente rispetto
@@ -508,14 +508,14 @@ ancora presenti nei buffer al termine della sessione, la sequenza di arresto
 esegue uno svuotamento forzato di tutti i buffer prima della chiusura dei
 superfile.
 
-\paragraph{Disabilitazione del magnetometro}
+\subsubsection{Disabilitazione del magnetometro}
 Il magnetometro, i cui dati non trovano al momento alcun utilizzo concreto
 nel sistema, è stato invece disabilitato in questa versione del firmware: il
 suo buffer, presente nella versione di partenza con una dimensione di circa
 32.0 KB, non viene più allocato, azzerandone completamente l'occupazione di
 RAM.
 
-\paragraph{Il momento dell'allocazione conta più della dimensione}
+\subsubsection{Il momento dell'allocazione conta più della dimensione}
 Il dato più rilevante non riguarda quindi la dimensione dei singoli buffer,
 quanto il momento in cui vengono allocati. Nella versione di partenza, il
 logging iniziava automaticamente all'accensione e tutti e quattro i buffer
